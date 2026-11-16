@@ -6,12 +6,12 @@
 | main-jdk17 | Spring Boot 3 | 17 | ruoyi-vue-pro-jdk25 |
 | main-jdk8 | Spring Boot 2 | 8 | ruoyi-vue-pro-jdk8 |
 
-This branch targets Spring AI `2.1.0-boot4-SNAPSHOT` and Boot 4.1.2; minimum target Java 17+, consumer validation JVM 25.
+This branch targets Spring AI `4.0.0-SNAPSHOT` and Boot 4.1.2; minimum target Java 17+, consumer validation JVM 25.
 Internal Alibaba state/option serializers retain the Jackson 2 implementation supplied
 by the Boot 4 Jackson 2 BOM; the framework/MCP JSON implementation is Jackson 3.
 This boundary requires explicit HTTP codec and runtime validation.
 Default reactor unit tests and dependency gates have passed by recorded full/closure runs. Consumer source alignment is still in progress.
-No release has been published. Original groupIds, artifactIds and packages are retained.
+No release has been published. Maven groups are cn.iocoder.spring-ai-alibaba and cn.iocoder.spring-ai; upstream artifactIds and Java packages are retained.
 
 ## Upstream source provenance
 
@@ -40,3 +40,7 @@ The three frozen business consumers start and pass local chat/image/knowledge fl
 The same ten local HTTP acceptance tests pass in all three business lines, including native DashScope embedding/image credentials, requested/default models and application observation callbacks. The matched chat service/tool regressions pass on actual JVM8/17/25 (51/54/61 tests). Streaming reasoning consumption uses the delegate delta rather than appending cumulative content.
 
 The optional AgentScope adapter currently follows the pinned upstream integration (`agentscope-core` 1.0.9). Migration to current AgentScope 2.x is a separate compatibility task; these checks do not claim that migration is complete. Java8 excludes the optional AgentScope starter and runtime-sandbox from its default supported reactor/BOM.
+
+## Retained admin source boundary
+
+The retained `spring-ai-alibaba-admin` source tree is outside the supported default reactor and BOM. Its historical external `spring-ai-alibaba-core:1.0.0.3`, `spring-ai-alibaba-graph-core:1.0.0.4` and `spring-ai-alibaba-autoconfigure-arms-observation:1.0.0.4` dependencies keep the official `com.alibaba.cloud.ai` coordinates; these releases are not produced by this fork. Fork-owned admin project references use `cn.iocoder.spring-ai-alibaba`. No Boot/JDK compatibility is claimed for this retained admin tree.
