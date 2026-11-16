@@ -20,7 +20,7 @@
     </scm>
 
     <properties>
-        <agentscope-runtime.version>1.0.2</agentscope-runtime.version>
+        <agentscope-runtime.version>3.0.0-SNAPSHOT</agentscope-runtime.version>
     </properties>
 
     <dependencies>
@@ -30,7 +30,7 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.agentscope</groupId>
+            <groupId>cn.iocoder.agentscope</groupId>
             <artifactId>agentscope-runtime-sandbox-core</artifactId>
             <version>${agentscope-runtime.version}</version>
         </dependency>
