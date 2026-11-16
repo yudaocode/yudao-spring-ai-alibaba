@@ -26,7 +26,6 @@ import com.alibaba.cloud.ai.graph.action.NodeAction;
 import com.alibaba.cloud.ai.graph.agent.BaseAgent;
 import com.alibaba.cloud.ai.graph.agent.flow.node.RoutingMergeNode;
 import io.agentscope.core.ReActAgent;
-import io.agentscope.core.memory.InMemoryMemory;
 import io.agentscope.core.message.Msg;
 import io.agentscope.core.message.MsgRole;
 import org.slf4j.Logger;
@@ -36,9 +35,10 @@ import org.springframework.ai.chat.messages.Message;
 /**
  * Merge node for routing results that uses an AgentScope {@link ReActAgent} (assembled
  * with a Model and system prompt) to synthesize sub-agent outputs. Equivalent to the
- * framework's {@link RoutingMergeNode} which uses {@link org.springframework.ai.chat.model.ChatModel#call};
- * here we use ReActAgent's {@link ReActAgent#call(java.util.List)} to obtain the merged
- * text. No direct Model calls—all invocation goes through the ReActAgent.
+ * framework's {@link RoutingMergeNode} which uses
+ * {@link org.springframework.ai.chat.model.ChatModel#call}; here we use ReActAgent's
+ * {@link ReActAgent#call(java.util.List)} to obtain the merged text. No direct Model
+ * calls—all invocation goes through the ReActAgent.
  */
 public class AgentScopeRoutingMergeNode implements NodeAction {
 
@@ -54,7 +54,9 @@ public class AgentScopeRoutingMergeNode implements NodeAction {
 			""";
 
 	private final io.agentscope.core.model.Model model;
+
 	private final List<BaseAgent> subAgents;
+
 	private final String mergedOutputKey;
 
 	public AgentScopeRoutingMergeNode(io.agentscope.core.model.Model model, List<BaseAgent> subAgents) {
@@ -120,15 +122,15 @@ public class AgentScopeRoutingMergeNode implements NodeAction {
 		}
 		String formatted = String.join("\n\n", formattedResults);
 		String systemPrompt = SYNTHESIZE_SYSTEM_TEMPLATE.formatted(query);
-		ReActAgent reactAgent = ReActAgent.builder()
-				.name("merge")
-				.model(model)
-				.sysPrompt(systemPrompt)
-				.memory(new InMemoryMemory())
-				.build();
-		List<Msg> msgs = List.of(
-				Msg.builder().name("user").role(MsgRole.USER).textContent(formatted).build());
-		Msg response = reactAgent.call(msgs).block();
+		ReActAgent reactAgent = ReActAgent.builder().name("merge").model(model).sysPrompt(systemPrompt).build();
+		List<Msg> msgs = List.of(Msg.builder().name("user").role(MsgRole.USER).textContent(formatted).build());
+		Msg response;
+		try {
+			response = reactAgent.call(msgs).block();
+		}
+		finally {
+			reactAgent.close();
+		}
 		if (response == null) {
 			return "";
 		}
@@ -168,4 +170,5 @@ public class AgentScopeRoutingMergeNode implements NodeAction {
 		}
 		return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
 	}
+
 }
