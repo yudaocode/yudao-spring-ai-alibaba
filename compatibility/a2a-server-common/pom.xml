@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.alibaba.cloud.ai</groupId>
+        <groupId>cn.iocoder.spring-ai-alibaba</groupId>
         <artifactId>spring-ai-alibaba</artifactId>
         <version>${revision}</version>
         <relativePath>../../pom.xml</relativePath>
@@ -19,17 +19,17 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.alibaba.cloud.ai</groupId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
             <artifactId>spring-ai-alibaba-a2a-spec-compat</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.alibaba.cloud.ai</groupId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
             <artifactId>spring-ai-alibaba-a2a-client-compat</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.alibaba.cloud.ai</groupId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
             <artifactId>spring-ai-alibaba-mutiny-zero-compat</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -48,7 +48,7 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.ai</groupId>
+            <groupId>cn.iocoder.spring-ai</groupId>
             <artifactId>spring-ai-jdk-http-compat</artifactId>
         </dependency>
     </dependencies>

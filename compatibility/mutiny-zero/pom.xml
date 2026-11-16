@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.alibaba.cloud.ai</groupId>
+        <groupId>cn.iocoder.spring-ai-alibaba</groupId>
         <artifactId>spring-ai-alibaba</artifactId>
         <version>${revision}</version>
         <relativePath>../../pom.xml</relativePath>
@@ -11,7 +11,7 @@
     <name>spring-ai-alibaba-mutiny-zero-compat (Java 8 source port)</name>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.ai</groupId>
+            <groupId>cn.iocoder.spring-ai</groupId>
             <artifactId>spring-ai-jdk-http-compat</artifactId>
         </dependency>
     </dependencies>

@@ -18,9 +18,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.alibaba.cloud.ai</groupId>
+    <groupId>cn.iocoder.spring-ai-alibaba</groupId>
     <artifactId>spring-ai-alibaba-extensions-bom</artifactId>
-    <version>2.1.0-boot2-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -91,40 +91,40 @@
         <dependencies>
 
             <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
+                <groupId>cn.iocoder.spring-ai-alibaba</groupId>
                 <artifactId>spring-ai-alibaba-dashscope</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <!-- Spring AI Alibaba Starter -->
             <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
+                <groupId>cn.iocoder.spring-ai-alibaba</groupId>
                 <artifactId>spring-ai-alibaba-starter-dashscope</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <!-- Spring AI Alibaba Autoconfiguration  -->
             <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
+                <groupId>cn.iocoder.spring-ai-alibaba</groupId>
                 <artifactId>spring-ai-alibaba-autoconfigure-dashscope</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <!-- Spring AI Alibaba Core Components -->
             <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
+                <groupId>cn.iocoder.spring-ai-alibaba</groupId>
                 <artifactId>spring-ai-alibaba-mcp-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
+                <groupId>cn.iocoder.spring-ai-alibaba</groupId>
                 <artifactId>spring-ai-alibaba-mcp-registry</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
+                <groupId>cn.iocoder.spring-ai-alibaba</groupId>
                 <artifactId>spring-ai-alibaba-observation-extension</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -142,25 +142,25 @@
             <!-- Spring AI Alibaba Document Parsers -->
 
             <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
+                <groupId>cn.iocoder.spring-ai-alibaba</groupId>
                 <artifactId>spring-ai-alibaba-starter-document-parser-bshtml</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
+                <groupId>cn.iocoder.spring-ai-alibaba</groupId>
                 <artifactId>spring-ai-alibaba-starter-document-parser-markdown</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
+                <groupId>cn.iocoder.spring-ai-alibaba</groupId>
                 <artifactId>spring-ai-alibaba-starter-document-parser-tika</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
+                <groupId>cn.iocoder.spring-ai-alibaba</groupId>
                 <artifactId>spring-ai-alibaba-starter-document-parser-yaml</artifactId>
                 <version>${project.version}</version>
             </dependency>
