@@ -59,6 +59,12 @@
             <artifactId>json-schema-validator</artifactId>
             <version>1.5.7</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.ethlo.time</groupId>
+                    <artifactId>itu</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

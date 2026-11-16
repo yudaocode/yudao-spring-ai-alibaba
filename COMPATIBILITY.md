@@ -82,3 +82,7 @@ arguments, response JSON, sandbox reuse and cleanup. Complete reactor verify pas
 on all three lines: Boot2=28 modules/1896 tests/286 skips; Boot3/4=23 modules/1895
 tests/288 skips each, with no failures or errors. Provider-gated tests stay skipped;
 these gates do not claim acceptance of every remote sandbox backend.
+
+### ITU Java 8 API fix
+
+The Networknt schema paths exclude `com.ethlo.time:itu`; MCP common explicitly consumes `cn.iocoder.spring-ai:spring-ai-itu-compat`. This avoids a Java 9-only Math overload in original ITU binaries, verified by a real Java 8 duration-parsing regression. Keep the Spring AI compatibility BOM at the matching revision.

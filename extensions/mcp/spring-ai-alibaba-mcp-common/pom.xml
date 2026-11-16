@@ -80,6 +80,10 @@
             <version>${json-schema-validator.version}</version>
             <exclusions>
                 <exclusion>
+                    <groupId>com.ethlo.time</groupId>
+                    <artifactId>itu</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>com.fasterxml.jackson.dataformat</groupId>
                     <artifactId>jackson-dataformat-yaml</artifactId>
                 </exclusion>
@@ -112,6 +116,15 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>cn.iocoder.spring-ai</groupId>
+            <artifactId>spring-ai-itu-compat</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
