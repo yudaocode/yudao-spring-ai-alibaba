@@ -74,6 +74,13 @@ class GraphObservationAutoConfigurationTest {
 	@BeforeEach
 	void setUpFunctionalTests() {
 		functionalTestObservationRegistry = ObservationRegistry.create();
+        functionalTestObservationRegistry.observationConfig().observationHandler(
+                new io.micrometer.observation.ObservationHandler<Observation.Context>() {
+                    @Override
+                    public boolean supportsContext(Observation.Context context) {
+                        return true;
+                    }
+                });
 
 		ContextRegistry.getInstance()
 			.registerThreadLocalAccessor(new ObservationThreadLocalAccessor(functionalTestObservationRegistry));

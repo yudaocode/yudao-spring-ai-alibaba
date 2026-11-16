@@ -37,7 +37,7 @@ target/
 **/node_modules
 
 # windows os
-/extensions/
+
 /h2-data/
 
 # checkstyle report files

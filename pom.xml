@@ -48,6 +48,7 @@
     </developers>
 
     <modules>
+        <module>extensions</module>
         <module>spring-ai-alibaba-bom</module>
         <module>spring-ai-alibaba-graph-core</module>
         <module>spring-ai-alibaba-agent-framework</module>
@@ -86,7 +87,7 @@
     <properties>
 
         <!-- Spring AI Alibaba Version -->
-        <revision>1.1.2.2</revision>
+        <revision>2.1.0-boot3-SNAPSHOT</revision>
 
         <!-- Maven project basic config -->
         <java.version>17</java.version>
@@ -96,9 +97,9 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Spring version -->
-        <spring-ai.version>1.1.2</spring-ai.version>
-        <spring-ai-alibaba-extensions.version>1.1.2.2</spring-ai-alibaba-extensions.version>
-        <spring-boot.version>3.5.8</spring-boot.version>
+        <spring-ai.version>2.1.0-boot3-SNAPSHOT</spring-ai.version>
+        <spring-ai-alibaba-extensions.version>2.1.0-boot3-SNAPSHOT</spring-ai-alibaba-extensions.version>
+        <spring-boot.version>3.5.15</spring-boot.version>
         <springdoc-openapi.version>2.8.8</springdoc-openapi.version>
 
         <!-- DashScope SDK Version -->
@@ -151,7 +152,7 @@
 
         <poi.version>5.4.0</poi.version>
 
-        <mcp.version>0.14.0</mcp.version>
+        <mcp.version>2.2.0</mcp.version>
         <opentelemetry.version>1.38.0</opentelemetry.version>
         <a2a-sdk.version>0.2.5.Beta2</a2a-sdk.version>
 
@@ -198,6 +199,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.networknt</groupId>
+                <artifactId>json-schema-validator</artifactId>
+                <version>2.0.8</version>
+            </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>dashscope-sdk-java</artifactId>
@@ -351,6 +357,60 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.6.3</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>extra-enforcer-rules</artifactId>
+                        <version>1.8.0</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>boot3-compatibility</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <bannedDependencies>
+                                    <searchTransitive>true</searchTransitive>
+                                    <excludes>
+                                        <exclude>org.springframework.boot:*:[4,)</exclude>
+                                        <exclude>org.springframework:*:[7,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-commons:[4,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-jpa:[4,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-jdbc:[4,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-r2dbc:[4,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-redis:[4,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-keyvalue:[4,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-mongodb:[5,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-cassandra:[5,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-neo4j:[8,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-elasticsearch:[6,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-rest-core:[5,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-rest-webmvc:[5,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-couchbase:[6,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-ldap:[4,)</exclude>
+                                        <exclude>tools.jackson.*:*</exclude>
+                                        <exclude>io.modelcontextprotocol.sdk:mcp-json-jackson3</exclude>
+                                        <exclude>org.testcontainers:*:[2,)</exclude>
+                                        <exclude>org.junit.jupiter:*:[6,)</exclude>
+                                        <exclude>jakarta.servlet:jakarta.servlet-api:[6.1,)</exclude>
+                                    </excludes>
+                                    <message>Use only the Spring Boot 3 / Spring 6 / Jackson 2 dependency stack.</message>
+                                </bannedDependencies>
+                                <enforceBytecodeVersion>
+                                    <maxJdkVersion>17</maxJdkVersion>
+                                </enforceBytecodeVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>io.spring.javaformat</groupId>
                 <artifactId>spring-javaformat-maven-plugin</artifactId>

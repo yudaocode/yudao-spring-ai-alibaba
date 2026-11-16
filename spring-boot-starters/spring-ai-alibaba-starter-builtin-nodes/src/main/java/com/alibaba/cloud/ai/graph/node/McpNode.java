@@ -87,7 +87,7 @@ public class McpNode implements NodeAction {
 		HttpClientSseClientTransport.Builder transportBuilder = HttpClientSseClientTransport.builder(baseUrl)
 			.sseEndpoint(sseEndpoint);
 		if (this.headers != null && !this.headers.isEmpty()) {
-			transportBuilder.customizeRequest(req -> this.headers.forEach(req::header));
+			transportBuilder.addHttpRequestCustomizer((req, method, uri, body, context) -> this.headers.forEach(req::header));
 		}
 		this.transport = transportBuilder.build();
 		this.client = McpClient.sync(this.transport).build();

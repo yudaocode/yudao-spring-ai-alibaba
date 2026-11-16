@@ -91,6 +91,8 @@ public interface ZhiPuAIAssistantMessageHandler {
 			}
 			gen.writeEndArray();
 
+            gen.writeBooleanField("reasoningContentOverridden", msg.hasReasoningContentOverride());
+
 			String reasoningContent = msg.getReasoningContent();
 
 			if (reasoningContent != null) {
@@ -102,6 +104,7 @@ public interface ZhiPuAIAssistantMessageHandler {
 
 			Map<String, Object> metadata = msg.getMetadata();
 			serializeMetadata(gen, provider, metadata);
+			MessagePartsHandler.serialize(msg.getParts(), gen);
 		}
 
 	}
@@ -121,6 +124,21 @@ public interface ZhiPuAIAssistantMessageHandler {
 			var textNode = node.get(Field.TEXT.name);
 			var text = (textNode != null && !textNode.isNull()) ? textNode.asText() : "";
 			var metadata = deserializeMetadata(mapper, node);
+            var parts = MessagePartsHandler.deserialize(mapper, node);
+            if (parts != null) {
+                var restored = ZhiPuAiAssistantMessage.builder().parts(parts).properties(metadata).build();
+                var reasoningOverride = node.get(Field.REASONING_CONTENT.name);
+                if (reasoningOverride != null) {
+                    var value = reasoningOverride.isNull() ? null : reasoningOverride.asText();
+                    var explicitOverride = node.get("reasoningContentOverridden");
+                    boolean overridden = explicitOverride != null ? explicitOverride.asBoolean()
+                            : !java.util.Objects.equals(restored.getReasoningContent(), value);
+                    if (overridden) {
+                        restored.setReasoningContent(value);
+                    }
+                }
+                return restored;
+            }
 			var requestsNode = node.get(Field.TOOL_CALLS.name);
 
 			var reasoningContentNode = node.get(Field.REASONING_CONTENT.name);

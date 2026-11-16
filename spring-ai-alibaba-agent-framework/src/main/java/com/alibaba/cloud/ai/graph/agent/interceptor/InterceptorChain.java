@@ -227,7 +227,7 @@ public class InterceptorChain {
 		}
 		return ModelRequest.builder(src)
 				.messages(src.getMessages() != null ? new ArrayList<>(src.getMessages()) : null)
-				.options(src.getOptions() != null ? src.getOptions().copy() : null)
+				.options(src.getOptions() != null ? src.getOptions().mutate().build() : null)
 				.build();
 	}
 

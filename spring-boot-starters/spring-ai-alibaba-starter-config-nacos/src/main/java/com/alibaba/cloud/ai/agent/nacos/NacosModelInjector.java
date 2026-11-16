@@ -43,10 +43,21 @@ public class NacosModelInjector {
 	}
 
 
+	/**
+	 * Retains the versioned endpoint previously supplied by the Spring AI REST adapter.
+	 */
+	public static String normalizeOpenAiBaseUrl(String baseUrl) {
+		if (baseUrl == null || baseUrl.trim().isEmpty()) {
+			return baseUrl;
+		}
+		String normalized = baseUrl.replaceAll("/+$", "");
+		return normalized.matches(".*/v[0-9]+") ? normalized : normalized + "/v1";
+	}
+
 	public static void replaceModel(ChatClient chatClient, ChatModel chatModel, OpenAiChatOptions openAiChatOptions) throws Exception {
 		Object defaultChatClientRequest = getField(chatClient, "defaultChatClientRequest");
 		modifyFinalField(defaultChatClientRequest, "chatModel", chatModel);
-		modifyFinalField(defaultChatClientRequest, "chatOptions", openAiChatOptions);
+		modifyFinalField(defaultChatClientRequest, "optionsCustomizer", openAiChatOptions.mutate());
 	}
 
 	private static Object getField(Object obj, String fieldName) throws Exception {
