@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.alibaba.cloud.ai</groupId>
+        <groupId>cn.iocoder.spring-ai-alibaba</groupId>
         <artifactId>spring-ai-alibaba</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
@@ -50,7 +50,7 @@
             <artifactId>snakeyaml</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.alibaba.cloud.ai</groupId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
             <artifactId>spring-ai-alibaba-graph-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
@@ -103,19 +103,19 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud.ai</groupId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
             <artifactId>spring-ai-alibaba-starter-dashscope</artifactId>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.ai</groupId>
+            <groupId>cn.iocoder.spring-ai</groupId>
             <artifactId>spring-ai-starter-model-openai</artifactId>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.ai</groupId>
+            <groupId>cn.iocoder.spring-ai</groupId>
             <artifactId>spring-ai-starter-model-deepseek</artifactId>
             <scope>test</scope>
         </dependency>

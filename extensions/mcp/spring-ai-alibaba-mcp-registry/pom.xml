@@ -18,7 +18,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.alibaba.cloud.ai</groupId>
+        <groupId>cn.iocoder.spring-ai-alibaba</groupId>
         <artifactId>spring-ai-alibaba-extensions</artifactId>
         <version>${revision}</version>
         <relativePath>../../pom.xml</relativePath>
@@ -59,12 +59,12 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.ai</groupId>
+            <groupId>cn.iocoder.spring-ai</groupId>
             <artifactId>spring-ai-starter-mcp-server</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud.ai</groupId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
             <artifactId>spring-ai-alibaba-mcp-common</artifactId>
             <version>${project.parent.version}</version>
         </dependency>

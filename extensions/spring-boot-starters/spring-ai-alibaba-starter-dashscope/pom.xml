@@ -18,7 +18,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.alibaba.cloud.ai</groupId>
+        <groupId>cn.iocoder.spring-ai-alibaba</groupId>
         <artifactId>spring-ai-alibaba-extensions</artifactId>
         <version>${revision}</version>
         <relativePath>../../pom.xml</relativePath>
@@ -54,13 +54,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.alibaba.cloud.ai</groupId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
             <artifactId>spring-ai-alibaba-dashscope</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud.ai</groupId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
             <artifactId>spring-ai-alibaba-autoconfigure-dashscope</artifactId>
             <version>${revision}</version>
         </dependency>

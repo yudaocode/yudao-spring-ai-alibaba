@@ -1,24 +1,84 @@
 <!-- YUDAO-COMPATIBILITY-INTRO-BEGIN -->
 # yudao-spring-ai-alibaba
 
-yudao-spring-ai-alibaba 是 [Spring AI Alibaba](https://github.com/alibaba/spring-ai-alibaba) 的芋道社区兼容维护版本，并非官方发布。补齐 **Spring AI 2.x** 的 API 和依赖适配，让 **Spring Boot 2.x、Spring Boot 3.x、Spring Boot 4.x** 项目可以选择对应兼容版本。
+yudao-spring-ai-alibaba 是 [Spring AI Alibaba](https://github.com/alibaba/spring-ai-alibaba) 的芋道社区兼容维护版本，并非官方发布。补齐 **Spring AI 2.x** 的 API 和依赖适配，让 **Spring Boot 2.x、Spring Boot 3.x、Spring Boot 4.x** 项目选择对应兼容版本。
 
-## 仓库与分支
+## 仓库与版本线
 
 | 平台 | 仓库地址 |
 | --- | --- |
 | Gitee | [yudao-spring-ai-alibaba](https://gitee.com/yudaocode/yudao-spring-ai-alibaba) |
 | GitHub | [yudao-spring-ai-alibaba](https://github.com/yudaocode/yudao-spring-ai-alibaba) |
 
-| 分支 | Spring Boot 基准 | 目标运行 JDK | 源码开发版本 |
-| --- | --- | --- | --- |
-| [`main`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main) | 4.x（4.1.2） | 17+（消费验证使用25） | `2.1.0-boot4-SNAPSHOT` |
-| [`main-jdk17`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk17) | 3.x（3.5.15） | 17+ | `2.1.0-boot3-SNAPSHOT` |
-| [`main-jdk8`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk8) | 2.x（2.7.18） | 8+ | `2.1.0-boot2-SNAPSHOT` |
+| 分支 | 已验证 Spring Boot | 运行 JDK | 源码开发版本 | 首个正式版本计划 |
+| --- | --- | --- | --- | --- |
+| [`main`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main) | 4.1.2 | 17+（业务消费使用25） | `4.0.0-SNAPSHOT` | `4.0.0` |
+| [`main-jdk17`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk17) | 3.5.15 | 17+ | `3.0.0-SNAPSHOT` | `3.0.0` |
+| [`main-jdk8`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk8) | 2.7.18 | 8+ | `2.0.0-SNAPSHOT` | `2.0.0` |
 
-**当前分支：`main-jdk17`。** 保留官方 Maven groupId `com.alibaba.cloud.ai`、artifactId 和 Java 包名，使用对应兼容版本区分。源码开发版尚未发布 Maven 制品；具体构建方式、已验证范围与 Java 8 可选模块限制见 [COMPATIBILITY.md](COMPATIBILITY.md)。
+版本主号对应宿主的 Boot 大版本；上游源码基线另行记录，不代表使用官方 Spring AI 的同名版本。当前分支：**`main-jdk17`**。
 
-下方保留官方项目原始 README。兼容版的分支、版本和环境要求以本节说明为准。
+Maven groupId 为 **`cn.iocoder.spring-ai-alibaba`**，artifactId 和 Java 包名沿用官方。同一个应用只选择一条版本线，同一项目的模块使用同一版本；替换已有依赖时，也要移除对应官方 groupId 下的同类模块，避免重复类。
+
+**当前仅提供源码开发版，尚未发布这些坐标到 Maven Central 或远端 SNAPSHOT 仓库。** 正式版本列为计划，不能直接从 Central 下载；下面的 SNAPSHOT 示例须先从源码安装到本地仓库。正式发布后，将版本改为对应 `x.0.0` 即可从 Central 引入。
+
+## 如何使用
+
+先安装相同版本线的 [yudao-spring-ai](https://github.com/yudaocode/yudao-spring-ai)，再使用 JDK 17.0.19+ 构建本仓库。Java 8 分支同样使用 JDK 17 构建，产物供 JDK 8 运行。
+
+```bash
+git clone -b main-jdk17 https://github.com/yudaocode/yudao-spring-ai-alibaba.git
+cd yudao-spring-ai-alibaba
+bash ./mvnw -DskipTests -Dmaven.javadoc.skip=true install
+```
+
+宿主保留自己的 Spring Boot parent/BOM，导入两份兼容 BOM，再引入 DashScope starter：
+
+```xml
+<properties>
+    <yudao-spring-ai-alibaba.version>3.0.0-SNAPSHOT</yudao-spring-ai-alibaba.version>
+</properties>
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>cn.iocoder.spring-ai</groupId>
+            <artifactId>spring-ai-bom</artifactId>
+            <version>${yudao-spring-ai-alibaba.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
+            <artifactId>spring-ai-alibaba-bom</artifactId>
+            <version>${yudao-spring-ai-alibaba.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+<dependencies>
+    <dependency>
+        <groupId>cn.iocoder.spring-ai-alibaba</groupId>
+        <artifactId>spring-ai-alibaba-starter-dashscope</artifactId>
+    </dependency>
+</dependencies>
+```
+
+```yaml
+spring:
+  ai:
+    dashscope:
+      api-key: ${DASHSCOPE_API_KEY}
+      chat:
+        options:
+          model: qwen-plus
+```
+
+配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。JDK 8 当前默认支持范围不包含可选 AgentScope starter 和 sandbox，它们将继续分阶段移植。
+
+详细构建、源码基线、API 差异及当前支持边界见 [COMPATIBILITY.md](COMPATIBILITY.md)。
+
+下方逐字保留官方项目原始 README，其中的官方 Maven 坐标和发布状态仅针对上游项目；使用本兼容版时，以本节坐标、版本线和支持范围为准。
 <!-- YUDAO-COMPATIBILITY-INTRO-END -->
 
 ---

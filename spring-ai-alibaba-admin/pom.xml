@@ -17,7 +17,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.alibaba.cloud.ai</groupId>
+    <groupId>cn.iocoder.spring-ai-alibaba</groupId>
     <artifactId>spring-ai-alibaba-admin</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
@@ -46,7 +46,7 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <spring-ai-alibaba.version>1.0.0.3</spring-ai-alibaba.version>
-        <spring-ai.version>2.1.0-boot3-SNAPSHOT</spring-ai.version>
+        <spring-ai.version>3.0.0-SNAPSHOT</spring-ai.version>
         <spring-boot.version>3.5.15</spring-boot.version>
 
         <!-- 数据库相关 -->
@@ -141,12 +141,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
+                <groupId>cn.iocoder.spring-ai-alibaba</groupId>
                 <artifactId>spring-ai-alibaba-admin-server-runtime</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
+                <groupId>cn.iocoder.spring-ai-alibaba</groupId>
                 <artifactId>spring-ai-alibaba-admin-server-core</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -158,7 +158,7 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.springframework.ai</groupId>
+                <groupId>cn.iocoder.spring-ai</groupId>
                 <artifactId>spring-ai-bom</artifactId>
                 <version>${spring-ai.version}</version>
                 <type>pom</type>

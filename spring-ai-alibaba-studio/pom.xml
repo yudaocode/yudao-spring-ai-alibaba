@@ -19,7 +19,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.alibaba.cloud.ai</groupId>
+        <groupId>cn.iocoder.spring-ai-alibaba</groupId>
         <artifactId>spring-ai-alibaba</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
@@ -49,7 +49,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.ai</groupId>
+            <groupId>cn.iocoder.spring-ai</groupId>
             <artifactId>spring-ai-starter-mcp-client</artifactId>
             <scope>test</scope>
         </dependency>
@@ -62,12 +62,12 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud.ai</groupId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
             <artifactId>spring-ai-alibaba-starter-dashscope</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud.ai</groupId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
             <artifactId>spring-ai-alibaba-agent-framework</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
