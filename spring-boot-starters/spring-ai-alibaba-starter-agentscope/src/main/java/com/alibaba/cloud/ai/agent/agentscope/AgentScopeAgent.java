@@ -39,9 +39,7 @@ import io.agentscope.core.agent.EventType;
 import io.agentscope.core.agent.StreamOptions;
 import io.agentscope.core.message.Msg;
 import io.agentscope.core.message.ToolUseBlock;
-import io.agentscope.core.session.Session;
-import io.agentscope.core.state.SessionKey;
-import io.agentscope.core.state.SimpleSessionKey;
+import io.agentscope.core.state.AgentStateStore;
 import io.agentscope.core.tool.ToolExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +51,6 @@ import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.SignalType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,9 +70,9 @@ import static java.lang.String.format;
  * Spring AI Alibaba agent that proxies an AgentScope {@link ReActAgent}.
  * <p>
  * AgentScopeAgent uses an {@link ReActAgent.Builder} to create a new ReActAgent instance
- * for each invocation, so that stateful agent state is correctly isolated per call.
- * When a {@link Session} is configured, state is loaded from the session before each run
- * and saved in {@link Flux#doFinally} after the run completes.
+ * for each invocation, so that stateful agent state is correctly isolated per call. When
+ * an {@link AgentStateStore} is configured, state is loaded before each run and saved
+ * through AgentScope's state-store lifecycle before normal completion.
  * <p>
  * This agent can be used as a {@link BaseAgent} in graph workflows. Call, invoke, and
  * stream are delegated to the underlying graph (START → self → END), whose single node
@@ -91,7 +88,7 @@ public class AgentScopeAgent extends BaseAgent {
 
 	private final ReActAgent.Builder reactAgentBuilder;
 
-	private final Session session;
+	private final AgentStateStore session;
 
 	private final String defaultSessionId;
 
@@ -100,26 +97,24 @@ public class AgentScopeAgent extends BaseAgent {
 	private final String instruction;
 
 	AgentScopeAgent(ReActAgent.Builder reactAgentBuilder, AgentScopeAgentBuilder builder) {
-		super(
-				builder.name != null ? builder.name : "AgentScopeAgent",
-				builder.description != null ? builder.description : "",
-				builder.includeContents,
-				builder.returnReasoningContents,
-				builder.outputKey,
+		super(builder.name != null ? builder.name : "AgentScopeAgent",
+				builder.description != null ? builder.description : "", builder.includeContents,
+				builder.returnReasoningContents, builder.outputKey,
 				builder.outputKeyStrategy != null ? builder.outputKeyStrategy : KeyStrategy.REPLACE);
 		this.reactAgentBuilder = Objects.requireNonNull(reactAgentBuilder, "reactAgentBuilder must not be null");
 		this.session = builder.session;
-		this.defaultSessionId = StringUtils.hasText(builder.defaultSessionId) ? builder.defaultSessionId : DEFAULT_SESSION_ID;
-		this.stateSerializer = builder.stateSerializer != null
-				? builder.stateSerializer
+		this.defaultSessionId = StringUtils.hasText(builder.defaultSessionId) ? builder.defaultSessionId
+				: DEFAULT_SESSION_ID;
+		this.stateSerializer = builder.stateSerializer != null ? builder.stateSerializer
 				: new SpringAIJacksonStateSerializer(OverAllState::new);
 		this.instruction = builder.instruction;
 	}
 
 	/**
-	 * Create a builder that uses the given AgentScope ReActAgent.Builder to instantiate
-	 * a new ReActAgent for each invocation. When {@link AgentScopeAgentBuilder#session(Session)}
-	 * is set, state is loaded before and saved after each run.
+	 * Create a builder that uses the given AgentScope ReActAgent.Builder to instantiate a
+	 * new ReActAgent for each invocation. When
+	 * {@link AgentScopeAgentBuilder#session(AgentStateStore)} is set, state is loaded
+	 * before and saved after each run.
 	 * @param reactAgentBuilder the AgentScope ReActAgent.Builder
 	 * @return a new builder
 	 */
@@ -147,8 +142,7 @@ public class AgentScopeAgent extends BaseAgent {
 	 */
 	public AssistantMessage call(String message, RunnableConfig config) throws GraphRunnerException {
 		return doMessageInvoke(
-				Map.of("messages", List.of(UserMessage.builder().text(message).build()), "input", message),
-				config);
+				Map.of("messages", List.of(UserMessage.builder().text(message).build()), "input", message), config);
 	}
 
 	/**
@@ -181,27 +175,24 @@ public class AgentScopeAgent extends BaseAgent {
 
 	@SuppressWarnings("unchecked")
 	private AssistantMessage doMessageInvoke(Object input, RunnableConfig config) throws GraphRunnerException {
-		Map<String, Object> inputs = input instanceof Map
-				? (Map<String, Object>) input
-				: buildMessageInput(input);
+		Map<String, Object> inputs = input instanceof Map ? (Map<String, Object>) input : buildMessageInput(input);
 		RunnableConfig runnableConfig = config != null ? config : RunnableConfig.builder().build();
 		var stateOpt = invoke(inputs, runnableConfig);
-		return stateOpt
-				.flatMap(s -> s.value("messages"))
-				.filter(List.class::isInstance)
-				.map(list -> (List<?>) list)
-				.filter(list -> !list.isEmpty())
-				.map(list -> list.get(list.size() - 1))
-				.filter(AssistantMessage.class::isInstance)
-				.map(AssistantMessage.class::cast)
-				.orElseThrow(() -> new GraphRunnerException("No AssistantMessage in graph result"));
+		return stateOpt.flatMap(s -> s.value("messages"))
+			.filter(List.class::isInstance)
+			.map(list -> (List<?>) list)
+			.filter(list -> !list.isEmpty())
+			.map(list -> list.get(list.size() - 1))
+			.filter(AssistantMessage.class::isInstance)
+			.map(AssistantMessage.class::cast)
+			.orElseThrow(() -> new GraphRunnerException("No AssistantMessage in graph result"));
 	}
 
 	@Override
 	public Node asNode(boolean includeContents, boolean returnReasoningContents) {
-		return new Node(this.name, (config) -> node_async(new ReActAgentNodeAction(
-				reactAgentBuilder, session, defaultSessionId,
-				outputKey, returnReasoningContents, includeContents, instruction, this.name, this.name)));
+		return new Node(this.name,
+				(config) -> node_async(new ReActAgentNodeAction(reactAgentBuilder, session, defaultSessionId, outputKey,
+						returnReasoningContents, includeContents, instruction, this.name, this.name)));
 	}
 
 	/**
@@ -213,8 +204,7 @@ public class AgentScopeAgent extends BaseAgent {
 	@Override
 	protected StateGraph initGraph() throws GraphStateException {
 		StateGraph graph = new StateGraph(name, buildKeyStrategyFactory(), stateSerializer);
-		graph.addNode(AGENT_NODE_ID, node_async(new ReActAgentNodeAction(
-				reactAgentBuilder, session, defaultSessionId,
+		graph.addNode(AGENT_NODE_ID, node_async(new ReActAgentNodeAction(reactAgentBuilder, session, defaultSessionId,
 				outputKey, returnReasoningContents, includeContents, instruction, AGENT_NODE_ID, this.name)));
 		graph.addEdge(START, AGENT_NODE_ID);
 		graph.addEdge(AGENT_NODE_ID, END);
@@ -234,24 +224,32 @@ public class AgentScopeAgent extends BaseAgent {
 
 	/**
 	 * Node action that runs the AgentScope ReActAgent via stream and returns a Flux of
-	 * GraphResponse. For each apply(), a new ReActAgent is obtained from the supplier,
-	 * state is loaded from the session (if present), the agent runs, and state is saved
-	 * in Flux doFinally. Uses returnReasoningContents to decide whether to emit all isLast
-	 * events as messages or only the final AGENT_RESULT.
+	 * GraphResponse. Each subscription creates a fresh ReActAgent. Its state-store
+	 * lifecycle loads and saves state; termination releases the temporary agent. Uses
+	 * returnReasoningContents to decide whether to emit all isLast events as messages or
+	 * only the final AGENT_RESULT.
 	 */
 	private static final class ReActAgentNodeAction implements NodeActionWithConfig {
 
 		private final ReActAgent.Builder reactAgentBuilder;
-		private final Session session;
+
+		private final AgentStateStore session;
+
 		private final String defaultSessionId;
+
 		private final String outputKey;
+
 		private final boolean returnReasoningContents;
+
 		private final boolean includeContents;
+
 		private final String instruction;
+
 		private final String nodeId;
+
 		private final String agentName;
 
-		ReActAgentNodeAction(ReActAgent.Builder reactAgentBuilder, Session session, String defaultSessionId,
+		ReActAgentNodeAction(ReActAgent.Builder reactAgentBuilder, AgentStateStore session, String defaultSessionId,
 				String outputKey, boolean returnReasoningContents, boolean includeContents, String instruction,
 				String nodeId, String agentName) {
 			this.reactAgentBuilder = Objects.requireNonNull(reactAgentBuilder, "reactAgentBuilder must not be null");
@@ -266,8 +264,8 @@ public class AgentScopeAgent extends BaseAgent {
 		}
 
 		/**
-		 * Build the message list to send to ReActAgent: render instruction template
-		 * via AgentInstructionMessage; if includeContents is false only the instruction
+		 * Build the message list to send to ReActAgent: render instruction template via
+		 * AgentInstructionMessage; if includeContents is false only the instruction
 		 * message is used, otherwise instruction (if set) is prepended to state messages.
 		 */
 		private List<Message> buildMessagesForAgent(OverAllState state, List<Message> stateMessages) {
@@ -319,7 +317,14 @@ public class AgentScopeAgent extends BaseAgent {
 
 		@Override
 		public Map<String, Object> apply(OverAllState state, RunnableConfig config) throws Exception {
-			// Build ToolContext with OverAllState, RunnableConfig, and stateForUpdate map (per ToolContextHelper pattern)
+			Map<String, Object> result = new HashMap<>();
+			result.put(outputKey, Flux.defer(() -> buildResponseStream(state, config)));
+			return result;
+		}
+
+		private Flux<GraphResponse<NodeOutput>> buildResponseStream(OverAllState state, RunnableConfig config) {
+			// Build ToolContext with OverAllState, RunnableConfig, and stateForUpdate map
+			// (per ToolContextHelper pattern)
 			Map<String, Object> stateForUpdate = new HashMap<>();
 			Map<String, Object> contextMap = new HashMap<>();
 			contextMap.put(AGENT_STATE_CONTEXT_KEY, state);
@@ -327,157 +332,154 @@ public class AgentScopeAgent extends BaseAgent {
 			contextMap.put(AGENT_STATE_FOR_UPDATE_CONTEXT_KEY, stateForUpdate);
 			ToolContext toolContext = new ToolContext(contextMap);
 
-			ToolExecutionContext agentScopeCtx = ToolExecutionContext.builder()
-					.register(toolContext)
-					.build();
-			ReActAgent reactAgent = reactAgentBuilder.toolExecutionContext(agentScopeCtx).build();
+			ToolExecutionContext agentScopeCtx = ToolExecutionContext.builder().register(toolContext).build();
 
-			// Derive sessionId from threadId + agentName to isolate each AgentScopeAgent in a graph
-			// (same pattern as ReactAgent.MainAgentNodeAction / getSubGraphRunnableConfig)
+			// Derive sessionId from threadId + agentName to isolate each AgentScopeAgent
+			// in a graph
+			// (same pattern as ReactAgent.MainAgentNodeAction /
+			// getSubGraphRunnableConfig)
 			String sessionId = config.threadId()
-					.map(threadId -> format("%s_%s", threadId, agentName))
-					.orElse(defaultSessionId);
-			SessionKey sessionKey = SimpleSessionKey.of(sessionId);
-			if (session != null && session.exists(sessionKey)) {
-				reactAgent.loadFrom(session, sessionKey);
+				.map(threadId -> format("%s_%s", threadId, agentName))
+				.orElse(defaultSessionId);
+			ReActAgent.Builder scopedBuilder = reactAgentBuilder.copy()
+				.toolExecutionContext(agentScopeCtx)
+				.defaultSessionId(sessionId);
+			if (session != null) {
+				scopedBuilder.stateStore(session);
 			}
 
 			@SuppressWarnings("unchecked")
 			List<Message> stateMessages = (List<Message>) state.value("messages").orElse(List.of());
 			List<Message> messages = buildMessagesForAgent(state, stateMessages);
 			List<Msg> agentScopeMsgs = AgentScopeMessageUtils.toAgentScopeMessages(messages);
-			Flux<Event> eventFlux = reactAgent.stream(agentScopeMsgs, StreamOptions.defaults());
+			ReActAgent reactAgent = scopedBuilder.build();
+			Flux<Event> eventFlux = Flux.defer(() -> reactAgent.stream(agentScopeMsgs, StreamOptions.defaults()));
 
 			// Collect isLast events for building final done state
 			List<Event> isLastEvents = new ArrayList<>();
 
-			Flux<GraphResponse<NodeOutput>> responseFlux = eventFlux
-					.doFinally(signalType -> {
-						// Save on error/cancel only; normal completion saves in Flux.defer before emitting done.
-						// Root cause: (1) Reactor FluxDoFinally forwards onComplete BEFORE running callback, so
-						// block() can return before this runs; (2) graph executor may consider node done when it
-						// receives GraphResponse.done() and proceed to END, completing the stream early.
-						// Must not rely on doFinally for normal completion.
-						if (session != null && signalType != SignalType.ON_COMPLETE) {
-							reactAgent.saveTo(session, sessionKey);
-						}
-					})
-					.concatMap(event -> {
-						if (!event.isLast()) {
-							// Not isLast: skip messages containing toolUseBlocks; convert others to stream output
-							Msg agentScopeMsg = event.getMessage();
-							if (agentScopeMsg != null && !agentScopeMsg.getContentBlocks(ToolUseBlock.class).isEmpty()) {
-								return Flux.empty();
-							}
-							Message msg = AgentScopeMessageUtils.toMessage(agentScopeMsg);
-							if (msg == null) {
-								return Flux.empty();
-							}
-							StreamingOutput<?> so = new StreamingOutput<>(msg, nodeId, agentName, state,
-									OutputType.AGENT_MODEL_STREAMING);
-							return Flux.just(GraphResponse.of((NodeOutput) so));
-						}
-						// isLast: skip if not tool call, not tool response, and not from AGENT_RESULT
-						isLastEvents.add(event);
-						Msg agentScopeMsg = event.getMessage();
-						Message msg = agentScopeMsg != null ? AgentScopeMessageUtils.toMessage(event) : null;
-						if (msg == null) {
-							return Flux.empty();
-						}
+			Flux<GraphResponse<NodeOutput>> responseFlux = eventFlux.concatMap(event -> {
+				if (!event.isLast()) {
+					// Not isLast: skip messages containing toolUseBlocks; convert others
+					// to stream output
+					Msg agentScopeMsg = event.getMessage();
+					if (agentScopeMsg != null && !agentScopeMsg.getContentBlocks(ToolUseBlock.class).isEmpty()) {
+						return Flux.empty();
+					}
+					Message msg = AgentScopeMessageUtils.toMessage(agentScopeMsg);
+					if (msg == null) {
+						return Flux.empty();
+					}
+					StreamingOutput<?> so = new StreamingOutput<>(msg, nodeId, agentName, state,
+							OutputType.AGENT_MODEL_STREAMING);
+					return Flux.just(GraphResponse.of((NodeOutput) so));
+				}
+				// isLast: skip if not tool call, not tool response, and not from
+				// AGENT_RESULT
+				isLastEvents.add(event);
+				Msg agentScopeMsg = event.getMessage();
+				Message msg = agentScopeMsg != null ? AgentScopeMessageUtils.toMessage(event) : null;
+				if (msg == null) {
+					return Flux.empty();
+				}
 
-						OutputType outputType = msg instanceof ToolResponseMessage
-								? OutputType.AGENT_TOOL_FINISHED
-								: OutputType.AGENT_MODEL_FINISHED;
-						StreamingOutput<?> so = new StreamingOutput<>(msg, nodeId, agentName, state, outputType);
-						return Flux.just(GraphResponse.of((NodeOutput) so));
-					})
-					.concatWith(Flux.defer(() -> {
-						// Save ReActAgent state before emitting done. Must run here (not in doFinally) because
-						// doFinally forwards onComplete before its callback runs, and the graph executor may
-						// proceed to END when it receives GraphResponse.done(), so block() can return before
-						// doFinally's callback finishes.
-						if (session != null) {
-							reactAgent.saveTo(session, sessionKey);
+				OutputType outputType = msg instanceof ToolResponseMessage ? OutputType.AGENT_TOOL_FINISHED
+						: OutputType.AGENT_MODEL_FINISHED;
+				StreamingOutput<?> so = new StreamingOutput<>(msg, nodeId, agentName, state, outputType);
+				return Flux.just(GraphResponse.of((NodeOutput) so));
+			}).concatWith(Flux.defer(() -> {
+				// Build final done state from collected isLast events
+				if (isLastEvents.isEmpty()) {
+					logger.debug("isLastEvents is empty, skipping done state build from events");
+					return Flux.just(GraphResponse.done(stateForUpdate));
+				}
+
+				Map<String, Object> doneState = new HashMap<>();
+
+				List<Message> allMessages = new ArrayList<>(messages);
+				for (Event e : isLastEvents) {
+					Message m = AgentScopeMessageUtils.toMessage(e);
+					if (m == null) {
+						continue;
+					}
+					// Skip duplicate AGENT_RESULT: same type and content as previous
+					// message
+					if (e.getType() == EventType.AGENT_RESULT && !allMessages.isEmpty()) {
+						Message last = allMessages.get(allMessages.size() - 1);
+						if (Objects.equals(m.getMessageType(), last.getMessageType())
+								&& Objects.equals(m.getText(), last.getText())) {
+							continue;
 						}
-						// Build final done state from collected isLast events
-						if (isLastEvents.isEmpty()) {
-							logger.debug("isLastEvents is empty, skipping done state build from events");
-							return Flux.just(GraphResponse.done(stateForUpdate));
+					}
+					allMessages.add(m);
+				}
+
+				if (allMessages.isEmpty()) {
+					logger.debug("No valid messages from isLastEvents, skipping done state build");
+					return Flux.just(GraphResponse.done(stateForUpdate));
+				}
+
+				Message lastResultMessage = allMessages.get(allMessages.size() - 1);
+				if (!"messages".equals(outputKey)) {
+					doneState.put(outputKey, lastResultMessage);
+					// If outputKey is not "messages" and messages is not already in
+					// doneState,
+					// make sure messages updated for consistent context for next agent
+					// node.
+				}
+				if (!returnReasoningContents) {
+					Message firstUserOrInstruction = null;
+					for (Message m : allMessages) {
+						if (m instanceof UserMessage || m instanceof AgentInstructionMessage) {
+							firstUserOrInstruction = m;
+							break;
 						}
+					}
+					List<Message> resultMessages = new ArrayList<>();
+					if (firstUserOrInstruction != null && firstUserOrInstruction != lastResultMessage) {
+						resultMessages.add(firstUserOrInstruction);
+					}
+					resultMessages.add(lastResultMessage);
+					doneState.put("messages", resultMessages);
+				}
+				else {
+					doneState.put("messages", allMessages);
+				}
 
-						Map<String, Object> doneState = new HashMap<>();
+				// Flatten stateForUpdate (updated by tools via ToolContextHelper) into
+				// doneState
+				doneState.putAll(stateForUpdate);
 
-						List<Message> allMessages = new ArrayList<>(messages);
-						for (Event e : isLastEvents) {
-							Message m = AgentScopeMessageUtils.toMessage(e);
-							if (m == null) {
-								continue;
-							}
-							// Skip duplicate AGENT_RESULT: same type and content as previous message
-							if (e.getType() == EventType.AGENT_RESULT && !allMessages.isEmpty()) {
-								Message last = allMessages.get(allMessages.size() - 1);
-								if (Objects.equals(m.getMessageType(), last.getMessageType())
-										&& Objects.equals(m.getText(), last.getText())) {
-									continue;
-								}
-							}
-							allMessages.add(m);
-						}
+				return Flux.just(GraphResponse.done(doneState));
+			})).doFinally(signal -> reactAgent.close());
 
-						if (allMessages.isEmpty()) {
-							logger.debug("No valid messages from isLastEvents, skipping done state build");
-							return Flux.just(GraphResponse.done(stateForUpdate));
-						}
-
-						Message lastResultMessage = allMessages.get(allMessages.size() - 1);
-						if (!"messages".equals(outputKey)) {
-							doneState.put(outputKey, lastResultMessage);
-							// If outputKey is not "messages" and messages is not already in doneState,
-							// make sure messages updated for consistent context for next agent node.
-						}
-						if (!returnReasoningContents) {
-							Message firstUserOrInstruction = null;
-							for (Message m : allMessages) {
-								if (m instanceof UserMessage || m instanceof AgentInstructionMessage) {
-									firstUserOrInstruction = m;
-									break;
-								}
-							}
-							List<Message> resultMessages = new ArrayList<>();
-							if (firstUserOrInstruction != null && firstUserOrInstruction != lastResultMessage) {
-								resultMessages.add(firstUserOrInstruction);
-							}
-							resultMessages.add(lastResultMessage);
-							doneState.put("messages", resultMessages);
-						} else {
-							doneState.put("messages", allMessages);
-						}
-
-						// Flatten stateForUpdate (updated by tools via ToolContextHelper) into doneState
-						doneState.putAll(stateForUpdate);
-
-						return Flux.just(GraphResponse.done(doneState));
-					}));
-
-			Map<String, Object> result = new HashMap<>();
-			result.put(outputKey, responseFlux);
-			return result;
+			return responseFlux;
 		}
-	}
 
+	}
 
 	public static final class AgentScopeAgentBuilder {
 
 		private final ReActAgent.Builder reactAgentBuilder;
-		private Session session;
+
+		private AgentStateStore session;
+
 		private String defaultSessionId;
+
 		private String name;
+
 		private String description;
+
 		private String instruction;
+
 		private boolean includeContents = true;
+
 		private boolean returnReasoningContents = false;
+
 		private String outputKey;
+
 		private KeyStrategy outputKeyStrategy = KeyStrategy.REPLACE;
+
 		private StateSerializer stateSerializer;
 
 		private AgentScopeAgentBuilder(ReActAgent.Builder reactAgentBuilder) {
@@ -485,16 +487,31 @@ public class AgentScopeAgent extends BaseAgent {
 		}
 
 		/**
-		 * Set the session for loading and saving ReActAgent state per run. When set,
-		 * state is loaded before each invocation and saved in doFinally after the run.
+		 * Set the store for loading and saving ReActAgent state per run.
+		 * @deprecated use {@link #stateStore(AgentStateStore)} with AgentScope 2.x.
+		 *
 		 */
-		public AgentScopeAgentBuilder session(Session session) {
-			this.session = session;
+		@Deprecated
+		public AgentScopeAgentBuilder session(AgentStateStore session) {
+			return stateStore(session);
+		}
+
+		/**
+		 * Configure AgentScope 2.x state persistence, isolated by graph thread and agent.
+		 * The AgentScope call lifecycle loads and saves state before emitting its
+		 * terminal event.
+		 * @param stateStore state store, or null to retain the ReActAgent builder
+		 * configuration
+		 * @return this builder
+		 */
+		public AgentScopeAgentBuilder stateStore(AgentStateStore stateStore) {
+			this.session = stateStore;
 			return this;
 		}
 
 		/**
-		 * Set the default session id used when {@link RunnableConfig#threadId()} is empty.
+		 * Set the default session id used when {@link RunnableConfig#threadId()} is
+		 * empty.
 		 */
 		public AgentScopeAgentBuilder defaultSessionId(String defaultSessionId) {
 			this.defaultSessionId = defaultSessionId;
@@ -502,8 +519,8 @@ public class AgentScopeAgent extends BaseAgent {
 		}
 
 		/**
-		 * Set the instruction (optionally a template with placeholders like {@code {input}}).
-		 * Rendered with state before being passed to the ReActAgent.
+		 * Set the instruction (optionally a template with placeholders like
+		 * {@code {input}}). Rendered with state before being passed to the ReActAgent.
 		 */
 		public AgentScopeAgentBuilder instruction(String instruction) {
 			this.instruction = instruction;
@@ -548,5 +565,7 @@ public class AgentScopeAgent extends BaseAgent {
 		public AgentScopeAgent build() {
 			return new AgentScopeAgent(reactAgentBuilder, this);
 		}
+
 	}
+
 }

@@ -27,19 +27,42 @@ The branch is a development SNAPSHOT. Maven artifact publication is managed sepa
 
 ## Verified scope (2026-11-16)
 
-Default reactor: Boot2=26 modules; Boot3/4=23 modules. Unit suites and dependency gates passed by combined module/closure receipts; this is not a claim that every external integration ran. Boot2 executes on real Java8; Boot3 on Java17; Boot4 consumer tests on Java25.
+Default reactor: Boot2=27 modules; Boot3/4=23 modules. Unit suites and dependency gates passed by combined module/closure receipts; this is not a claim that every external integration ran. Boot2 executes on real Java8; Boot3 on Java17; Boot4 consumer tests on Java25.
 
 Native DashScope sync/UTF8 SSE/provider errors and ChatClient option merging have five common HTTP tests passing on each JVM. The native getOptions method returns defensive copies; the legacy getter delegates. Global embedding selection uses spring.ai.model.embedding. The extensions BOM does not mark the model runtime optional.
 
 Tika parser's original14 tests pass on each line with the corresponding family (2.9.4/3.3.1/4.0.0); Boot4 uses TikaInputStream and standard-package type pom.
 
-The three frozen business consumers start and pass local chat/image/knowledge flows. AgentScope SDK compatibility is a later phase. Java8 currently excludes its optional starter and runtime-sandbox module from default build/BOM; those are not claimed as supported. Original consumer working directories remain untouched. No remote release has been published.
+The three frozen business consumers start and pass local chat/image/knowledge flows. The optional AgentScope adapter uses the Yudao SDK on every branch: main/main-jdk17 use 3.0.0-SNAPSHOT and main-jdk8 uses 2.0.0-SNAPSHOT. The Java8 adapter is included in its default reactor/BOM; its separate runtime-sandbox module remains excluded pending the independent port. Original consumer working directories remain untouched. No remote release has been published.
 
 ## Additional validation and limits
 
 The same ten local HTTP acceptance tests pass in all three business lines, including native DashScope embedding/image credentials, requested/default models and application observation callbacks. The matched chat service/tool regressions pass on actual JVM8/17/25 (51/54/61 tests). Streaming reasoning consumption uses the delegate delta rather than appending cumulative content.
 
-The optional AgentScope adapter currently follows the pinned upstream integration (`agentscope-core` 1.0.9). Migration to current AgentScope 2.x is a separate compatibility task; these checks do not claim that migration is complete. Java8 excludes the optional AgentScope starter and runtime-sandbox from its default supported reactor/BOM.
+The optional AgentScope adapter uses `cn.iocoder.agentscope:agentscope-core:3.0.0-SNAPSHOT`, from the pinned current AgentScope source (the compatibility version is independent of upstream's version). It uses `AgentStateStore` instead of the removed `Session` API. Each invocation copies the builder, scopes persisted state by graph thread and agent name, creates the temporary agent on subscription, and closes it on termination. `session(AgentStateStore)` is retained as a deprecated builder alias; use `stateStore(AgentStateStore)` for new code. Model errors save safe input before propagating; cancellation retains committed file state without an extra blanket save.
+
+The adapter's local regression suite passes on native JDK17 for both Boot3 and Boot4: 18 tests, 0 failures/errors, 5 external-service skips. It covers multi-turn/thread/agent isolation, lazy lifecycle, failed model calls and cancellation recovery through a fresh graph. This is local adapter evidence; skipped provider integrations are not covered by it.
+
+### Using the optional AgentScope adapter
+
+Before installing this repository, install `yudao-agentscope-java` branch `main` with JDK17 and an installed Maven 3.9+. That SDK has no Maven wrapper. From its own checkout, build the BOMs, core and DashScope model extension used by this adapter:
+
+```bash
+git clone -b main https://github.com/yudaocode/yudao-agentscope-java.git
+cd yudao-agentscope-java
+mvn -pl agentscope-dependencies-bom,agentscope-distribution/agentscope-bom,agentscope-extensions/agentscope-extensions-model/agentscope-extensions-model-dashscope -am -DskipTests -Dmaven.javadoc.skip=true install
+```
+
+Then return to your Alibaba checkout for its build. Alongside the Spring AI/Alibaba BOMs above, add:
+
+```xml
+<dependency>
+    <groupId>cn.iocoder.spring-ai-alibaba</groupId>
+    <artifactId>spring-ai-alibaba-starter-agentscope</artifactId>
+</dependency>
+```
+
+The Alibaba BOM manages the adapter version; its POM selects AgentScope `3.0.0-SNAPSHOT` on both Boot3 and Boot4. Do not use the Boot4 Alibaba version as the AgentScope version. Configure an AgentScope `ReActAgent.Builder` with your `Model`, then wrap it with `AgentScopeAgent.fromBuilder(builder).name("assistant").stateStore(store).build()`. `store` is an AgentScope `AgentStateStore` such as `InMemoryAgentStateStore` or `JsonFileAgentStateStore`; pass a graph `RunnableConfig` with a thread ID for persisted conversations. Java packages remain `io.agentscope.*` and `com.alibaba.cloud.ai.*`. DashScope starter does not acquire AgentScope unless this adapter is explicitly added.
 
 ## Retained admin source boundary
 
