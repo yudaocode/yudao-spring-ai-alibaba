@@ -55,7 +55,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.EnabledIfDockerAvailable;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static com.alibaba.cloud.ai.graph.StateGraph.END;
@@ -67,9 +66,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@EnabledIfDockerAvailable
 @EnabledIf(value = "isCI", disabledReason = "this test is designed to run only in the GitHub CI environment.")
-@Testcontainers
+@Testcontainers(disabledWithoutDocker = true)
 public class PostgresSaverTest {
     private static boolean isCI() {
         return "true".equalsIgnoreCase(System.getProperty("CI", System.getenv("CI")));
@@ -85,7 +83,8 @@ public class PostgresSaverTest {
     };
 
     static PostgreSQLContainer<?> postgres =
-            new PostgreSQLContainer<>(IMAGES[1])
+            new PostgreSQLContainer<>(org.testcontainers.utility.DockerImageName.parse(IMAGES[1])
+                    .asCompatibleSubstituteFor("postgres"))
                             .withDatabaseName(DATABASE_NAME);
 
     static KeyStrategyFactory keyStrategyFactory = () -> {

@@ -16,7 +16,6 @@
 
 package com.alibaba.cloud.ai.agent.nacos;
 
-import com.alibaba.cloud.ai.agent.nacos.utils.ChatOptionsProxy;
 import com.alibaba.cloud.ai.agent.nacos.vo.AgentVO;
 import com.alibaba.cloud.ai.agent.nacos.vo.McpServersVO;
 import com.alibaba.cloud.ai.agent.nacos.vo.ModelVO;
@@ -35,16 +34,13 @@ import com.alibaba.cloud.ai.graph.agent.interceptor.ToolInterceptor;
 import com.alibaba.cloud.ai.graph.agent.node.AgentLlmNode;
 import com.alibaba.cloud.ai.graph.agent.node.AgentToolNode;
 import com.alibaba.cloud.ai.mcp.nacos.service.NacosMcpOperationService;
-import com.alibaba.cloud.ai.observation.model.ObservationMetadataAwareOptions;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.client.config.NacosConfigService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -69,9 +65,7 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.withSettings;
 
 /**
  * Unit tests to verify that interceptors provided via interceptors() method are correctly separated into
@@ -89,7 +83,6 @@ class NacosReactAgentBuilderInterceptorTest {
     
     private NacosOptions nacosOptions;
     
-    private MockedStatic<ChatOptionsProxy> chatOptionsProxyMockedStatic;
     
     /**
      * Simple ModelInterceptor implementation for testing.
@@ -276,33 +269,9 @@ class NacosReactAgentBuilderInterceptorTest {
         nacosOptions = createMockNacosOptions();
         setupMockNacosConfigs();
         
-        // Mock the static ChatOptionsProxy.createProxy method to avoid CGLIB issues
-        chatOptionsProxyMockedStatic = mockStatic(ChatOptionsProxy.class);
-        chatOptionsProxyMockedStatic.when(() -> ChatOptionsProxy.createProxy(any(ChatOptions.class), anyMap()))
-                .thenAnswer(invocation -> {
-                    // Return a mock that implements both interfaces
-                    OpenAiChatOptions mockOptions = mock(OpenAiChatOptions.class,
-                            withSettings().extraInterfaces(ObservationMetadataAwareOptions.class));
-                    
-                    // Setup basic behavior
-                    when(mockOptions.getModel()).thenReturn("gpt-4");
-                    when(mockOptions.getTemperature()).thenReturn(0.7);
-                    
-                    // Setup ObservationMetadataAwareOptions behavior
-                    Map<String, String> metadata = new HashMap<>();
-                    ObservationMetadataAwareOptions observationOptions = (ObservationMetadataAwareOptions) mockOptions;
-                    when(observationOptions.getObservationMetadata()).thenReturn(metadata);
-                    
-                    return mockOptions;
-                });
+
     }
-    
-    @AfterEach
-    void tearDown() {
-        if (chatOptionsProxyMockedStatic != null) {
-            chatOptionsProxyMockedStatic.close();
-        }
-    }
+
     
     /**
      * Helper method to get llmNode from ReactAgent using reflection.

@@ -75,11 +75,11 @@ public class DefaultBuilder extends Builder {
 					this.observationRegistry == null ? ObservationRegistry.NOOP : this.observationRegistry,
 					this.customObservationConvention, this.advisorObservationConvention);
 			if (effectiveOptions != null) {
-				clientBuilder.defaultOptions(effectiveOptions);
+				clientBuilder.defaultOptions(effectiveOptions != null ? effectiveOptions.mutate() : ChatOptions.builder());
 			}
 			chatClient = clientBuilder.build();
 		} else {
-			chatClient = chatClient.mutate().defaultOptions(effectiveOptions).build();
+			chatClient = chatClient.mutate().defaultOptions(effectiveOptions != null ? effectiveOptions.mutate() : ChatOptions.builder()).build();
 		}
 
 		AgentLlmNode.Builder llmNodeBuilder = AgentLlmNode.builder()
@@ -358,7 +358,7 @@ public class DefaultBuilder extends Builder {
 		}
 //		Class<ChatOptions> targetClass = (Class<ChatOptions>) sourceOptionsClass;
 //		ChatOptions agentAsSourceType = ModelOptionsUtils.copyToTarget(agentOptions, ChatOptions.class, targetClass);
-		return (ChatOptions) ModelOptionsUtils.merge(agentOptions, sourceOptions, sourceOptionsClass);
+		return sourceOptions.mutate().combineWith(agentOptions.mutate()).build();
 	}
 
 	/**
@@ -400,10 +400,16 @@ public class DefaultBuilder extends Builder {
 			if (defaultChatClientRequest == null) {
 				return null;
 			}
-			Field chatOptionsField = defaultChatClientRequest.getClass().getDeclaredField("chatOptions");
+			Field chatOptionsField = defaultChatClientRequest.getClass().getDeclaredField("optionsCustomizer");
 			chatOptionsField.setAccessible(true);
 			Object options = chatOptionsField.get(defaultChatClientRequest);
-			return options instanceof ChatOptions ? (ChatOptions) options : null;
+			Field modelField = defaultChatClientRequest.getClass().getDeclaredField("chatModel");
+            modelField.setAccessible(true);
+            ChatOptions modelOptions = ((ChatModel) modelField.get(defaultChatClientRequest)).getDefaultOptions();
+            if (options instanceof ChatOptions.Builder<?> builder) {
+                return modelOptions != null ? modelOptions.mutate().combineWith(builder).build() : builder.build();
+            }
+            return modelOptions;
 		}
 		catch (NoSuchFieldException | IllegalAccessException e) {
 			if (logger.isDebugEnabled()) {

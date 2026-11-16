@@ -71,6 +71,7 @@ public interface UserMessageHandler {
 		private void serializeFields(UserMessage msg, JsonGenerator gen, SerializerProvider provider) throws IOException {
 			gen.writeStringField(Field.TEXT.name, msg.getText());
 			serializeMetadata(gen, provider, msg.getMetadata());
+			MessagePartsHandler.serialize(msg.getParts(), gen);
 
 			// gen.writeArrayFieldStart( Property.MEDIA.field);
 			// for (var media : msg.getMedia()) {
@@ -93,6 +94,10 @@ public interface UserMessageHandler {
 
 			var text = node.findValue(Field.TEXT.name).asText();
 			var metadata = deserializeMetadata(mapper, node);
+            var parts = MessagePartsHandler.deserialize(mapper, node);
+            if (parts != null) {
+                return UserMessage.builder().parts(parts).metadata(metadata).build();
+            }
 
 			return UserMessage.builder().text(text).metadata(metadata).build();
 

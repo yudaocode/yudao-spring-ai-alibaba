@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.alibaba.cloud.ai.graph.node;
 
 import com.alibaba.cloud.ai.graph.OverAllState;
@@ -27,9 +26,8 @@ import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.ToolDefinition;
 import org.springframework.ai.tool.metadata.ToolMetadata;
 import org.springframework.lang.Nullable;
-import org.springframework.retry.policy.SimpleRetryPolicy;
-import org.springframework.retry.support.RetryTemplate;
-
+import org.springframework.core.retry.RetryPolicy;
+import org.springframework.core.retry.RetryTemplate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -37,179 +35,165 @@ import java.util.Map;
 // Agent node
 public class AgentNode implements NodeAction {
 
-	private static final Logger logger = LoggerFactory.getLogger(AgentNode.class);
+    private static final Logger logger = LoggerFactory.getLogger(AgentNode.class);
 
-	private final ChatClient chatClient;
+    private final ChatClient chatClient;
 
-	private final ToolCallback[] toolCallbacks;
+    private final ToolCallback[] toolCallbacks;
 
-	private final Strategy strategy;
+    private final Strategy strategy;
 
-	// Prompt can contain variables in the format {varName}, which will be replaced before calling the Client
-	private final String systemPrompt;
+    // Prompt can contain variables in the format {varName}, which will be replaced before calling the Client
+    private final String systemPrompt;
 
-	private final String userPrompt;
+    private final String userPrompt;
 
-	private final Integer maxIterations;
+    private final Integer maxIterations;
 
-	private final String outputKey;
+    private final String outputKey;
 
-	private final RetryTemplate retryTemplate;
+    private final RetryTemplate retryTemplate;
 
-	public enum Strategy {
+    public enum Strategy {
 
-		REACT, TOOL_CALLING
+        REACT, TOOL_CALLING
+    }
 
-	}
+    public AgentNode(ChatClient chatClient, ToolCallback[] toolCallbacks, Strategy strategy, String systemPrompt, String userPrompt, Integer maxIterations, String outputKey) {
+        this.chatClient = chatClient;
+        this.strategy = strategy == null ? Strategy.REACT : strategy;
+        this.systemPrompt = systemPrompt == null ? "" : systemPrompt;
+        this.userPrompt = userPrompt == null ? "" : userPrompt;
+        this.maxIterations = maxIterations == null ? 1 : maxIterations;
+        this.outputKey = outputKey == null ? "agent_output" : outputKey;
+        if (this.chatClient == null) {
+            throw new IllegalArgumentException("ChatClient is required");
+        }
+        // Initialize retryTemplate
+        this.retryTemplate = new RetryTemplate(RetryPolicy.builder()
+            .maxRetries(this.maxIterations - 1).delay(java.time.Duration.ZERO).includes(Exception.class).build());
+        // Initialize toolCallbacks
+        this.toolCallbacks = Arrays.stream(toolCallbacks).map(toolCallback -> {
+            // ToolCalling strategy returns directly after calling the tool, needs to be wrapped to set returnDirect to true
+            if (this.strategy == Strategy.TOOL_CALLING && !toolCallback.getToolMetadata().returnDirect()) {
+                final ToolMetadata toolMetadata = ToolMetadata.builder().returnDirect(true).build();
+                return new ToolCallback() {
 
-	public AgentNode(ChatClient chatClient, ToolCallback[] toolCallbacks, Strategy strategy, String systemPrompt,
-			String userPrompt, Integer maxIterations, String outputKey) {
-		this.chatClient = chatClient;
-		this.strategy = strategy == null ? Strategy.REACT : strategy;
-		this.systemPrompt = systemPrompt == null ? "" : systemPrompt;
-		this.userPrompt = userPrompt == null ? "" : userPrompt;
-		this.maxIterations = maxIterations == null ? 1 : maxIterations;
-		this.outputKey = outputKey == null ? "agent_output" : outputKey;
-		if (this.chatClient == null) {
-			throw new IllegalArgumentException("ChatClient is required");
-		}
+                    @Override
+                    public ToolDefinition getToolDefinition() {
+                        return toolCallback.getToolDefinition();
+                    }
 
-		// Initialize retryTemplate
-		this.retryTemplate = new RetryTemplate();
-		SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();
-		retryPolicy.setMaxAttempts(this.maxIterations);
-		this.retryTemplate.setRetryPolicy(retryPolicy);
+                    @Override
+                    public ToolMetadata getToolMetadata() {
+                        // ToolMetadata with returnDirect set to true
+                        return toolMetadata;
+                    }
 
-		// Initialize toolCallbacks
-		this.toolCallbacks = Arrays.stream(toolCallbacks).map(toolCallback -> {
-			// ToolCalling strategy returns directly after calling the tool, needs to be wrapped to set returnDirect to true
-			if (this.strategy == Strategy.TOOL_CALLING && !toolCallback.getToolMetadata().returnDirect()) {
-				final ToolMetadata toolMetadata = ToolMetadata.builder().returnDirect(true).build();
-				return new ToolCallback() {
-					@Override
-					public ToolDefinition getToolDefinition() {
-						return toolCallback.getToolDefinition();
-					}
+                    @Override
+                    public String call(String toolInput) {
+                        return toolCallback.call(toolInput);
+                    }
 
-					@Override
-					public ToolMetadata getToolMetadata() {
-						// ToolMetadata with returnDirect set to true
-						return toolMetadata;
-					}
+                    @Override
+                    public String call(String toolInput, @Nullable ToolContext tooContext) {
+                        return toolCallback.call(toolInput, tooContext);
+                    }
+                };
+            } else {
+                return toolCallback;
+            }
+        }).toArray(ToolCallback[]::new);
+    }
 
-					@Override
-					public String call(String toolInput) {
-						return toolCallback.call(toolInput);
-					}
+    @Override
+    public Map<String, Object> apply(OverAllState state) throws Exception {
+        String userPrompt = new PromptTemplate(this.userPrompt).render(state.data());
+        String systemPrompt = new PromptTemplate(this.systemPrompt).render(state.data());
+        String output = switch(this.strategy) {
+            case TOOL_CALLING, REACT ->
+                {
+                    // Retry mechanism
+                    try {
+                        yield org.springframework.ai.retry.RetryUtils.execute(this.retryTemplate, () -> {
+                            String content = this.chatClient.prompt(systemPrompt).toolCallbacks(this.toolCallbacks).user(userPrompt).call().content();
+                            if (content == null) {
+                                logger.warn("ChatClient Call Return Null...");
+                                throw new RuntimeException("ChatClient Call Return Null...");
+                            }
+                            return content;
+                        });
+                    } catch (Exception e) {
+                        logger.error("Attempted to the maximum number of times but still failed!");
+                        yield null;
+                    }
+                }
+        };
+        return Map.of(this.outputKey, output == null ? "" : output);
+    }
 
-					@Override
-					public String call(String toolInput, @Nullable ToolContext tooContext) {
-						return toolCallback.call(toolInput, tooContext);
-					}
+    public static Builder builder() {
+        return new Builder();
+    }
 
-				};
-			}
-			else {
-				return toolCallback;
-			}
-		}).toArray(ToolCallback[]::new);
-	}
+    public static class Builder {
 
-	@Override
-	public Map<String, Object> apply(OverAllState state) throws Exception {
-		String userPrompt = new PromptTemplate(this.userPrompt).render(state.data());
-		String systemPrompt = new PromptTemplate(this.systemPrompt).render(state.data());
-		String output = switch (this.strategy) {
-			case TOOL_CALLING, REACT -> {
-				// Retry mechanism
-				try {
-					yield this.retryTemplate.execute(retryContext -> {
-						String content = this.chatClient.prompt(systemPrompt)
-							.toolCallbacks(this.toolCallbacks)
-							.user(userPrompt)
-							.call()
-							.content();
-						if (content == null) {
-							logger.warn("ChatClient Call Return Null...");
-							throw new RuntimeException("ChatClient Call Return Null...");
-						}
-						return content;
-					});
-				}
-				catch (Exception e) {
-					logger.error("Attempted to the maximum number of times but still failed!");
-					yield null;
-				}
-			}
-		};
-		return Map.of(this.outputKey, output == null ? "" : output);
-	}
+        private ChatClient chatClient;
 
-	public static Builder builder() {
-		return new Builder();
-	}
+        private ToolCallback[] toolCallbacks;
 
-	public static class Builder {
+        private Strategy strategy;
 
-		private ChatClient chatClient;
+        private String systemPrompt;
 
-		private ToolCallback[] toolCallbacks;
+        private String userPrompt;
 
-		private Strategy strategy;
+        private Integer maxIterations;
 
-		private String systemPrompt;
+        private String outputKey;
 
-		private String userPrompt;
+        public Builder chatClient(ChatClient chatClient) {
+            this.chatClient = chatClient;
+            return this;
+        }
 
-		private Integer maxIterations;
+        public Builder toolCallbacks(ToolCallback[] toolCallbacks) {
+            this.toolCallbacks = toolCallbacks;
+            return this;
+        }
 
-		private String outputKey;
+        public Builder toolCallBacks(List<ToolCallback> toolCallbacks) {
+            this.toolCallbacks = toolCallbacks.toArray(ToolCallback[]::new);
+            return this;
+        }
 
-		public Builder chatClient(ChatClient chatClient) {
-			this.chatClient = chatClient;
-			return this;
-		}
+        public Builder strategy(Strategy strategy) {
+            this.strategy = strategy;
+            return this;
+        }
 
-		public Builder toolCallbacks(ToolCallback[] toolCallbacks) {
-			this.toolCallbacks = toolCallbacks;
-			return this;
-		}
+        public Builder systemPrompt(String systemPrompt) {
+            this.systemPrompt = systemPrompt;
+            return this;
+        }
 
-		public Builder toolCallBacks(List<ToolCallback> toolCallbacks) {
-			this.toolCallbacks = toolCallbacks.toArray(ToolCallback[]::new);
-			return this;
-		}
+        public Builder userPrompt(String userPrompt) {
+            this.userPrompt = userPrompt;
+            return this;
+        }
 
-		public Builder strategy(Strategy strategy) {
-			this.strategy = strategy;
-			return this;
-		}
+        public Builder maxIterations(Integer maxIterations) {
+            this.maxIterations = maxIterations;
+            return this;
+        }
 
-		public Builder systemPrompt(String systemPrompt) {
-			this.systemPrompt = systemPrompt;
-			return this;
-		}
+        public Builder outputKey(String outputKey) {
+            this.outputKey = outputKey;
+            return this;
+        }
 
-		public Builder userPrompt(String userPrompt) {
-			this.userPrompt = userPrompt;
-			return this;
-		}
-
-		public Builder maxIterations(Integer maxIterations) {
-			this.maxIterations = maxIterations;
-			return this;
-		}
-
-		public Builder outputKey(String outputKey) {
-			this.outputKey = outputKey;
-			return this;
-		}
-
-		public AgentNode build() {
-			return new AgentNode(chatClient, toolCallbacks, strategy, systemPrompt, userPrompt, maxIterations,
-					outputKey);
-		}
-
-	}
-
+        public AgentNode build() {
+            return new AgentNode(chatClient, toolCallbacks, strategy, systemPrompt, userPrompt, maxIterations, outputKey);
+        }
+    }
 }

@@ -198,7 +198,8 @@ class SerializationHelper {
 								|| propertyWriter.getTypeSerializer() != null
 								|| (propertyValue == null
 										? propertyWriter.hasNullSerializer()
-										: propertyWriter.hasSerializer());
+										: hasAssignedPropertySerializer(provider, propertyWriter, accessor,
+											property.getPrimaryType(), propertyValue));
 						if (hasAssignedSerializer) {
 							normalized.putAll(applyPropertyWriter(provider, propertyWriter, record));
 						}
@@ -385,6 +386,27 @@ class SerializationHelper {
 		};
 	}
 
+	private static boolean hasAssignedPropertySerializer(SerializerProvider provider,
+			BeanPropertyWriter writer, AnnotatedMember accessor, JavaType declaredType, Object value) {
+		if (!writer.hasSerializer()) {
+			return false;
+		}
+		var introspector = provider.getAnnotationIntrospector();
+		if (!hasIncompatibleContainerValue(declaredType, value)
+				|| introspector.findSerializer(accessor) != null
+				|| introspector.findContentSerializer(accessor) != null
+				|| introspector.findKeySerializer(accessor) != null
+				|| introspector.findSerializationConverter(accessor) != null
+				|| introspector.findSerializationContentConverter(accessor) != null) {
+			return true;
+		}
+		// Jackson can statically assign a standard container serializer from a record's
+		// declared generic type. Raw provider metadata may instead contain Maps: use
+		// dynamic normalization for those values, retaining explicit custom serializers.
+		return !isStandardCollectionSerializer(writer.getSerializer())
+				&& !isStandardMapSerializer(writer.getSerializer());
+	}
+
 	private static List<BeanPropertyWriter> getEffectivePropertyWriters(BeanSerializerBase serializer) {
 		List<BeanPropertyWriter> writers = new ArrayList<>();
 		var properties = serializer.properties();
@@ -421,7 +443,8 @@ class SerializationHelper {
 				writer.serializeAsField(record, buffer, provider);
 			}
 			catch (Exception ex) {
-				throw new IOException("Failed to apply serializer for metadata property " + writer.getName(), ex);
+				throw com.fasterxml.jackson.databind.JsonMappingException.from(provider.getGenerator(),
+						"Failed to apply serializer for metadata property " + writer.getName(), ex);
 			}
 			buffer.writeEndObject();
 			try (JsonParser parser = buffer.asParser(codec)) {

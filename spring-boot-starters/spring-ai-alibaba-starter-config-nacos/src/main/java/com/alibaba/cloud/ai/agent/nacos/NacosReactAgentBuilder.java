@@ -42,7 +42,6 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.execution.DefaultToolExecutionExceptionProcessor;
 
@@ -55,7 +54,7 @@ public class NacosReactAgentBuilder extends NacosAgentPromptBuilder {
 
 	NacosContextHolder agentVOHolder = new NacosContextHolder();
 	private NacosOptions nacosOptions;
-	
+
 	private List<ToolCallback> localTools = new ArrayList<>();
 
 	public NacosReactAgentBuilder nacosOptions(NacosOptions nacosOptions) {
@@ -83,7 +82,7 @@ public class NacosReactAgentBuilder extends NacosAgentPromptBuilder {
 
 		//4.build chat options and create model
 		OpenAiChatOptions openAiChatOptions = buildProxyChatOptions(modelVO, getMetadata(promptVO));
-		agentVOHolder.setObservationMetadataAwareOptions((ObservationMetadataAwareOptions) openAiChatOptions);
+		agentVOHolder.setObservationMetadataAwareOptions(com.alibaba.cloud.ai.observation.model.ObservationMetadataContext.find(openAiChatOptions));
 		this.chatOptions = openAiChatOptions;
 		this.model = createModel(nacosOptions, modelVO, openAiChatOptions);
 
@@ -98,15 +97,15 @@ public class NacosReactAgentBuilder extends NacosAgentPromptBuilder {
 					.getChatClientObservationConvention(), this.advisorObservationConvention);
 		}
 
-		clientBuilder.defaultOptions(chatOptions);
+		clientBuilder.defaultOptions(chatOptions.mutate());
 		chatClient = clientBuilder.build();
 
 		//6.load mcp servers
 		McpServersVO mcpServersVO = NacosMcpToolsInjector.getMcpServersVO(nacosOptions);
 		agentVOHolder.setMcpServersVO(mcpServersVO);
-		
+
 		separateInterceptorsByType();
-		
+
 		List<ToolCallback> allTools = new ArrayList<>();
 		this.localTools = gatherLocalTools();
 		List<ToolCallback> mcpTools = convert(nacosOptions, mcpServersVO);
@@ -114,7 +113,7 @@ public class NacosReactAgentBuilder extends NacosAgentPromptBuilder {
 		if (mcpTools != null) {
 			allTools.addAll(mcpTools);
 		}
-		
+
 		//7. build tools
 		AgentLlmNode.Builder llmNodeBuilder = AgentLlmNode.builder()
 				.chatClient(chatClient)
@@ -143,7 +142,7 @@ public class NacosReactAgentBuilder extends NacosAgentPromptBuilder {
 			builder.toolCallbacks(allTools);
 		}
 		toolNode = builder.build();
-		
+
 		// register listeners.
 
 		//register model  listener
@@ -234,7 +233,7 @@ public class NacosReactAgentBuilder extends NacosAgentPromptBuilder {
 								OpenAiChatOptions openAiChatOptions = buildProxyChatOptions(modelVO, getMetadata(agentVOHolder.promptVO));
 								ChatModel chatModelNew = createModel(nacosOptions, modelVO, openAiChatOptions);
 								replaceModel(chatClient, chatModelNew, openAiChatOptions);
-								agentVOHolder.setObservationMetadataAwareOptions((ObservationMetadataAwareOptions) openAiChatOptions);
+								agentVOHolder.setObservationMetadataAwareOptions(com.alibaba.cloud.ai.observation.model.ObservationMetadataContext.find(openAiChatOptions));
 							}
 							catch (Exception e) {
 								throw new RuntimeException(e);
@@ -256,7 +255,7 @@ public class NacosReactAgentBuilder extends NacosAgentPromptBuilder {
 		if (model.getMaxTokens() != null) {
 			chatOptionsBuilder.maxTokens(Integer.parseInt(model.getMaxTokens()));
 		}
-		chatOptionsBuilder.internalToolExecutionEnabled(false);
+
 		OpenAiChatOptions openaiChatOptions = chatOptionsBuilder
 				.model(model.getModel())
 				.build();
@@ -266,12 +265,8 @@ public class NacosReactAgentBuilder extends NacosAgentPromptBuilder {
 
 	private static ChatModel createModel(NacosOptions nacosOptions, ModelVO model, OpenAiChatOptions openAiChatOptions) {
 
-		OpenAiApi openAiApi = OpenAiApi.builder()
-				.apiKey(model.getApiKey()).baseUrl(model.getBaseUrl())
-				.build();
-
-		OpenAiChatModel.Builder builder = OpenAiChatModel.builder().defaultOptions(openAiChatOptions)
-				.openAiApi(openAiApi);
+		OpenAiChatModel.Builder builder = OpenAiChatModel.builder().options(openAiChatOptions.mutate()
+            .apiKey(model.getApiKey()).baseUrl(NacosModelInjector.normalizeOpenAiBaseUrl(model.getBaseUrl())).build());
 		//inject observation config.
 		ObservationConfiguration observationConfiguration = nacosOptions.getObservationConfiguration();
 		if (observationConfiguration != null) {

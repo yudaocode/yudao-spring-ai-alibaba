@@ -148,3 +148,10 @@ The project uses `make` for linting tasks:
 - **Issues**: [https://github.com/alibaba/spring-ai-alibaba/issues](https://github.com/alibaba/spring-ai-alibaba/issues)
 - **Source**: [https://github.com/alibaba/spring-ai-alibaba](https://github.com/alibaba/spring-ai-alibaba)
 - **Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## Yudao compatibility branches
+
+- This fork follows `COMPATIBILITY.md`; the upstream Java 17 recommendation does not apply to `main-jdk8`.
+- New Java classes, including tests and helpers, use `@author 芋道源码`; preserve existing authors.
+- Keep framework and JSON differences inside the compatibility libraries where possible.
+- Work only in isolated consumer snapshots; preserve concurrently edited original repositories.

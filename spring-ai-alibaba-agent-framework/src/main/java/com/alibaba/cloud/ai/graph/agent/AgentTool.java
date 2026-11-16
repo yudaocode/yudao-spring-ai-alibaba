@@ -50,6 +50,9 @@ import java.util.Optional;
  * This class provides a programmatic way to create MethodToolCallback without requiring @Tool annotation.
  */
 public class AgentTool {
+
+    private static final ObjectMapper JSON_MAPPER = com.fasterxml.jackson.databind.json.JsonMapper.builder()
+        .findAndAddModules().build();
 	private static final ToolCallResultConverter CONVERTER = new MessageToolCallResultConverter();
 
 	/**
@@ -122,7 +125,7 @@ public class AgentTool {
 	 * @return a wrapped schema with "input" parameter containing the original schema
 	 */
 	private static String wrapSchemaInInputParameter(String originalSchema) {
-		ObjectMapper objectMapper = JsonParser.getObjectMapper();
+		ObjectMapper objectMapper = JSON_MAPPER;
 		
 		try {
 			// Parse the original schema if provided
@@ -275,7 +278,7 @@ public class AgentTool {
 
 			// Try to parse as JSON object and extract the "input" field
 			try {
-				ObjectMapper objectMapper = JsonParser.getObjectMapper();
+				ObjectMapper objectMapper = JSON_MAPPER;
 				Map<String, Object> jsonMap = objectMapper.readValue(input, new TypeReference<HashMap<String, Object>>() {});
 
 				if (jsonMap != null && jsonMap.containsKey("input")) {
@@ -287,7 +290,7 @@ public class AgentTool {
 							return (String) inputValue;
 						}
 						// Otherwise, serialize it to JSON string
-						return JsonParser.getObjectMapper().writeValueAsString(inputValue);
+						return JSON_MAPPER.writeValueAsString(inputValue);
 					}
 				}
 			}

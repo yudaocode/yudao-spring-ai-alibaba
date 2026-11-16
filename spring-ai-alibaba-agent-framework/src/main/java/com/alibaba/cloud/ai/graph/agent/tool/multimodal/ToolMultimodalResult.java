@@ -123,7 +123,11 @@ public final class ToolMultimodalResult {
 	 * @param base64 Base64-encoded data (raw string, not data URL; may be null)
 	 */
 	public static Media mediaFromUrlAndBase64(String url, String base64, MimeType mimeType) {
-		return Media.builder().mimeType(mimeType).data(new MediaFormats(url, base64)).build();
+		MediaFormats formats = new MediaFormats(url, base64);
+        if (url != null && !url.isBlank()) {
+            return new FormattedMedia(mimeType, URI.create(url), formats);
+        }
+        return new FormattedMedia(mimeType, java.util.Base64.getDecoder().decode(base64), formats);
 	}
 
 	/**
@@ -132,7 +136,7 @@ public final class ToolMultimodalResult {
 	 * @param base64 Base64-encoded data (raw string, not data URL)
 	 */
 	public static Media mediaFromBase64(String base64, MimeType mimeType) {
-		return Media.builder().mimeType(mimeType).data(new MediaFormats(null, base64)).build();
+		return mediaFromUrlAndBase64(null, base64, mimeType);
 	}
 
 	/**
@@ -141,6 +145,28 @@ public final class ToolMultimodalResult {
 	 */
 	public record MediaFormats(String url, String base64) {
 	}
+
+    /**
+     * Carries both encodings while exposing a valid URI or byte payload to Spring AI.
+     * @author 芋道源码
+     */
+    static final class FormattedMedia extends Media {
+        private final MediaFormats formats;
+
+        private FormattedMedia(MimeType mimeType, URI uri, MediaFormats formats) {
+            super(mimeType, uri);
+            this.formats = formats;
+        }
+
+        private FormattedMedia(MimeType mimeType, byte[] bytes, MediaFormats formats) {
+            super(mimeType, new ByteArrayResource(bytes));
+            this.formats = formats;
+        }
+
+        MediaFormats formats() {
+            return this.formats;
+        }
+    }
 
 	public static class Builder {
 

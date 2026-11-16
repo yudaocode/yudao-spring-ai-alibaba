@@ -23,7 +23,7 @@ import com.alibaba.cloud.ai.parser.bshtml.BsHtmlDocumentParser;
 import com.alibaba.cloud.ai.parser.markdown.MarkdownDocumentParser;
 import com.alibaba.cloud.ai.parser.tika.TikaDocumentParser;
 import com.alibaba.cloud.ai.parser.yaml.YamlDocumentParser;
-import com.fasterxml.jackson.core.type.TypeReference;
+import tools.jackson.core.type.TypeReference;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.util.json.JsonParser;
 

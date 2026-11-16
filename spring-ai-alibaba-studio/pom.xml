@@ -48,6 +48,11 @@
     </properties>
 
     <dependencies>
+        <!-- Internal Alibaba state/options use the Boot 4-managed Jackson 2 boundary. -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-mcp-client</artifactId>

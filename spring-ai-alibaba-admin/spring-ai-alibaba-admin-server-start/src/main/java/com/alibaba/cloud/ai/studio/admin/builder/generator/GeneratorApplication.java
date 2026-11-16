@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.alibaba.cloud.ai.studio.admin.builder.generator;
 
 import com.alibaba.cloud.ai.studio.admin.builder.controller.SystemController;
@@ -42,47 +41,42 @@ import org.springframework.web.bind.annotation.RestController;
  * 仅用来启动DSL转换SAA服务的启动类（可以不启动studio-admin所需要的中间件）
  */
 // TODO: 将Studio的低代码平台也引入本启动类中
-@SpringBootApplication(exclude = { RedissonAutoConfigurationV2.class, ElasticsearchDataAutoConfiguration.class,
-		ElasticsearchRepositoriesAutoConfiguration.class, ElasticsearchRestClientAutoConfiguration.class,
-		DataSourceAutoConfiguration.class })
-@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-		classes = GraphProjectGenerationConfiguration.class))
+@SpringBootApplication(exclude = { RedissonAutoConfigurationV2.class, ElasticsearchDataAutoConfiguration.class, ElasticsearchRepositoriesAutoConfiguration.class, ElasticsearchRestClientAutoConfiguration.class, DataSourceAutoConfiguration.class })
+@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = GraphProjectGenerationConfiguration.class))
 public class GeneratorApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(GeneratorApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(GeneratorApplication.class, args);
+    }
 
-	// TODO: 前端适配无登陆进入DSL转换页面，去掉这个MockLoginController
-	@RestController
-	@CrossOrigin
-	public static class MockLoginController {
+    // TODO: 前端适配无登陆进入DSL转换页面，去掉这个MockLoginController
+    @RestController
+    @CrossOrigin
+    public static class MockLoginController {
 
-		@PostMapping("/console/v1/auth/login")
-		public Result<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
-			return Result.success(new TokenResponse("token", "refreshToken", 1000L));
-		}
+        @PostMapping("/console/v1/auth/login")
+        public Result<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
+            return Result.success(new TokenResponse("token", "refreshToken", 1000L));
+        }
 
-		@PostMapping("/console/v1/auth/refresh-token")
-		public Result<TokenResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
-			return Result.success(new TokenResponse("token", "refreshToken", 1000L));
-		}
+        @PostMapping("/console/v1/auth/refresh-token")
+        public Result<TokenResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+            return Result.success(new TokenResponse("token", "refreshToken", 1000L));
+        }
 
-		@GetMapping("/console/v1/system/global-config")
-		public Result<SystemController.GlobalConfig> globalConfig() {
-			SystemController.GlobalConfig globalConfig = new SystemController.GlobalConfig();
-			globalConfig.setLoginMethod("preset_account");
-			globalConfig.setUploadMethod("file");
-			return Result.success(globalConfig);
-		}
+        @GetMapping("/console/v1/system/global-config")
+        public Result<SystemController.GlobalConfig> globalConfig() {
+            SystemController.GlobalConfig globalConfig = new SystemController.GlobalConfig();
+            globalConfig.setLoginMethod("preset_account");
+            globalConfig.setUploadMethod("file");
+            return Result.success(globalConfig);
+        }
 
-		@GetMapping("/console/v1/accounts/profile")
-		public Result<Account> getAccountProfile() {
-			Account account = new Account();
-			account.setUsername("admin");
-			return Result.success(account);
-		}
-
-	}
-
+        @GetMapping("/console/v1/accounts/profile")
+        public Result<Account> getAccountProfile() {
+            Account account = new Account();
+            account.setUsername("admin");
+            return Result.success(account);
+        }
+    }
 }

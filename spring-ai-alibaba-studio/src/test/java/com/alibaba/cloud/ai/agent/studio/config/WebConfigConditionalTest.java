@@ -18,9 +18,9 @@ package com.alibaba.cloud.ai.agent.studio.config;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
-import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
+import org.springframework.boot.http.converter.autoconfigure.HttpMessageConvertersAutoConfiguration;
+import org.springframework.boot.webmvc.autoconfigure.DispatcherServletAutoConfiguration;
+import org.springframework.boot.webmvc.autoconfigure.WebMvcAutoConfiguration;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -81,7 +81,8 @@ class WebConfigConditionalTest {
 			mockMvc.perform(options("/test")
 					.header(ORIGIN, "http://localhost:3000")
 					.header(ACCESS_CONTROL_REQUEST_METHOD, "GET"))
-				.andExpect(status().isForbidden())
+				// Spring 7 responds to an unconfigured OPTIONS request without CORS grants.
+				.andExpect(status().isOk())
 				.andExpect(header().doesNotExist(ACCESS_CONTROL_ALLOW_ORIGIN))
 				.andExpect(header().doesNotExist(ACCESS_CONTROL_ALLOW_CREDENTIALS));
 		});
