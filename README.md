@@ -24,7 +24,7 @@ Maven groupId 为 **`cn.iocoder.spring-ai-alibaba`**，artifactId 和 Java 包�
 
 ## 如何使用
 
-先安装相同版本线的 [yudao-spring-ai](https://github.com/yudaocode/yudao-spring-ai)，并安装 [yudao-agentscope-java 的 main-jdk8 分支](https://github.com/yudaocode/yudao-agentscope-java/tree/main-jdk8)，再使用 JDK 17.0.19+ 构建本仓库。Java 8 分支同样使用 JDK 17 构建，产物供 JDK 8 运行。
+先安装相同版本线的 [yudao-spring-ai](https://github.com/yudaocode/yudao-spring-ai)，并安装 [yudao-agentscope-java 的 main-jdk8 分支](https://github.com/yudaocode/yudao-agentscope-java/tree/main-jdk8)，再使用 JDK 17.0.19+ 构建本仓库。Java 8 分支同样使用 JDK 17 构建，产物供 JDK 8 运行。 默认源码构建包含 AgentScope 与 sandbox 模块，还需先安装 [yudao-agentscope-java](https://github.com/yudaocode/yudao-agentscope-java) 的对应依赖：Boot 2 选择 `main-jdk8`，Boot 3/4 选择 `main`；模块构建命令见 [COMPATIBILITY.md](COMPATIBILITY.md#runtime-sandbox-optional)。
 
 ```bash
 git clone -b main-jdk8 https://github.com/yudaocode/yudao-spring-ai-alibaba.git
@@ -74,7 +74,7 @@ spring:
           model: qwen-plus
 ```
 
-配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。JDK 8 分支已支持可选 AgentScope starter；独立 runtime-sandbox 仍在移植中。AgentScope 集成不会成为 DashScope starter 的强制依赖。
+配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。三个分支均提供可选 AgentScope starter 与 sandbox 模块：Boot 2 依赖 AgentScope SDK `2.0.0-SNAPSHOT`，Boot 3/4 共用 SDK `3.0.0-SNAPSHOT`；具体接入见兼容说明。AgentScope 集成不会成为 DashScope starter 的强制依赖。
 
 需要 AgentScope 时，先安装 [yudao-agentscope-java 的 main-jdk8 分支](https://github.com/yudaocode/yudao-agentscope-java/tree/main-jdk8)，再构建本仓库；另行引入 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-starter-agentscope`。它使用 `cn.iocoder.agentscope:agentscope-core:2.0.0-SNAPSHOT`，通过 `AgentScopeAgent.fromBuilder(...).stateStore(store)` 接入新版状态存储；Java 包名仍沿用官方。基础 AgentScope 的 Boot parent HTTP 配置见其 [Java 8 使用说明](https://github.com/yudaocode/yudao-agentscope-java/blob/main-jdk8/JAVA8-COMPATIBILITY.md)。
 
