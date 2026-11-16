@@ -24,13 +24,13 @@ The branch is a development SNAPSHOT. Maven artifact publication is managed sepa
 
 ## Verified scope (2026-11-16)
 
-Default reactor: Boot2=27 modules; Boot3/4=23 modules. Unit suites and dependency gates passed by combined module/closure receipts; this is not a claim that every external integration ran. Boot2 executes on real Java8; Boot3 on Java17; Boot4 consumer tests on Java25.
+Default reactor: Boot2=28 modules; Boot3/4=23 modules. Unit suites and dependency gates passed by combined module/closure receipts; this is not a claim that every external integration ran. Boot2 executes on real Java8; Boot3 on Java17; Boot4 consumer tests on Java25.
 
 Native DashScope sync/UTF8 SSE/provider errors and ChatClient option merging have five common HTTP tests passing on each JVM. The native getOptions method returns defensive copies; the legacy getter delegates. Global embedding selection uses spring.ai.model.embedding. The extensions BOM does not mark the model runtime optional.
 
 Tika parser's original14 tests pass on each line with the corresponding family (2.9.4/3.3.1/4.0.0); Boot4 uses TikaInputStream and standard-package type pom.
 
-The three frozen business consumers start and pass local chat/image/knowledge flows. The optional AgentScope adapter uses the Yudao SDK on every branch: main/main-jdk17 use 3.0.0-SNAPSHOT and main-jdk8 uses 2.0.0-SNAPSHOT. The Java8 adapter is included in its default reactor/BOM; its separate runtime-sandbox module remains excluded pending the independent port. Original consumer working directories remain untouched. No remote release has been published.
+The three frozen business consumers start and pass local chat/image/knowledge flows. The optional AgentScope adapter uses the Yudao SDK on every branch: main/main-jdk17 use 3.0.0-SNAPSHOT and main-jdk8 uses 2.0.0-SNAPSHOT. The Java8 adapter is included in its default reactor/BOM; its runtime-sandbox module is also included after the independent Java8 port. Original consumer working directories remain untouched. No remote release has been published.
 
 ## Additional validation and limits
 
@@ -64,3 +64,42 @@ The Alibaba BOM manages the adapter version; its POM selects AgentScope `3.0.0-S
 ## Retained admin source boundary
 
 The retained `spring-ai-alibaba-admin` source tree is outside the supported default reactor and BOM. Its historical external `spring-ai-alibaba-core:1.0.0.3`, `spring-ai-alibaba-graph-core:1.0.0.4` and `spring-ai-alibaba-autoconfigure-arms-observation:1.0.0.4` dependencies keep the official `com.alibaba.cloud.ai` coordinates; these releases are not produced by this fork. Fork-owned admin project references use `cn.iocoder.spring-ai-alibaba`. No Boot/JDK compatibility is claimed for this retained admin tree.
+
+## Runtime sandbox (optional)
+
+`cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-sandbox:3.0.0-SNAPSHOT` uses
+`cn.iocoder.agentscope:agentscope-runtime-sandbox-core:3.0.0-SNAPSHOT`. Boot4 deliberately
+shares AgentScope version3 with Boot3. These development artifacts must be installed
+from source before use; no remote artifact release has been published.
+
+First install matching yudao-spring-ai. In yudao-agentscope-java branch `main`,
+use JDK17 and installed Maven3.9+ (the SDK has no mvnw) to install the BOMs and both
+optional Alibaba integration dependencies:
+
+```bash
+mvn -pl agentscope-dependencies-bom,agentscope-distribution/agentscope-bom,agentscope-extensions/agentscope-extensions-model/agentscope-extensions-model-dashscope,agentscope-runtime-sandbox-core -am -DskipTests -Dmaven.javadoc.skip=true install
+```
+
+Then build this Alibaba checkout using its Maven wrapper as shown in the README.
+Import the Spring AI and Alibaba BOMs, and add the sandbox dependency explicitly:
+
+```xml
+<dependency>
+    <groupId>cn.iocoder.spring-ai-alibaba</groupId>
+    <artifactId>spring-ai-alibaba-sandbox</artifactId>
+</dependency>
+```
+
+Configure an `io.agentscope.runtime.sandbox.manager.SandboxService`, create a
+`BaseSandbox`, and bind it with `SaaBaseShellRunner.setSandbox(sandbox)`. Calling
+`buildTool()` returns a Spring AI `ToolCallback`; its JSON input is
+`{"command":"printf 'hello'"}`. Close the service when its sandboxes are no longer
+needed. Use a compatible `/sandbox/*` manager endpoint for remote mode; local mode
+requires Docker and the configured tool image. Request timeout, ownership and
+backend configuration are documented in the SDK runtime module's README.
+
+The same local HTTP ToolCallback regression passes on real8/17/25: schema, UTF8
+arguments, response JSON, sandbox reuse and cleanup. Complete reactor verify passes
+on all three lines: Boot2=28 modules/1896 tests/286 skips; Boot3/4=23 modules/1895
+tests/288 skips each, with no failures or errors. Provider-gated tests stay skipped;
+these gates do not claim acceptance of every remote sandbox backend.
