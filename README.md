@@ -74,7 +74,7 @@ spring:
           model: qwen-plus
 ```
 
-配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。JDK 8 当前默认支持范围不包含可选 AgentScope starter 和 sandbox，它们将继续分阶段移植。
+配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。JDK 8 分支已支持可选 AgentScope starter；独立 runtime-sandbox 仍在移植中。AgentScope 集成不会成为 DashScope starter 的强制依赖。
 
 详细构建、源码基线、API 差异及当前支持边界见 [COMPATIBILITY.md](COMPATIBILITY.md)。
 
