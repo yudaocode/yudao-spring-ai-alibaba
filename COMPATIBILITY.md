@@ -24,19 +24,21 @@ The branch is a development SNAPSHOT. Maven artifact publication is managed sepa
 
 ## Verified scope (2026-11-16)
 
-Default reactor: Boot2=26 modules; Boot3/4=23 modules. Unit suites and dependency gates passed by combined module/closure receipts; this is not a claim that every external integration ran. Boot2 executes on real Java8; Boot3 on Java17; Boot4 consumer tests on Java25.
+Default reactor: Boot2=27 modules; Boot3/4=23 modules. Unit suites and dependency gates passed by combined module/closure receipts; this is not a claim that every external integration ran. Boot2 executes on real Java8; Boot3 on Java17; Boot4 consumer tests on Java25.
 
 Native DashScope sync/UTF8 SSE/provider errors and ChatClient option merging have five common HTTP tests passing on each JVM. The native getOptions method returns defensive copies; the legacy getter delegates. Global embedding selection uses spring.ai.model.embedding. The extensions BOM does not mark the model runtime optional.
 
 Tika parser's original14 tests pass on each line with the corresponding family (2.9.4/3.3.1/4.0.0); Boot4 uses TikaInputStream and standard-package type pom.
 
-The three frozen business consumers start and pass local chat/image/knowledge flows. AgentScope SDK compatibility is a later phase. Java8 currently excludes its optional starter and runtime-sandbox module from default build/BOM; those are not claimed as supported. Original consumer working directories remain untouched. No remote release has been published.
+The three frozen business consumers start and pass local chat/image/knowledge flows. The Java8 optional AgentScope starter is included in the supported reactor/BOM and uses the Yudao Java8 AgentScope port. The separate runtime-sandbox module remains excluded and is not claimed as supported. Original consumer working directories remain untouched. No remote release has been published.
 
 ## Additional validation and limits
 
 The same ten local HTTP acceptance tests pass in all three business lines, including native DashScope embedding/image credentials, requested/default models and application observation callbacks. The matched chat service/tool regressions pass on actual JVM8/17/25 (51/54/61 tests). Streaming reasoning consumption uses the delegate delta rather than appending cumulative content.
 
-The optional AgentScope adapter currently follows the pinned upstream integration (`agentscope-core` 1.0.9). Migration to current AgentScope 2.x is a separate compatibility task; these checks do not claim that migration is complete. Java8 excludes the optional AgentScope starter and runtime-sandbox from its default supported reactor/BOM.
+The Java8 optional AgentScope adapter uses `cn.iocoder.agentscope:agentscope-core:2.0.0-SNAPSHOT`, based on the pinned current AgentScope source. It uses `AgentStateStore` in place of the removed `Session` API, copies builders per invocation, isolates graph thread/agent state, and closes temporary agents after stream termination. `session(AgentStateStore)` remains a deprecated builder alias; new code should use `stateStore(AgentStateStore)`. The main and main-jdk17 adapters still use their existing upstream integration until their separate migration is validated. Model errors persist safe conversation input before propagating the failure. Cancellation follows core state ownership: committed file state remains available, in-flight writes finish before their session ownership is released, and the adapter does not perform an additional blanket save.
+
+The expanded 27-module Java8 default install passes 1892 tests with 0 failures/errors and 283 skips; skipped cases requiring external services are not acceptance evidence. The optional adapter's 18 tests include local multi-turn state isolation, direct failure/cancellation persistence checks with a rebuilt graph, and lazy agent lifecycle coverage; 5 external-service cases remain skipped. Runtime sandbox is still outside the default reactor/BOM. No model provider credentials or remote model calls are required for these local gates.
 
 ## Retained admin source boundary
 
