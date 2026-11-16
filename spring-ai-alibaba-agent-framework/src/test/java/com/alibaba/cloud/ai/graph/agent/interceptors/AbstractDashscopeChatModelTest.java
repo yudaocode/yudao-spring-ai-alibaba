@@ -20,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.openai.api.OpenAiApi;
 
 /**
  * 共享 base class：通过 OpenAI 兼容接口初始化 DashScope ChatModel。
@@ -50,14 +49,8 @@ abstract class AbstractDashscopeChatModelTest {
 
 		final String baseUrl = System.getenv().getOrDefault("AI_DASHSCOPE_BASE_URL", DEFAULT_BASE_URL);
 		final String model = System.getenv().getOrDefault("AI_DASHSCOPE_MODEL", DEFAULT_MODEL);
-
-		OpenAiApi openAiApi = OpenAiApi.builder()
-				.baseUrl(baseUrl)
-				.apiKey(apiKey)
-				.build();
 		chatModel = OpenAiChatModel.builder()
-				.openAiApi(openAiApi)
-				.defaultOptions(OpenAiChatOptions.builder().model(model).build())
+								.options(OpenAiChatOptions.builder().baseUrl(baseUrl.replaceAll("/+$", "") + (baseUrl.replaceAll("/+$", "").endsWith("/v1") ? "" : "/v1")).apiKey(apiKey).model(model).build())
 				.build();
 	}
 }

@@ -451,7 +451,7 @@ public interface JacksonDeserializer<T> {
 			TypeMapper typeMapper) throws IOException {
 		try {
 			Class<?> arrayClass = resolveArrayClass(className);
-			Class<?> componentType = arrayClass.componentType();
+			Class<?> componentType = arrayClass.getComponentType();
 			if (componentType.isPrimitive()) {
 				return objectMapper.treeToValue(payload, arrayClass);
 			}

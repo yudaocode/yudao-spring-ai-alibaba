@@ -46,14 +46,18 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.alibaba.cloud.ai</groupId>
             <artifactId>spring-ai-alibaba-graph-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>io.github.a2asdk</groupId>
-            <artifactId>a2a-java-sdk-client</artifactId>
+            <groupId>com.alibaba.cloud.ai</groupId>
+            <artifactId>spring-ai-alibaba-a2a-client-compat</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -62,7 +66,7 @@
         <dependency>
             <groupId>com.vladsch.flexmark</groupId>
             <artifactId>flexmark-html2md-converter</artifactId>
-            <version>0.64.8</version>
+            <version>0.62.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -117,20 +121,6 @@
         </dependency>
 
         <!-- GraalVM Polyglot for Python execution -->
-        <dependency>
-            <groupId>org.graalvm.polyglot</groupId>
-            <artifactId>polyglot</artifactId>
-            <version>${graalvm.polyglot.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.graalvm.polyglot</groupId>
-            <artifactId>python-community</artifactId>
-            <version>${graalvm.polyglot.version}</version>
-            <type>pom</type>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <reporting>

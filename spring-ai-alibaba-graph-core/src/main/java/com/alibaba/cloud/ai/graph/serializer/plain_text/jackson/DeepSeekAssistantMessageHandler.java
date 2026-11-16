@@ -90,6 +90,8 @@ public interface DeepSeekAssistantMessageHandler {
 			}
 			gen.writeEndArray();
 
+            gen.writeBooleanField("reasoningContentOverridden", msg.hasReasoningContentOverride());
+
 			String reasoningContent = msg.getReasoningContent();
 
 			if (reasoningContent != null) {
@@ -101,6 +103,7 @@ public interface DeepSeekAssistantMessageHandler {
 
 			java.util.Map<String, Object> metadata = msg.getMetadata();
 			serializeMetadata(gen, provider, metadata);
+			MessagePartsHandler.serialize(msg.getParts(), gen);
 		}
 
 	}
@@ -119,6 +122,21 @@ public interface DeepSeekAssistantMessageHandler {
 
 			var text = node.findValue(Field.TEXT.name).asText();
 			var metadata = deserializeMetadata(mapper, node);
+            var parts = MessagePartsHandler.deserialize(mapper, node);
+            if (parts != null) {
+                var restored = DeepSeekAssistantMessage.builder().parts(parts).properties(metadata).build();
+                var reasoningOverride = node.get(Field.REASONING_CONTENT.name);
+                if (reasoningOverride != null) {
+                    var value = reasoningOverride.isNull() ? null : reasoningOverride.asText();
+                    var explicitOverride = node.get("reasoningContentOverridden");
+                    boolean overridden = explicitOverride != null ? explicitOverride.asBoolean()
+                            : !java.util.Objects.equals(restored.getReasoningContent(), value);
+                    if (overridden) {
+                        restored.setReasoningContent(value);
+                    }
+                }
+                return restored;
+            }
 			var requestsNode = node.findValue(Field.TOOL_CALLS.name);
 
 			var reasoningContentNode = node.findValue(Field.REASONING_CONTENT.name);

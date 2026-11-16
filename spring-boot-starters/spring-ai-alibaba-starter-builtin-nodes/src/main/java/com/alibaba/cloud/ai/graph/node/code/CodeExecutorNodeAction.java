@@ -109,8 +109,8 @@ public class CodeExecutorNodeAction implements NodeAction {
 		Map<String, Object> inputs = Optional.ofNullable(params)
 			.orElse(List.of())
 			.stream()
-			.collect(Collectors.toUnmodifiableMap(CodeParam::argName, param -> Optional.ofNullable(param.value())
-				.or(() -> StringUtils.hasText(param.stateKey()) ? state.value(param.stateKey()) : Optional.empty())
+			.collect(Collectors.toUnmodifiableMap(CodeParam::argName, param -> org.springframework.ai.util.Java8Platform.optionalOr(Optional.ofNullable(param.value()),
+                () -> StringUtils.hasText(param.stateKey()) ? state.value(param.stateKey()) : Optional.empty())
 				.orElseThrow(() -> new IllegalStateException("param has no value and legal key!"))));
 		Map<String, Object> resultObjectMap = executeWorkflowCodeTemplate(CodeLanguage.fromValue(codeLanguage), code,
 				inputs);

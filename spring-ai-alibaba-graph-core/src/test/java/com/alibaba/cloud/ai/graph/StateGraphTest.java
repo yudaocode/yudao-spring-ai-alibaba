@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.NamedExecutable;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -993,7 +993,7 @@ public class StateGraphTest {
 				}).build());
 
 		assertThrows(ArithmeticException.class,
-				(NamedExecutable) () -> app.invoke(Map.of(OverAllState.DEFAULT_INPUT_KEY, "test1")));
+				(Executable) () -> app.invoke(Map.of(OverAllState.DEFAULT_INPUT_KEY, "test1")));
 	}
 
 	/**

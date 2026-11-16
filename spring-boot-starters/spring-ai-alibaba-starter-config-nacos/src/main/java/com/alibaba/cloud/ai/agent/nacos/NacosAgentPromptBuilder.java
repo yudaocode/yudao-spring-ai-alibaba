@@ -82,13 +82,13 @@ public class NacosAgentPromptBuilder extends DefaultBuilder {
 			if (promptVO != null) {
 				this.instruction = promptVO.getTemplate();
 				if (this.chatOptions == null) {
-					this.chatOptions = new OpenAiChatOptions();
+					this.chatOptions = OpenAiChatOptions.builder().build();
 				}
-				if (!(this.chatOptions instanceof ObservationMetadataAwareOptions)) {
+				if (com.alibaba.cloud.ai.observation.model.ObservationMetadataContext.find(this.chatOptions) == null) {
 					this.chatOptions = (ChatOptions) ChatOptionsProxy.createProxy(this.chatOptions, getMetadata(promptVO));
 				}
 
-				observationMetadataAwareOptions = (ObservationMetadataAwareOptions) this.chatOptions;
+				observationMetadataAwareOptions = com.alibaba.cloud.ai.observation.model.ObservationMetadataContext.find(this.chatOptions);
 				observationMetadataAwareOptions.getObservationMetadata().putAll(getMetadata(promptVO));
 			}
 		}

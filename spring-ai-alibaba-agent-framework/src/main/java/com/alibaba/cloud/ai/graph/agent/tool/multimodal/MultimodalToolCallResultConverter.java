@@ -120,8 +120,8 @@ public class MultimodalToolCallResultConverter implements ToolCallResultConverte
 		}
 
 		Object data = media.getData();
-		if (data instanceof ToolMultimodalResult.MediaFormats formats) {
-			handleMediaFormats(formats, mimeTypeStr, itemMap);
+		if (media instanceof ToolMultimodalResult.FormattedMedia formatted) {
+			handleMediaFormats(formatted.formats(), mimeTypeStr, itemMap);
 		}
 		else if (data instanceof URI uri) {
 			putUriOrEncodeToDataUrl(uri, mimeTypeStr, itemMap);

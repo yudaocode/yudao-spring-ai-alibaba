@@ -183,7 +183,7 @@ public class ThreadController {
 		}
 		catch (ResponseStatusException e) {
 
-			if (e.getStatusCode() != HttpStatus.NOT_FOUND) {
+			if (e.getStatus() != HttpStatus.NOT_FOUND) {
 				throw e;
 			}
 

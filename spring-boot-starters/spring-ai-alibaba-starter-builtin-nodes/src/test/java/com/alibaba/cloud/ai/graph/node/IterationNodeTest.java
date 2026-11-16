@@ -116,8 +116,6 @@ public class IterationNodeTest {
 	@Test
 	@DisplayName("Test POJO Iteration")
 	public void testPOJO() throws Exception {
-		record Person(String name, int age) {
-		}
 		String res = this.runGraph("[{\"name\": \"a\", \"age\": 1}, {\"name\": \"b\", \"age\": 2}]",
 				(OverAllState state) -> {
 					Person p = OBJECT_MAPPER.readValue(
@@ -273,6 +271,10 @@ public class IterationNodeTest {
 		log.info("result: {}", res);
 		Assertions.assertEquals(OBJECT_MAPPER.readValue(res, new TypeReference<List<Integer>>() {
 		}), List.of(1, 8, 27, 64, 125));
+	}
+
+	// A member DTO preserves record's static semantics on the Java 8 Jackson runtime.
+	private record Person(String name, int age) {
 	}
 
 }

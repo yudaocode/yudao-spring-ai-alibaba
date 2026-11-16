@@ -48,18 +48,21 @@
     </developers>
 
     <modules>
+        <module>compatibility/a2a-spec</module>
+        <module>compatibility/a2a-common</module>
+        <module>compatibility/a2a-client</module>
+        <module>compatibility/mutiny-zero</module>
+        <module>compatibility/a2a-server-common</module>
+        <module>extensions</module>
         <module>spring-ai-alibaba-bom</module>
         <module>spring-ai-alibaba-graph-core</module>
         <module>spring-ai-alibaba-agent-framework</module>
         <module>spring-ai-alibaba-studio</module>
-        <module>spring-ai-alibaba-sandbox</module>
-
         <!-- Spring AI Alibaba Spring Boot Starters -->
         <module>spring-boot-starters/spring-ai-alibaba-starter-a2a-nacos</module>
         <module>spring-boot-starters/spring-ai-alibaba-starter-config-nacos</module>
         <module>spring-boot-starters/spring-ai-alibaba-starter-graph-observation</module>
         <module>spring-boot-starters/spring-ai-alibaba-starter-builtin-nodes</module>
-        <module>spring-boot-starters/spring-ai-alibaba-starter-agentscope</module>
     </modules>
 
     <scm>
@@ -86,19 +89,19 @@
     <properties>
 
         <!-- Spring AI Alibaba Version -->
-        <revision>1.1.2.2</revision>
+        <revision>2.1.0-boot2-SNAPSHOT</revision>
 
         <!-- Maven project basic config -->
-        <java.version>17</java.version>
+        <java.version>8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Spring version -->
-        <spring-ai.version>1.1.2</spring-ai.version>
-        <spring-ai-alibaba-extensions.version>1.1.2.2</spring-ai-alibaba-extensions.version>
-        <spring-boot.version>3.5.8</spring-boot.version>
+        <spring-ai.version>2.1.0-boot2-SNAPSHOT</spring-ai.version>
+        <spring-ai-alibaba-extensions.version>2.1.0-boot2-SNAPSHOT</spring-ai-alibaba-extensions.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
         <springdoc-openapi.version>2.8.8</springdoc-openapi.version>
 
         <!-- DashScope SDK Version -->
@@ -151,7 +154,7 @@
 
         <poi.version>5.4.0</poi.version>
 
-        <mcp.version>0.14.0</mcp.version>
+        <mcp.version>2.2.0</mcp.version>
         <opentelemetry.version>1.38.0</opentelemetry.version>
         <a2a-sdk.version>0.2.5.Beta2</a2a-sdk.version>
 
@@ -174,7 +177,7 @@
         <maven-assembly-plugin.version>3.7.0</maven-assembly-plugin.version>
         <maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
         <maven-dependency-plugin.version>3.5.0</maven-dependency-plugin.version>
         <asciidoctor-maven-plugin.version>2.2.3</asciidoctor-maven-plugin.version>
         <springdoc-openapi-maven-plugin.version>1.4</springdoc-openapi-maven-plugin.version>
@@ -194,10 +197,39 @@
         <central.publishing.maven.version>0.7.0</central.publishing.maven.version>
 
         <slf4j.version>2.0.17</slf4j.version>
+        <mockito.version>4.11.0</mockito.version>
+        <assertj.version>3.27.7</assertj.version>
+        <tika.version>2.9.4</tika.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-bom</artifactId>
+                <version>4.11.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.opentelemetry</groupId>
+                <artifactId>opentelemetry-bom</artifactId>
+                <version>1.49.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.networknt</groupId>
+                <artifactId>json-schema-validator</artifactId>
+                <version>2.0.8</version>
+            </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>dashscope-sdk-java</artifactId>
@@ -221,13 +253,6 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.springframework.ai</groupId>
-                <artifactId>spring-ai-bom</artifactId>
-                <version>${spring-ai.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
                 <groupId>com.alibaba.cloud.ai</groupId>
                 <artifactId>spring-ai-alibaba-extensions-bom</artifactId>
                 <version>${spring-ai-alibaba-extensions.version}</version>
@@ -237,34 +262,15 @@
 
             <!-- A2A SDK Dependencies -->
             <dependency>
-                <groupId>io.github.a2asdk</groupId>
-                <artifactId>a2a-java-reference-server</artifactId>
-                <version>${a2a-sdk.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.jboss.slf4j</groupId>
-                        <artifactId>slf4j-jboss-logmanager</artifactId>
-                    </exclusion>
-                </exclusions>
+                <groupId>com.alibaba.cloud.ai</groupId>
+                <artifactId>spring-ai-alibaba-a2a-server-common-compat</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.a2asdk</groupId>
-                <artifactId>a2a-java-sdk-server-common</artifactId>
-                <version>${a2a-sdk.version}</version>
+                <groupId>com.alibaba.cloud.ai</groupId>
+                <artifactId>spring-ai-alibaba-a2a-client-compat</artifactId>
+                <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>io.github.a2asdk</groupId>
-                <artifactId>a2a-java-sdk-client</artifactId>
-                <version>${a2a-sdk.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.modelcontextprotocol.sdk</groupId>
-                <artifactId>mcp-bom</artifactId>
-                <version>${mcp.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
@@ -297,6 +303,34 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-commons</artifactId>
+            <version>2.1.0-boot2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+            <version>2.7.18</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>4.11.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
 
     <repositories>
         <repository>
@@ -339,7 +373,6 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories>
-
     <build>
         <pluginManagement>
             <plugins>
@@ -351,6 +384,132 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration>
+                    <includePluginDependencies>true</includePluginDependencies>
+                    <classpathScope>test</classpathScope>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.github.javaparser</groupId>
+                        <artifactId>javaparser-core</artifactId>
+                        <version>3.28.2</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.github.javaparser</groupId>
+                        <artifactId>javaparser-symbol-solver-core</artifactId>
+                        <version>3.28.2</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>java8-main-sources</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <executable>${java.home}/bin/java</executable>
+                            <arguments>
+                                <argument>--source</argument>
+                                <argument>17</argument>
+                                <argument>-cp</argument>
+                                <classpath></classpath>
+                                <argument>${maven.multiModuleProjectDirectory}/compatibility/java8/Java8SourceGenerator.java</argument>
+                                <argument>${project.basedir}/src/main/java</argument>
+                                <argument>${project.build.directory}/generated-sources/java8</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>java8-test-sources</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>generate-test-sources</phase>
+                        <configuration>
+                            <executable>${java.home}/bin/java</executable>
+                            <arguments>
+                                <argument>--source</argument>
+                                <argument>17</argument>
+                                <argument>-cp</argument>
+                                <classpath></classpath>
+                                <argument>${maven.multiModuleProjectDirectory}/compatibility/java8/Java8SourceGenerator.java</argument>
+                                <argument>${project.basedir}/src/test/java</argument>
+                                <argument>${project.build.directory}/generated-test-sources/java8</argument>
+                            </arguments>
+                            <skip>${maven.test.skip}</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.6.3</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>extra-enforcer-rules</artifactId>
+                        <version>1.8.0</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>boot2-compatibility</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <bannedDependencies>
+                                    <searchTransitive>true</searchTransitive>
+                                    <excludes>
+                                        <exclude>org.springframework.boot:*:[3,)</exclude>
+                                        <exclude>org.springframework:*:[6,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-commons:[3,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-jpa:[3,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-jdbc:[3,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-r2dbc:[3,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-redis:[3,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-keyvalue:[3,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-mongodb:[4,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-cassandra:[4,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-neo4j:[7,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-elasticsearch:[5,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-rest-core:[4,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-rest-webmvc:[4,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-couchbase:[5,)</exclude>
+                                        <exclude>org.springframework.data:spring-data-ldap:[3,)</exclude>
+                                        <exclude>tools.jackson.*:*</exclude>
+                                        <exclude>io.modelcontextprotocol.sdk:mcp-json-jackson3</exclude>
+                                        <exclude>org.testcontainers:*:[2,)</exclude>
+                                        <exclude>org.junit.jupiter:*:[6,)</exclude>
+                                        <exclude>jakarta.servlet:jakarta.servlet-api:[5,)</exclude>
+                                        <exclude>org.jspecify:jspecify</exclude>
+                                        <exclude>org.springframework.retry:spring-retry:[2,)</exclude>
+                                        <exclude>org.springframework.security:*:[6,)</exclude>
+                                        <exclude>jakarta.persistence:jakarta.persistence-api:[3,)</exclude>
+                                        <exclude>jakarta.validation:jakarta.validation-api:[3,)</exclude>
+                                        <exclude>jakarta.annotation:jakarta.annotation-api:[2,)</exclude>
+                                        <exclude>jakarta.transaction:jakarta.transaction-api:[2,)</exclude>
+                                        <exclude>io.modelcontextprotocol.sdk:*</exclude>
+                                        <exclude>io.github.a2asdk:*</exclude>
+                                        <exclude>io.smallrye.reactive:mutiny-zero</exclude>
+                                    </excludes>
+                                    <message>Use only the Spring Boot 2 / Spring 5 / Jackson 2 / Java 8 runtime stack.</message>
+                                </bannedDependencies>
+                                <enforceBytecodeVersion>
+                                    <maxJdkVersion>8</maxJdkVersion>
+                                </enforceBytecodeVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>io.spring.javaformat</groupId>
                 <artifactId>spring-javaformat-maven-plugin</artifactId>
@@ -424,10 +583,33 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <release>${java.version}</release>
+                    <release>8</release>
                     <compilerArgs>
-                        <compilerArg>-parameters</compilerArg>
+                        <arg>-parameters</arg>
+                        <arg>-XDstringConcat=inline</arg>
                     </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.github.bsideup.jabel</groupId>
+                            <artifactId>jabel-javac-plugin</artifactId>
+                            <version>1.0.0</version>
+                        </path>
+                        <path>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
+                            <version>${spring-boot.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-autoconfigure-processor</artifactId>
+                            <version>${spring-boot.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.42</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
                 <executions>
                     <!-- Replacing default-compile as it is treated specially by Maven -->
@@ -558,6 +740,8 @@
                 </configuration>
             </plugin>
         </plugins>
+        <sourceDirectory>${project.build.directory}/generated-sources/java8</sourceDirectory>
+        <testSourceDirectory>${project.build.directory}/generated-test-sources/java8</testSourceDirectory>
     </build>
 
     <reporting>

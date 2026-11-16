@@ -323,7 +323,7 @@ public class AgentToolNode implements NodeActionWithConfig {
 			AssistantMessage.ToolCall toolCall = toolCalls.get(index);
 			Map<String, Object> toolSpecificUpdate = stateCollector.createToolUpdateMap(index);
 
-			return CompletableFuture.runAsync(() -> {
+			return com.alibaba.cloud.ai.graph.utils.FutureTimeouts.orTimeout(CompletableFuture.runAsync(() -> {
 				try {
 					// Acquire permit to limit concurrent executions
 					semaphore.acquire();
@@ -344,8 +344,7 @@ public class AgentToolNode implements NodeActionWithConfig {
 					orderedResponses.compareAndSet(index, null,
 							ToolCallResponse.error(toolCall.id(), toolCall.name(), "Tool execution was interrupted"));
 				}
-			}, executor)
-				.orTimeout(toolExecutionTimeout.toMillis(), TimeUnit.MILLISECONDS)
+			}, executor), toolExecutionTimeout.toMillis(), TimeUnit.MILLISECONDS)
 				.exceptionally(ex -> {
 					// CAS: only set error if still null (tool hasn't completed successfully)
 					Throwable cause = ex instanceof CompletionException ? ex.getCause() : ex;
@@ -726,7 +725,7 @@ public class AgentToolNode implements NodeActionWithConfig {
 						"Async tool returned null future");
 			}
 
-			String result = future.orTimeout(callback.getTimeout().toMillis(), TimeUnit.MILLISECONDS).join();
+			String result = com.alibaba.cloud.ai.graph.utils.FutureTimeouts.orTimeout(future, callback.getTimeout().toMillis(), TimeUnit.MILLISECONDS).join();
 
 			if (enableActingLog) {
 				logger.info("[ThreadId {}] Agent {} acting, async tool {} finished",

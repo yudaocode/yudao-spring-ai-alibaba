@@ -1,0 +1,7 @@
+{
+  "source": "https://archive.apache.org/dist/opennlp/models/ud-models-1.0/opennlp-en-ud-ewt-sentence-1.0-1.9.3.bin",
+  "sha512": "6cb2c5ecc2598463aad9e8d463065a2f3c6f7090362380c64f4985e850032398338a47bf7583bf1e242dc9e75f060b44c633a4577994959445dbb9b56a314ec9",
+  "sha256": "8dddd7e582cedef4a79a83fd340cefcdafe58419bd20520fec90492ea4bffd11",
+  "manifest": "#\n#Tue Dec 08 09:52:05 EST 2020\nfactory=opennlp.tools.sentdetect.SentenceDetectorFactory\neosCharacters=.\\!?\nTrainerType=Event\nLanguage=en\nOpenNLP-Version=1.9.3\nManifest-Version=1.0\nTraining-Eventhash=4e963a4bef5af513d830333f86ab8835\nComponent-Name=SentenceDetectorME\nuseTokenEnd=true\nTimestamp=1607439125950\n",
+  "reason": "The Java 8 OpenNLP 1.9.5 runtime rejects models trained with major version 2."
+}

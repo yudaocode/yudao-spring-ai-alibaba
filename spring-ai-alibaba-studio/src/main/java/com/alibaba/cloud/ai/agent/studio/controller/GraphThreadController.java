@@ -139,7 +139,7 @@ public class GraphThreadController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Thread already exists: " + threadId);
 		}
 		catch (ResponseStatusException e) {
-			if (e.getStatusCode() != HttpStatus.NOT_FOUND) {
+			if (e.getStatus() != HttpStatus.NOT_FOUND) {
 				throw e;
 			}
 		}

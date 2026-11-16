@@ -86,6 +86,7 @@ public interface AssistantMessageHandler {
 		gen.writeEndArray();
 
 		serializeMetadata(gen, provider, msg.getMetadata());
+			MessagePartsHandler.serialize(msg.getParts(), gen);
 
 		// gen.writeArrayFieldStart( Property.MEDIA.field);
 		// for (var media : msg.getMedia()) {
@@ -108,6 +109,10 @@ public interface AssistantMessageHandler {
 
 			var text = node.findValue(Field.TEXT.name).asText();
 			var metadata = deserializeMetadata(mapper, node);
+            var parts = MessagePartsHandler.deserialize(mapper, node);
+            if (parts != null) {
+                return AssistantMessage.builder().parts(parts).properties(metadata).build();
+            }
 			var requestsNode = node.findValue(Field.TOOL_CALLS.name);
 
 			if (requestsNode.isNull() || requestsNode.isEmpty()) {

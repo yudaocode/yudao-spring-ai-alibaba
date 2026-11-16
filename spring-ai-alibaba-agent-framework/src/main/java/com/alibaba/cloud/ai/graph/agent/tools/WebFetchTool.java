@@ -57,7 +57,7 @@ import org.springframework.util.StringUtils;
  *
  * @see <a href="https://mikhail.io/2025/10/claude-code-web-tools/">Reference</a>
  */
-public class WebFetchTool implements BiFunction<WebFetchTool.Request, ToolContext, String> {
+public class WebFetchTool implements BiFunction<WebFetchTool.Request, ToolContext, String>, AutoCloseable {
 
 	private static final Logger logger = LoggerFactory.getLogger(WebFetchTool.class);
 
@@ -137,6 +137,13 @@ public class WebFetchTool implements BiFunction<WebFetchTool.Request, ToolContex
 			.maximumSize(maxCacheSize)
 			.expireAfterWrite(CACHE_TTL)
 			.build();
+	}
+
+	/** Releases the HTTP client owned by this tool. */
+	@Override
+	public void close() {
+		this.urlCache.invalidateAll();
+		this.httpClient.close();
 	}
 
 	@JsonClassDescription("Request to fetch and process web content")
@@ -307,10 +314,7 @@ public class WebFetchTool implements BiFunction<WebFetchTool.Request, ToolContex
 					return byteResponse.request();
 				}
 
-				@Override
-				public Optional<HttpResponse<String>> previousResponse() {
-					return Optional.empty();
-				}
+
 
 				@Override
 				public java.net.http.HttpHeaders headers() {
@@ -322,10 +326,7 @@ public class WebFetchTool implements BiFunction<WebFetchTool.Request, ToolContex
 					return body;
 				}
 
-				@Override
-				public Optional<javax.net.ssl.SSLSession> sslSession() {
-					return byteResponse.sslSession();
-				}
+
 
 				@Override
 				public URI uri() {

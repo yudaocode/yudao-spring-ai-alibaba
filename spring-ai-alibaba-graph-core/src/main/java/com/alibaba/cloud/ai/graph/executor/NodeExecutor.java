@@ -548,7 +548,7 @@ public class NodeExecutor extends BaseGraphExecutor {
 			// retain regular procedural events
 			.filter(data -> {
 				var value = data.resultValue();
-				return value.isEmpty() || !(value.get() instanceof InterruptionMetadata);
+				return !value.isPresent() || !(value.get() instanceof InterruptionMetadata);
 			});
 
 		Mono<Void> updateContextMono = Mono.fromRunnable(() -> {
@@ -713,7 +713,7 @@ public class NodeExecutor extends BaseGraphExecutor {
 			// retain regular procedural events
 			.filter(data -> {
 				var value = data.resultValue();
-				return value.isEmpty() || !(value.get() instanceof InterruptionMetadata);
+				return !value.isPresent() || !(value.get() instanceof InterruptionMetadata);
 			});
 	}
 

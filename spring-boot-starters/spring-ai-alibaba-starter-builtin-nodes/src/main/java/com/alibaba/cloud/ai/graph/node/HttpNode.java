@@ -171,7 +171,7 @@ public class HttpNode implements NodeAction {
 
 	private String replaceVariables(String template, OverAllState state) {
 		Matcher matcher = VARIABLE_PATTERN.matcher(template);
-		StringBuilder result = new StringBuilder();
+		StringBuffer result = new StringBuffer();
 		while (matcher.find()) {
 			String key = matcher.group(1);
 			Object value = state.value(key).orElse("");

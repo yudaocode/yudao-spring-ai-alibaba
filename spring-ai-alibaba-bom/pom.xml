@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
 <!--
   ~ Copyright 2024-2026 the original author or authors.
   ~
@@ -13,14 +14,12 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.alibaba.cloud.ai</groupId>
     <artifactId>spring-ai-alibaba-bom</artifactId>
-    <version>1.1.2.2</version>
+    <version>2.1.0-boot2-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -91,8 +90,10 @@
         <dependencies>
             <dependency>
                 <groupId>com.alibaba.cloud.ai</groupId>
-                <artifactId>spring-ai-alibaba-starter-agentscope</artifactId>
+                <artifactId>spring-ai-alibaba-extensions-bom</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>com.alibaba.cloud.ai</groupId>
@@ -129,13 +130,7 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
-                <artifactId>spring-ai-alibaba-sandbox</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-        </dependencies>
+            <dependency><groupId>com.alibaba.cloud.ai</groupId><artifactId>spring-ai-alibaba-a2a-spec-compat</artifactId><version>${project.version}</version></dependency><dependency><groupId>com.alibaba.cloud.ai</groupId><artifactId>spring-ai-alibaba-a2a-common-compat</artifactId><version>${project.version}</version></dependency><dependency><groupId>com.alibaba.cloud.ai</groupId><artifactId>spring-ai-alibaba-a2a-client-compat</artifactId><version>${project.version}</version></dependency><dependency><groupId>com.alibaba.cloud.ai</groupId><artifactId>spring-ai-alibaba-mutiny-zero-compat</artifactId><version>${project.version}</version></dependency><dependency><groupId>com.alibaba.cloud.ai</groupId><artifactId>spring-ai-alibaba-a2a-server-common-compat</artifactId><version>${project.version}</version></dependency></dependencies>
 
     </dependencyManagement>
 

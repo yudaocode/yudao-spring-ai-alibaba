@@ -1,0 +1,15 @@
+{
+  "artifact": "a2a-java-sdk-common",
+  "version": "0.2.5.Beta2",
+  "sourceJarSha256": "ca36f546a2812dc5d944b7097c4309de8e3bcf5a2da530786998bb2210b388b4",
+  "files": [
+    {
+      "path": "io/a2a/util/Assert.java",
+      "upstreamSha256": "5974ce7fb138e966ac76b746338bbb15d54f9bad560130e52a2e7db5a60480fa"
+    },
+    {
+      "path": "io/a2a/util/NotNull.java",
+      "upstreamSha256": "894cd116f0360324291df52569df8652083dafdde410aed36a4f4c3362a1003e"
+    }
+  ]
+}

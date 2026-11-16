@@ -275,7 +275,7 @@ public class NacosMcpGatewayToolCallback implements ToolCallback {
 			return "";
 		}
 		Matcher matcher = TEMPLATE_PATTERN.matcher(template);
-		StringBuilder result = new StringBuilder();
+		StringBuffer result = new StringBuffer();
 		while (matcher.find()) {
 			// 获取完整路径，如 .args.name 或 .data.key1.key2
 			String fullPath = matcher.group(1);
@@ -531,7 +531,7 @@ public class NacosMcpGatewayToolCallback implements ToolCallback {
 				HttpClientSseClientTransport.Builder transportBuilder = HttpClientSseClientTransport.builder(baseUrl.toString())
 						.sseEndpoint(sseEndpoint.toString());
 				if (mcpServerVO.getHeaders() != null) {
-					transportBuilder.customizeRequest(requestBuilder -> {
+					transportBuilder.addHttpRequestCustomizer((requestBuilder, method, uri, body, context) -> {
 						for (Map.Entry<String, String> headerName : mcpServerVO.getHeaders().entrySet())
 							requestBuilder.header(headerName.getKey(), headerName.getValue());
 					});

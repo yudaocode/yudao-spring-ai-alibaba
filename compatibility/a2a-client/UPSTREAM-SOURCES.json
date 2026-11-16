@@ -1,0 +1,35 @@
+{
+  "artifact": "a2a-java-sdk-client",
+  "version": "0.2.5.Beta2",
+  "sourceJarSha256": "70cfeb6a9fef5481dd86c9691249df3f7c619fc21b62f870612c971bfb9fd45d",
+  "files": [
+    {
+      "path": "io/a2a/A2A.java",
+      "upstreamSha256": "b41039486660570e164ae2216d1a895d016be4dd13ac2029e708d722b96caebb"
+    },
+    {
+      "path": "io/a2a/client/A2AClient.java",
+      "upstreamSha256": "91a7e25fc8e64446cf06999ecc8df6ef67eb5eac4c7f52b85337c8f2179cf8da"
+    },
+    {
+      "path": "io/a2a/client/A2ACardResolver.java",
+      "upstreamSha256": "3a61c55fe96c69af91bcf2e0ca8b4c7d02846554952a8e30212c042afe9c0749"
+    },
+    {
+      "path": "io/a2a/client/sse/SSEEventListener.java",
+      "upstreamSha256": "e3d1b195b7cb730af083ac82c754524e351abe31c7560735520758eef15984e0"
+    },
+    {
+      "path": "io/a2a/http/JdkA2AHttpClient.java",
+      "upstreamSha256": "49c99d2abe7e21b7b9b6b20c5bbd475920dc11f47ec259ffe5a1f2bd72368f09"
+    },
+    {
+      "path": "io/a2a/http/A2AHttpResponse.java",
+      "upstreamSha256": "3caef099d4951c95120ccd4b26c0d3c460afd701dd5f1ba07efeb71f4e9c52f8"
+    },
+    {
+      "path": "io/a2a/http/A2AHttpClient.java",
+      "upstreamSha256": "50fded73c1be75f692fee8c8de5141adfc2ee367064bfd7521cae6f6a33b08b0"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion>
+<groupId>cn.iocoder.ai.validation</groupId><artifactId>alibaba-boot2-runtime-smoke</artifactId><version>1</version>
+<properties><java.version>1.8</java.version></properties>
+<dependencyManagement><dependencies>
+<dependency><groupId>org.springframework.ai</groupId><artifactId>spring-ai-bom</artifactId><version>2.1.0-boot2-SNAPSHOT</version><type>pom</type><scope>import</scope></dependency>
+<dependency><groupId>com.alibaba.cloud.ai</groupId><artifactId>spring-ai-alibaba-bom</artifactId><version>2.1.0-boot2-SNAPSHOT</version><type>pom</type><scope>import</scope></dependency>
+<dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-dependencies</artifactId><version>2.7.18</version><type>pom</type><scope>import</scope></dependency></dependencies></dependencyManagement>
+<dependencies>
+<dependency><groupId>com.alibaba.cloud.ai</groupId><artifactId>spring-ai-alibaba-a2a-server-common-compat</artifactId></dependency>
+<dependency><groupId>com.alibaba.cloud.ai</groupId><artifactId>spring-ai-alibaba-graph-core</artifactId></dependency>
+<dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-test</artifactId><scope>test</scope></dependency>
+</dependencies>
+<build><directory>${project.basedir}/target-independent</directory><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.14.1</version><configuration><source>8</source><target>8</target></configuration></plugin><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.5.4</version></plugin></plugins></build>
+</project>

@@ -1,0 +1,11 @@
+OpenNLP Pretrained Models
+https://opennlp.apache.org
+==========================
+
+See CHANGES for a release history.
+
+- The filenames of each model signify the model language, type, Universal Dependency training data, and version numbers.
+- The filename format is opennlp-[language-code]-ud-[corpus]-[model-type]-[model-version]-[opennlp-version].bin.
+- For example, the model file opennlp-de-ud-gsd-pos-1.0-1.9.3 is German language, trained on the GSD corpus, and is a parts-of-speech model. It is version 1.0 of the model and it was trained using OpenNLP 1.9.3.
+
+These models are licensed under the Apache License, version 2.0.

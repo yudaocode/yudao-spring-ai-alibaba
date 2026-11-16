@@ -109,7 +109,7 @@ public class QuestionClassifierNode implements NodeAction {
 		}
 		Map<String, Object> params = Stream.of(template)
 			.map(VAR_TEMPLATE_PATTERN::matcher)
-			.map(Matcher::results)
+			.map(com.alibaba.cloud.ai.graph.utils.RegexSupport::results)
 			.map(results -> results.collect(Collectors.toUnmodifiableMap(r -> r.group(1),
 					r -> state.value(r.group(1)).orElse(""), (a, b) -> b)))
 			.findFirst()

@@ -46,7 +46,7 @@ import io.a2a.spec.StreamingJSONRPCRequest;
 import io.a2a.spec.TaskResubscriptionRequest;
 import io.a2a.spec.UnsupportedOperationError;
 import io.a2a.util.Utils;
-import org.reactivestreams.FlowAdapters;
+import org.springframework.ai.compat.jdkhttp.FlowAdapters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
@@ -114,7 +114,7 @@ public class JsonRpcA2aRequestHandler implements A2aRequestHandler {
 		else {
 			return Flux.just(generateErrorResponse(request, new UnsupportedOperationError()));
 		}
-		return Flux.from(FlowAdapters.toPublisher(publisher))
+		return Flux.from(FlowAdapters.flowPublisherToFlux(publisher))
 			.map((Function<JSONRPCResponse<?>, JSONRPCResponse<?>>) jsonrpcResponse -> jsonrpcResponse)
 			.delaySubscription(Duration.ofMillis(10));
 	}

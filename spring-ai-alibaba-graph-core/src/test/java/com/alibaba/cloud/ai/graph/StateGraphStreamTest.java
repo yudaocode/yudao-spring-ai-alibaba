@@ -185,7 +185,7 @@ public class StateGraphStreamTest {
 	@NotNull
 	private static AsyncEdgeAction getAsyncEdgeAction() {
 		return t -> {
-			if (t.value("messages").isEmpty())
+			if (!t.value("messages").isPresent())
 				return completedFuture("result");
 			List collectedMessages = (List) t.value("messages").get();
 			// 使用异步方式等待流结束

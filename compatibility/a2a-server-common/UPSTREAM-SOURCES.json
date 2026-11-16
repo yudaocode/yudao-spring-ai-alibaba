@@ -1,0 +1,135 @@
+{
+  "artifact": "a2a-java-sdk-server-common",
+  "version": "0.2.5.Beta2",
+  "sourceJarSha256": "e6c49393ca6b7ce963e4d421f9a960a39b7b582876b95b5166224a942b4c3fc4",
+  "files": [
+    {
+      "path": "io/a2a/server/ServerCallContext.java",
+      "upstreamSha256": "92cc366be792a65f49a9bbd54917d11f95f621e44ad46261c1b0c3bc6c049831"
+    },
+    {
+      "path": "io/a2a/server/auth/User.java",
+      "upstreamSha256": "5d9946228a26df58e79da978f57b92eaa6c73b114b4cfed903ae77e46727051b"
+    },
+    {
+      "path": "io/a2a/server/auth/UnauthenticatedUser.java",
+      "upstreamSha256": "bc14f6f3d4de073a0c260d8a6d08357ba19fa8c2d2dc7f64bb7c21d03f4cea03"
+    },
+    {
+      "path": "io/a2a/server/PublicAgentCard.java",
+      "upstreamSha256": "8f566709ae93efeb1a48f0d40607029247d291c911248e69c6ab5cf8c0118760"
+    },
+    {
+      "path": "io/a2a/server/requesthandlers/DefaultRequestHandler.java",
+      "upstreamSha256": "5a05e26027dbb779a293e6bc459fff47f1d033d2fd1437f594a88d4a42fce56d"
+    },
+    {
+      "path": "io/a2a/server/requesthandlers/RequestHandler.java",
+      "upstreamSha256": "b7f514ef37d5dd639204f180f713d79e95a5437343470412d361777a155566b5"
+    },
+    {
+      "path": "io/a2a/server/requesthandlers/JSONRPCHandler.java",
+      "upstreamSha256": "f82ea2b774f864f0f7595030cea2ed378676789b3025ed6ec176c596a06fdd0b"
+    },
+    {
+      "path": "io/a2a/server/tasks/TaskStore.java",
+      "upstreamSha256": "e7b5008267880768f3ecc9a2b46339a9ca4f54e7a41e2fe602ae5bbd4449a96b"
+    },
+    {
+      "path": "io/a2a/server/tasks/TaskUpdater.java",
+      "upstreamSha256": "c0cef4eaa6d04265d119fbbaed713648c5bf7554f0945600dcf24d166b704bcc"
+    },
+    {
+      "path": "io/a2a/server/tasks/TaskManager.java",
+      "upstreamSha256": "5bff11933a33e838a0fc1779f6d2b790a7488a26becc82edfd2b12b6403a1d1c"
+    },
+    {
+      "path": "io/a2a/server/tasks/PushNotificationConfigStore.java",
+      "upstreamSha256": "9fb59814b2257c95aa8b7c22cd801bd5befaf6c243d972eb1b013a70c742ddcf"
+    },
+    {
+      "path": "io/a2a/server/tasks/BasePushNotificationSender.java",
+      "upstreamSha256": "0ea8593fe987115b6401195aa3a0105985e013ab0204bd5d8d9237a2599ef9c2"
+    },
+    {
+      "path": "io/a2a/server/tasks/InMemoryPushNotificationConfigStore.java",
+      "upstreamSha256": "3552c81686695e45dc7a50958fb9d0938a888c5cb14c8652d791f3ac03a7cba1"
+    },
+    {
+      "path": "io/a2a/server/tasks/InMemoryTaskStore.java",
+      "upstreamSha256": "3dcc471f32947832d6f366b76e9d1329c290bfc148d58c868a7e2de6a1324358"
+    },
+    {
+      "path": "io/a2a/server/tasks/PushNotificationSender.java",
+      "upstreamSha256": "9a3418fa49892918cb79fbe603db3029df118c49b3865a34b7be1b17757b5a91"
+    },
+    {
+      "path": "io/a2a/server/tasks/ResultAggregator.java",
+      "upstreamSha256": "65cff3b9d27741f0d87db0735464c2f4239413b7c17400c4d404c91aacdab483"
+    },
+    {
+      "path": "io/a2a/server/util/async/AsyncExecutorProducer.java",
+      "upstreamSha256": "cd6bf1f246e987a8fdffd1bc732f7c96ee4212fdd6a7e0d040eb303299cbd5bd"
+    },
+    {
+      "path": "io/a2a/server/util/async/AsyncUtils.java",
+      "upstreamSha256": "049e942d30fd65d186f4863165b1530e727c26115ef135cfeb50e80cc6610375"
+    },
+    {
+      "path": "io/a2a/server/util/async/Internal.java",
+      "upstreamSha256": "d69497e7f3494ffb9f6fc2f381a48aa7a5a37aa72171617167123242ad37e1a1"
+    },
+    {
+      "path": "io/a2a/server/agentexecution/AgentExecutor.java",
+      "upstreamSha256": "0e77bcdef377f653ae0e5fcf600378b23adb75cec6b04094b1790b2d68dde9f9"
+    },
+    {
+      "path": "io/a2a/server/agentexecution/RequestContext.java",
+      "upstreamSha256": "60ad0c1a07733f2c546b98722801dbb4f2049e3877a7265004ac0144edbac52e"
+    },
+    {
+      "path": "io/a2a/server/agentexecution/SimpleRequestContextBuilder.java",
+      "upstreamSha256": "0bdf39f8f7405fda9cca9a433444c8d0e709f81f91c0cde33a6c4e21cfcec6f7"
+    },
+    {
+      "path": "io/a2a/server/events/EventConsumer.java",
+      "upstreamSha256": "c977d508556778d10efdf0b13bd6af9085eeefdac8c3a835199e969484609bf1"
+    },
+    {
+      "path": "io/a2a/server/events/NoTaskQueueException.java",
+      "upstreamSha256": "5b2e405c663d8e08bfbbae82e9ea76c448a0ef0bbd982ee8118c113aa9912c9a"
+    },
+    {
+      "path": "io/a2a/server/events/TaskQueueExistsException.java",
+      "upstreamSha256": "a96358870d74b0259a66cbd8fea17a03cb9d7b2fc0784715e62eea5d1cd6c4be"
+    },
+    {
+      "path": "io/a2a/server/events/EventQueueClosedException.java",
+      "upstreamSha256": "61d7bfa60fd213dc685d502a61193021dbe87791f53d45c491e54df5ea0dc17d"
+    },
+    {
+      "path": "io/a2a/server/events/QueueManager.java",
+      "upstreamSha256": "aa72450fb29127d85e9d3914a084f5aaaea8879ce08eb4acf25514d964130e98"
+    },
+    {
+      "path": "io/a2a/server/events/EventQueue.java",
+      "upstreamSha256": "2fc0a837c3775f66d13d3977b1e6e3a55359498137fe4f324886c8c1a325c662"
+    },
+    {
+      "path": "io/a2a/server/events/InMemoryQueueManager.java",
+      "upstreamSha256": "c015bfe9d053847c92da3445e6bc6488bd87fd74d896cd7bbc9723f2cfb1860a"
+    },
+    {
+      "path": "io/a2a/server/events/EnhancedRunnable.java",
+      "upstreamSha256": "11be66d4dfeeb34a7afc4fd3f8ffe0bf7ff14ecc1e3f860133f16fd970797824"
+    },
+    {
+      "path": "io/a2a/server/ExtendedAgentCard.java",
+      "upstreamSha256": "51c288f02bf35cf29ceed8f8b65fd06390fff89eb94a79bf9ba8c91eb6ba47db"
+    },
+    {
+      "path": "io/a2a/server/JSONRPCException.java",
+      "upstreamSha256": "d47c954b60199232394a7424eba0be721069ab6d2a0b5071e99431f0c6662b66"
+    }
+  ]
+}

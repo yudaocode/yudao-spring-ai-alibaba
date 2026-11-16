@@ -27,7 +27,7 @@ class ParallelNodeTest {
 
 	@Test
 	void initializesWithMoreThanOneHundredProcessors() throws Exception {
-		String javaCommand = ProcessHandle.current().info().command().orElseThrow();
+		String javaCommand = java.nio.file.Paths.get(System.getProperty("java.home"), "bin", "java").toString();
 		String classPath = System.getProperty("surefire.test.class.path", System.getProperty("java.class.path"));
 		Process process = new ProcessBuilder(javaCommand, "-XX:ActiveProcessorCount=128", "-cp",
 				classPath, ParallelNodeLoader.class.getName()).redirectErrorStream(true)

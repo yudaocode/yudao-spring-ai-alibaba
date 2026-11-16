@@ -169,7 +169,11 @@ public class HttpNodeTest {
 		RecordedRequest request = mockWebServer.takeRequest();
 
 		assertEquals("field1=v1&field2=v2", request.getBody().readUtf8());
-		assertEquals("application/x-www-form-urlencoded", request.getHeader("Content-Type"));
+		org.springframework.http.MediaType contentType = org.springframework.http.MediaType
+			.parseMediaType(request.getHeader("Content-Type"));
+		assertEquals("application", contentType.getType());
+		assertEquals("x-www-form-urlencoded", contentType.getSubtype());
+		assertEquals(java.nio.charset.StandardCharsets.UTF_8, contentType.getCharset());
 	}
 
 	@Test

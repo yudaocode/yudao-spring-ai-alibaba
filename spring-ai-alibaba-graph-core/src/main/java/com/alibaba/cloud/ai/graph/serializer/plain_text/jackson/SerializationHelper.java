@@ -159,7 +159,8 @@ class SerializationHelper {
 			}
 			return normalizedList != null ? normalizedList : normalizedArray;
 		}
-		if (value instanceof Record record) {
+		if (value != null && isRecordType(value.getClass())) {
+            Object record = value;
 			if (!(provider.findValueSerializer(record.getClass()) instanceof BeanSerializerBase beanSerializer)) {
 				return record;
 			}
@@ -198,7 +199,8 @@ class SerializationHelper {
 								|| propertyWriter.getTypeSerializer() != null
 								|| (propertyValue == null
 										? propertyWriter.hasNullSerializer()
-										: propertyWriter.hasSerializer());
+										: hasAssignedPropertySerializer(provider, propertyWriter, accessor,
+											property.getPrimaryType(), propertyValue));
 						if (hasAssignedSerializer) {
 							normalized.putAll(applyPropertyWriter(provider, propertyWriter, record));
 						}
@@ -221,7 +223,11 @@ class SerializationHelper {
 		return value;
 	}
 
-	private static boolean requiresRecordNormalization(SerializerProvider provider, Record record,
+    private static boolean isRecordType(Class<?> type) {
+        return type.isAnnotationPresent(org.springframework.ai.util.Java8Record.class);
+    }
+
+	private static boolean requiresRecordNormalization(SerializerProvider provider, Object record,
 			List<BeanPropertyDefinition> properties) throws IOException {
 		for (BeanPropertyDefinition property : properties) {
 			AnnotatedMember accessor = property.getAccessor();
@@ -299,14 +305,14 @@ class SerializationHelper {
 		JsonInclude.Value effectiveInclusion = provider.getConfig()
 			.introspect(provider.constructType(valueClass))
 			.findPropertyInclusion(defaultInclusion);
-		boolean unsupportedInclusion = valueClass.isRecord()
+		boolean unsupportedInclusion = isRecordType(valueClass)
 				? hasUnsupportedRecordInclusion(effectiveInclusion)
 				: !defaultInclusion.equals(globalInclusion) || !effectiveInclusion.equals(defaultInclusion);
 		return unsupportedInclusion
 				|| hasContainerConfigOverride(provider, valueClass)
 				|| !JsonFormat.Value.empty().equals(provider.getConfig().getDefaultPropertyFormat(valueClass))
-				|| !valueClass.isRecord() && provider.getConfig().findMixInClassFor(valueClass) != null
-				|| hasNonStructuralJacksonAnnotation(List.of(valueClass.getAnnotations()))
+				|| !isRecordType(valueClass) && provider.getConfig().findMixInClassFor(valueClass) != null
+				|| hasNonStructuralJacksonAnnotation(List.of(valueClass.getAnnotations()), isRecordType(valueClass))
 				|| introspector.findSerializer(classInfo) != null
 				|| introspector.findKeySerializer(classInfo) != null
 				|| introspector.findContentSerializer(classInfo) != null
@@ -316,7 +322,7 @@ class SerializationHelper {
 	}
 
 	private static boolean hasContainerConfigOverride(SerializerProvider provider, Class<?> valueClass) {
-		if (valueClass.isRecord()) {
+		if (isRecordType(valueClass)) {
 			return false;
 		}
 		var override = provider.getConfig().findConfigOverride(valueClass);
@@ -385,6 +391,27 @@ class SerializationHelper {
 		};
 	}
 
+	private static boolean hasAssignedPropertySerializer(SerializerProvider provider,
+			BeanPropertyWriter writer, AnnotatedMember accessor, JavaType declaredType, Object value) {
+		if (!writer.hasSerializer()) {
+			return false;
+		}
+		var introspector = provider.getAnnotationIntrospector();
+		if (!hasIncompatibleContainerValue(declaredType, value)
+				|| introspector.findSerializer(accessor) != null
+				|| introspector.findContentSerializer(accessor) != null
+				|| introspector.findKeySerializer(accessor) != null
+				|| introspector.findSerializationConverter(accessor) != null
+				|| introspector.findSerializationContentConverter(accessor) != null) {
+			return true;
+		}
+		// Jackson can statically assign a standard container serializer from a record's
+		// declared generic type. Raw provider metadata may instead contain Maps: use
+		// dynamic normalization for those values, retaining explicit custom serializers.
+		return !isStandardCollectionSerializer(writer.getSerializer())
+				&& !isStandardMapSerializer(writer.getSerializer());
+	}
+
 	private static List<BeanPropertyWriter> getEffectivePropertyWriters(BeanSerializerBase serializer) {
 		List<BeanPropertyWriter> writers = new ArrayList<>();
 		var properties = serializer.properties();
@@ -413,7 +440,7 @@ class SerializationHelper {
 	}
 
 	private static Map<String, Object> applyPropertyWriter(SerializerProvider provider,
-			BeanPropertyWriter writer, Record record) throws IOException {
+			BeanPropertyWriter writer, Object record) throws IOException {
 		ObjectCodec codec = provider.getGenerator().getCodec();
 		try (TokenBuffer buffer = new TokenBuffer(codec, false)) {
 			buffer.writeStartObject();
@@ -421,7 +448,8 @@ class SerializationHelper {
 				writer.serializeAsField(record, buffer, provider);
 			}
 			catch (Exception ex) {
-				throw new IOException("Failed to apply serializer for metadata property " + writer.getName(), ex);
+				throw com.fasterxml.jackson.databind.JsonMappingException.from(provider.getGenerator(),
+						"Failed to apply serializer for metadata property " + writer.getName(), ex);
 			}
 			buffer.writeEndObject();
 			try (JsonParser parser = buffer.asParser(codec)) {
@@ -473,10 +501,20 @@ class SerializationHelper {
 		}
 	}
 
-	private static boolean hasNonStructuralJacksonAnnotation(Iterable<Annotation> annotations) {
+	private static boolean hasNonStructuralJacksonAnnotation(Iterable<Annotation> annotations, boolean generatedRecord) {
 		for (Annotation annotation : annotations) {
+            // This exact visibility contract is generated to retain record components
+            // as POJO fields. It is structural, not a user serializer override.
+            if (generatedRecord && annotation instanceof com.fasterxml.jackson.annotation.JsonAutoDetect visibility
+                    && visibility.fieldVisibility() == com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY
+                    && visibility.getterVisibility() == com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE
+                    && visibility.isGetterVisibility() == com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE
+                    && visibility.setterVisibility() == com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE
+                    && visibility.creatorVisibility() == com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.DEFAULT) {
+                continue;
+            }
 			Class<? extends Annotation> type = annotation.annotationType();
-			if (type.getPackageName().startsWith("com.fasterxml.jackson")
+			if ((type.getPackage() == null ? "" : type.getPackage().getName()).startsWith("com.fasterxml.jackson")
 					&& type != JsonProperty.class && type != JsonIgnore.class && type != JsonInclude.class) {
 				return true;
 			}

@@ -1,3 +1,28 @@
+<!-- YUDAO-COMPATIBILITY-INTRO-BEGIN -->
+# yudao-spring-ai-alibaba
+
+yudao-spring-ai-alibaba 是 [Spring AI Alibaba](https://github.com/alibaba/spring-ai-alibaba) 的芋道社区兼容维护版本，并非官方发布。补齐 **Spring AI 2.x** 的 API 和依赖适配，让 **Spring Boot 2.x、Spring Boot 3.x、Spring Boot 4.x** 项目可以选择对应兼容版本。
+
+## 仓库与分支
+
+| 平台 | 仓库地址 |
+| --- | --- |
+| Gitee | [yudao-spring-ai-alibaba](https://gitee.com/yudaocode/yudao-spring-ai-alibaba) |
+| GitHub | [yudao-spring-ai-alibaba](https://github.com/yudaocode/yudao-spring-ai-alibaba) |
+
+| 分支 | Spring Boot 基准 | 目标运行 JDK | 源码开发版本 |
+| --- | --- | --- | --- |
+| [`main`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main) | 4.x（4.1.2） | 17+（消费验证使用25） | `2.1.0-boot4-SNAPSHOT` |
+| [`main-jdk17`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk17) | 3.x（3.5.15） | 17+ | `2.1.0-boot3-SNAPSHOT` |
+| [`main-jdk8`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk8) | 2.x（2.7.18） | 8+ | `2.1.0-boot2-SNAPSHOT` |
+
+**当前分支：`main-jdk8`。** 保留官方 Maven groupId `com.alibaba.cloud.ai`、artifactId 和 Java 包名，使用对应兼容版本区分。源码开发版尚未发布 Maven 制品；具体构建方式、已验证范围与 Java 8 可选模块限制见 [COMPATIBILITY.md](COMPATIBILITY.md)。
+
+下方保留官方项目原始 README。兼容版的分支、版本和环境要求以本节说明为准。
+<!-- YUDAO-COMPATIBILITY-INTRO-END -->
+
+---
+
 # [Spring AI Alibaba](https://java2ai.com)
 
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)

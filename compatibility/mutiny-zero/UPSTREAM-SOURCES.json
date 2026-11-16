@@ -1,0 +1,143 @@
+{
+  "artifact": "mutiny-zero",
+  "version": "1.1.1",
+  "sourceJarSha256": "62e59e5cd1f984ec4af9ce3a3366eaee697e8d408f5be070c1540849ae06c4a3",
+  "files": [
+    {
+      "path": "mutiny/zero/package-info.java",
+      "upstreamSha256": "fb562ea127a524b1e51e78d94a635623a6724320a59275060ff74b7a657ef35a"
+    },
+    {
+      "path": "mutiny/zero/PublisherHelpers.java",
+      "upstreamSha256": "29d4243870d7c94b405aa08d2dd5fb10a64b740f033649ba85c65531c3abfec2"
+    },
+    {
+      "path": "mutiny/zero/ZeroPublisher.java",
+      "upstreamSha256": "7279f6f125ba4762f0754983a9d8e0370f4b7e5fb3920ed94e432209adad3a53"
+    },
+    {
+      "path": "mutiny/zero/TubeConfiguration.java",
+      "upstreamSha256": "3cec6ab5ca6c09b390b7afcbc328ea577da88939df49b1c30a5ea4ba8cc29981"
+    },
+    {
+      "path": "mutiny/zero/operators/package-info.java",
+      "upstreamSha256": "34980874f04f0ed41c50a8dcc0d6fb607a59f00c104a0c6c7ac7990e6433d40e"
+    },
+    {
+      "path": "mutiny/zero/operators/Select.java",
+      "upstreamSha256": "dea49fd5081a9011235b0b9de8ebad15b990e425e01de3559d3ab4416f50d5bb"
+    },
+    {
+      "path": "mutiny/zero/operators/Recover.java",
+      "upstreamSha256": "bd19194f64e163f2edf4df65bd31e9cc1303ec5c5e12d7056d6a510a893b8a9d"
+    },
+    {
+      "path": "mutiny/zero/operators/ProcessorBase.java",
+      "upstreamSha256": "fcbd725c8a3ea9346c16340d8b864a7716acb63b11d6142f2ed9544dd6b35c2c"
+    },
+    {
+      "path": "mutiny/zero/operators/Concatenate.java",
+      "upstreamSha256": "3966349df895a8e633e18cb28d7e0e85f6fdff2b2836200f1a70c45494fea05c"
+    },
+    {
+      "path": "mutiny/zero/operators/Retry.java",
+      "upstreamSha256": "ab5ad89c3aee5048e2ef68e6b3f78c49464627489e00ef66cb8854ab401f5954"
+    },
+    {
+      "path": "mutiny/zero/operators/Transform.java",
+      "upstreamSha256": "e90cf4b81d7ff07f2bc650b3498248481503b20d20d10543847714e0078ba49e"
+    },
+    {
+      "path": "mutiny/zero/Tube.java",
+      "upstreamSha256": "8d268100c5ee1326c27b04a38d6507b417d7769f65798717fdeaf2e011801fc9"
+    },
+    {
+      "path": "mutiny/zero/internal/IterablePublisher.java",
+      "upstreamSha256": "9c029725e3b07f3a8b58017b348968641f0126a817eae936f7795175b6178842"
+    },
+    {
+      "path": "mutiny/zero/internal/package-info.java",
+      "upstreamSha256": "326bbd990efc6d451c3b8c93ca22f92a2933501ccbada68e2dffc5c83e67e288"
+    },
+    {
+      "path": "mutiny/zero/internal/CompletionStagePublisher.java",
+      "upstreamSha256": "c8948065a567e55774bfc2e5595ed49e3d7121cd9d2ba53b7de39fcfed49d3f6"
+    },
+    {
+      "path": "mutiny/zero/internal/Helper.java",
+      "upstreamSha256": "88227b4db45cf08eef3927fed5039c3e157762092688e53dfbdc045dabb6d2ad"
+    },
+    {
+      "path": "mutiny/zero/internal/TubeBase.java",
+      "upstreamSha256": "99ff5f527e2319ed5db10f68127100465126772fd77b1623c7e7969529621a82"
+    },
+    {
+      "path": "mutiny/zero/internal/AlreadyCompletedSubscription.java",
+      "upstreamSha256": "2f2d7ea357f888cc5a6f5304be8756b106e4e36c6ffce7cf5918d87936d67ae9"
+    },
+    {
+      "path": "mutiny/zero/internal/IteratorSubscription.java",
+      "upstreamSha256": "428a1d6ac3c07a91105d0f1c2bf740736a717e46a1e477b6c40ab3a159040b79"
+    },
+    {
+      "path": "mutiny/zero/internal/IgnoringTube.java",
+      "upstreamSha256": "8a1906a5814f50f4144082a9c571a3bec04c85d1e6642a83f200216a9f72f7cc"
+    },
+    {
+      "path": "mutiny/zero/internal/BufferingTubeBase.java",
+      "upstreamSha256": "a5fd59a765da40e355f8e866315c49bd399a130cce2b411c0cf86b1284d4497b"
+    },
+    {
+      "path": "mutiny/zero/internal/ErroringTube.java",
+      "upstreamSha256": "732c93973748eb4231495475e60ae76d5267952c9c6bfc60639318e2c63ebed1"
+    },
+    {
+      "path": "mutiny/zero/internal/PublisherToCompletionStageSubscriber.java",
+      "upstreamSha256": "757fb9b086ef65136cde85e9eaea77e7abd387e1b89ff2d34f74bd204b467395"
+    },
+    {
+      "path": "mutiny/zero/internal/BufferingTube.java",
+      "upstreamSha256": "df86932e4fdd4dfaceb119d705ae71306806032c3eba8bb283baf4be1eaf7e7b"
+    },
+    {
+      "path": "mutiny/zero/internal/EmptyPublisher.java",
+      "upstreamSha256": "4cb8d23e75e5d726dd7abaf57d9d85e4f4ffd8569c138db5be1572cf728b1b0b"
+    },
+    {
+      "path": "mutiny/zero/internal/DroppingTube.java",
+      "upstreamSha256": "7d6263aef6cc22885436a7d48eefb5cf69374d46c64b23c60527c1cf8d7ce6a4"
+    },
+    {
+      "path": "mutiny/zero/internal/TubePublisher.java",
+      "upstreamSha256": "c533dc9bef30ff60fe1b89f545d3ac1fc2d363ac269fb8df43d40b27a58a4883"
+    },
+    {
+      "path": "mutiny/zero/internal/UnbounbedBufferingTube.java",
+      "upstreamSha256": "a1deaa234b924dd93da6b2eb09b1479bc5b1069666887c88d91f571dd480a33a"
+    },
+    {
+      "path": "mutiny/zero/internal/StreamPublisher.java",
+      "upstreamSha256": "f54629862f0d77618736177b87b9f86f9efc12ecd983b96fb5654001f372262d"
+    },
+    {
+      "path": "mutiny/zero/internal/GeneratorPublisher.java",
+      "upstreamSha256": "fdc93b0919d17eda527aa74a71edd5f0464afd24ca1f2fa8e3d03fec1d03805b"
+    },
+    {
+      "path": "mutiny/zero/internal/LatestTube.java",
+      "upstreamSha256": "097c4f364e94e89fb85dccb954a775e25fbba04287df8a4b6afca268faa0ee4c"
+    },
+    {
+      "path": "mutiny/zero/internal/FailurePublisher.java",
+      "upstreamSha256": "795ca5e3b41578739cb85833f4e1f2fd3d51b6fc55b7103d7bd078938af59d48"
+    },
+    {
+      "path": "mutiny/zero/BackpressureStrategy.java",
+      "upstreamSha256": "c195c581a75cf295dc0fdd2070c111396d0e85571042ddf4c82820103af22639"
+    },
+    {
+      "path": "mutiny/zero/AsyncHelpers.java",
+      "upstreamSha256": "9c19b973d2faeab794eab9d6cf2e54cbdc8f13675cb50ae2eca701f3c69be412"
+    }
+  ]
+}

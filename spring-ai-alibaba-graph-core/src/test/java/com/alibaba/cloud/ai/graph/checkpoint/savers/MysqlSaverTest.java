@@ -47,7 +47,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
 import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.EnabledIfDockerAvailable;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static com.alibaba.cloud.ai.graph.StateGraph.END;
@@ -58,9 +57,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@EnabledIfDockerAvailable
 @EnabledIf(value = "isCI", disabledReason = "this test is designed to run only in the GitHub CI environment.")
-@Testcontainers
+@Testcontainers(disabledWithoutDocker = true)
 public class MysqlSaverTest {
     private static boolean isCI() {
         return "true".equalsIgnoreCase(System.getProperty("CI", System.getenv("CI")));

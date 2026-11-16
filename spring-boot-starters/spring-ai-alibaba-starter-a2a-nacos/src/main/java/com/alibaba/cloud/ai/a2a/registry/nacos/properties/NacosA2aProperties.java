@@ -162,7 +162,7 @@ public class NacosA2aProperties implements EnvironmentAware {
 
 	protected String resolveKey(String key) {
 		Matcher matcher = PATTERN.matcher(key);
-		StringBuilder sb = new StringBuilder();
+		StringBuffer sb = new StringBuffer();
 		while (matcher.find()) {
 			matcher.appendReplacement(sb, matcher.group(1).toUpperCase());
 		}

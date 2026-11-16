@@ -37,7 +37,7 @@ target/
 **/node_modules
 
 # windows os
-/extensions/
+
 /h2-data/
 
 # checkstyle report files
@@ -60,3 +60,7 @@ modified_mcp_config.json
 
 .checkstyle
 model-config.yaml
+
+# Isolated Java 8 A2A acceptance builds
+/compatibility/acceptance/boot2-a2a-consumer/target-independent/
+/compatibility/acceptance/boot2-a2a-consumer/target-boot-parent/

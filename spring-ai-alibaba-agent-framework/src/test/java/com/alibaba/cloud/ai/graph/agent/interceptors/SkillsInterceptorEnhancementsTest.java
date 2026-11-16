@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static java.util.List.of;
+import static org.springframework.ai.util.Java8Collections.listOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -57,12 +57,12 @@ class SkillsInterceptorEnhancementsTest {
 
 		@Override
 		public ChatResponse call(Prompt prompt) {
-			return new ChatResponse(of(new Generation(new AssistantMessage("Mock response"))));
+			return new ChatResponse(listOf(new Generation(new AssistantMessage("Mock response"))));
 		}
 
 		@Override
 		public Flux<ChatResponse> stream(Prompt prompt) {
-			return Flux.just(new ChatResponse(of(new Generation(new AssistantMessage("Mock stream response")))));
+			return Flux.just(new ChatResponse(listOf(new Generation(new AssistantMessage("Mock stream response")))));
 		}
 
 	}
