@@ -101,7 +101,8 @@ public class ChatController {
 	 * @param response The HTTP servlet response
 	 * @return The chat completion response or error message
 	 */
-	@PostMapping(value = { "/chat/completions" })
+	@PostMapping(value = { "/chat/completions" },
+			produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_EVENT_STREAM_VALUE })
 	public Object completion(@RequestBody AgentRequest request, HttpServletResponse response) {
 		long start = System.currentTimeMillis();
 
@@ -118,13 +119,16 @@ public class ChatController {
 			response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_EVENT_STREAM_VALUE);
 
 			SseEmitter emitter = new SseEmitter(0L);
-			responseFlux.doOnNext(data -> sendStreamingResponse(context, request, emitter, data, response))
-				.onErrorResume(err -> handleError(context, request, err))
+			responseFlux.onErrorResume(err -> handleError(context, request, err))
+				.doOnNext(data -> sendStreamingResponse(context, request, emitter, data, response))
 				.doFinally(type -> handleComplete(context, type, emitter))
 				.subscribe();
 
 			return emitter;
 		}
+
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
 		try {
 			AgentResponse completion = agentService.call(request);
@@ -153,7 +157,8 @@ public class ChatController {
 	 * @param response The HTTP servlet response
 	 * @return The workflow completion response or error message
 	 */
-	@PostMapping(value = { "/workflow/completions" })
+	@PostMapping(value = { "/workflow/completions" },
+			produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_EVENT_STREAM_VALUE })
 	public Object completion(@RequestBody WorkflowRequest request, HttpServletResponse response) {
 		long start = System.currentTimeMillis();
 
@@ -170,13 +175,16 @@ public class ChatController {
 			response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_EVENT_STREAM_VALUE);
 
 			SseEmitter emitter = new SseEmitter(0L);
-			responseFlux.doOnNext(data -> sendStreamingResponse(context, request, emitter, data, response))
-				.onErrorResume(err -> handleError(context, request, err))
+			responseFlux.onErrorResume(err -> handleError(context, request, err))
+				.doOnNext(data -> sendStreamingResponse(context, request, emitter, data, response))
 				.doFinally(type -> handleComplete(context, type, emitter))
 				.subscribe();
 
 			return emitter;
 		}
+
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
 		try {
 			WorkflowResponse completion = workflowService.call(request);

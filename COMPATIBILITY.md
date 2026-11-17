@@ -150,3 +150,9 @@ on both Jackson families without injecting replacement framework classes.
 The pre-fix consumer401 regression and Boot4 Document deserialization failures are retained in the
 task notes. No all-provider/cloud credentials, complete Admin UI/database/MQ deployment or Maven Central
 release is claimed. Core on Java8 remains pending. See the Core module's README-COMPATIBILITY.md.
+
+## OpenAPI default-reactor checkpoint (2026-11-18)
+
+27 modules, 1961 cases, zero failures/errors, 288 conditional skips; full clean install on native17, retries disabled. This supersedes older aggregate counts above.
+Ten MVC cases and one installed-jar real HTTP consumer case pass per target VM (Boot2/native8; Boot3/4/native17 and25). Consumer fixtures replace application services, not servlet/JSON/SSE transport.
+OpenAPI is included in reactor/BOM. Start remains pending; no complete platform/backend or every endpoint/API-path claim. See OpenAPI module README for usage and limits.
