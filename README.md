@@ -17,7 +17,7 @@ yudao-spring-ai-alibaba 是 [Spring AI Alibaba](https://github.com/alibaba/sprin
 | 分支 | 已验证 Spring Boot | 运行 JDK | 源码开发版本 | 发布规则 |
 | --- | --- | --- | --- | --- |
 | [`main`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main) | 4.1.2 | 17+（业务消费使用25） | `1.1.2.2-jdk25-SNAPSHOT` | 官方版本 + 路线 + 日期 |
-| [`main-jdk17`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk17) | 3.5.15 | 17+ | `1.1.2.2-jdk17-SNAPSHOT` | 官方版本 + 日期 |
+| [`main-jdk17`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk17) | 3.5.15 | 17+ | `1.1.2.2-jdk17-SNAPSHOT` | 官方版本 + 路线 + 日期 |
 | [`main-jdk8`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk8) | 2.7.18 | 8+ | `1.1.2.2-jdk8-SNAPSHOT` | 官方版本 + 路线 + 日期 |
 
 版本保留上游源码基线编号，以 JDK 路线隔离 Boot 依赖；发布时追加北京时间日期，不增加同日序号。当前分支：**`main-jdk8`**。
@@ -91,6 +91,12 @@ Admin runtime DTO/JSON 工具库已接入当前版本线：在现有 Alibaba BOM
 当前完整30模块构建在原生JDK8通过1911项测试，零失败/错误、286项条件跳过；三路线安装包在Boot2/JDK8、Boot3/4×JDK17/25均完成真实HTTP文本/多模态验证。
 Boot4已补Jackson3转换器适配，Boot2/3继续使用Jackson2。Admin的core/openapi/start三个模块仍待兼容，本批不代表完整管理平台可部署。
 依赖示例、验证命令和边界见 [Admin runtime 使用说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-runtime/README-COMPATIBILITY.md)。
+
+## Admin Core 分支进展
+
+Boot3/4分支的Core类库已加入默认构建，并分别完成JDK17/25单测及独立Boot＋H2消费。
+当前Boot2分支的Core/OpenAPI/Start仍待迁移，不能使用现代分支jar替代。
+Java8内嵌Python原型13项通过，正式SDK的依赖隔离、构建和消费门禁仍在继续。
 
 <!-- YUDAO-COMPATIBILITY-INTRO-END -->
 
