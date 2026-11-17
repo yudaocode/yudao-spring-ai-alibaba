@@ -53,9 +53,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
-import static com.alibaba.cloud.ai.studio.core.base.constants.CacheConstants.*;
+import static com.alibaba.cloud.ai.studio.core.base.constants.CacheConstants.CACHE_APP_WORKSPACE_ID_PREFIX;
+import static com.alibaba.cloud.ai.studio.core.base.constants.CacheConstants.CACHE_EMPTY_ID;
 
 /**
  * Implementation of the application service. Handles CRUD operations and version

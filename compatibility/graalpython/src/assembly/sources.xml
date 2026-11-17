@@ -1,0 +1,10 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 https://maven.apache.org/xsd/assembly-2.2.0.xsd">
+    <id>sources</id><formats><format>jar</format></formats><includeBaseDirectory>false</includeBaseDirectory><fileSets>
+        <fileSet><directory>${project.build.directory}/upstream-sources</directory><outputDirectory>/</outputDirectory></fileSet>
+        <fileSet><directory>${project.basedir}/../graal-build</directory><outputDirectory>META-INF/build-sources</outputDirectory><includes><include>*.java</include></includes></fileSet>
+        <fileSet><directory>${project.basedir}</directory><outputDirectory>META-INF/upstream</outputDirectory><includes><include>upstream.properties</include><include>UPSTREAM-SOURCES.json</include></includes></fileSet>
+        <fileSet><directory>${project.basedir}/src/main/java</directory><outputDirectory>/</outputDirectory></fileSet>
+        <fileSet><directory>${project.build.directory}/classes/META-INF/graalpython</directory><outputDirectory>META-INF/stdlib</outputDirectory></fileSet>
+        <fileSet><directory>${project.basedir}/src/main/resources</directory><outputDirectory>/</outputDirectory></fileSet>
+    </fileSets>
+</assembly>

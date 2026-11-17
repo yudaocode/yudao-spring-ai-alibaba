@@ -30,8 +30,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.rag.Query;
 import org.springframework.ai.rag.retrieval.search.DocumentRetriever;
-import org.springframework.ai.vectorstore.SearchRequest;
-import org.springframework.ai.vectorstore.SearchType;
+import com.alibaba.cloud.ai.studio.core.rag.vectorstore.AdminSearchRequest;
+import com.alibaba.cloud.ai.studio.core.rag.vectorstore.SearchType;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.util.Assert;
@@ -44,7 +44,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.*;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_ENABLED;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_WORKSPACE_ID;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.SEARCH_TIMEOUT;
 import static com.alibaba.cloud.ai.studio.core.utils.LogUtils.FAIL;
 import static com.alibaba.cloud.ai.studio.core.utils.LogUtils.SUCCESS;
 
@@ -138,7 +140,7 @@ public class KnowledgeBaseDocumentRetriever implements DocumentRetriever {
 		FileSearchOptions searchOptions = knowledgeBase.getSearchConfig();
 		SearchType searchType = SearchType.valueOf(searchOptions.getSearchType().toUpperCase());
 
-		SearchRequest.Builder searchRequestBuilder = SearchRequest.builder()
+		AdminSearchRequest.Builder searchRequestBuilder = AdminSearchRequest.adminBuilder()
 			.query(query.text())
 			.filterExpression(exp)
 			.searchType(searchType);

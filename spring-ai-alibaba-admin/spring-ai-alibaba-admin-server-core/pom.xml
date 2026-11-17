@@ -18,11 +18,6 @@
         <url>https://github.com/alibaba/spring-ai-alibaba</url>
     </scm>
 
-    <properties>
-        <java.version>17</java.version>
-        <central.publishing.skip>true</central.publishing.skip>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -52,19 +47,20 @@
             <artifactId>spring-ai-alibaba-admin-server-runtime</artifactId>
         </dependency>
 
-        <!-- db -->
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
+            <groupId>cn.iocoder.spring-ai</groupId>
+            <artifactId>spring-ai-jspecify-compat</artifactId>
+            <version>${spring-ai.version}</version>
         </dependency>
 
+        <!-- db -->
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-jsqlparser</artifactId>
+            <artifactId>mybatis-plus-jsqlparser-4.9</artifactId>
         </dependency>
 
         <dependency>
@@ -73,7 +69,7 @@
         </dependency>
         <dependency>
             <groupId>org.redisson</groupId>
-            <artifactId>redisson-spring-boot-starter</artifactId>
+            <artifactId>redisson</artifactId>
         </dependency>
 
         <!-- oss -->
@@ -97,8 +93,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud.ai</groupId>
-            <artifactId>spring-ai-alibaba-core</artifactId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
+            <artifactId>spring-ai-alibaba-dashscope</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
@@ -121,13 +118,20 @@
 
         <!-- https://mvnrepository.com/artifact/org.jgrapht/jgrapht-core -->
         <dependency>
-            <groupId>org.jgrapht</groupId>
-            <artifactId>jgrapht-core</artifactId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
+            <artifactId>spring-ai-alibaba-jgrapht-compat</artifactId>
+            <version>${revision}</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jspecify</groupId>
+                    <artifactId>jspecify</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -172,11 +176,6 @@
         <!-- rag -->
 
         <dependency>
-            <groupId>org.openjdk.nashorn</groupId>
-            <artifactId>nashorn-core</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
         </dependency>
@@ -195,18 +194,16 @@
 
         <!-- GraalJS JavaScript Engine (alternative to Nashorn) -->
         <dependency>
-            <groupId>org.graalvm.js</groupId>
-            <artifactId>js</artifactId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
+            <artifactId>spring-ai-alibaba-graaljs-compat</artifactId>
+            <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>org.graalvm.js</groupId>
-            <artifactId>js-scriptengine</artifactId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
+            <artifactId>spring-ai-alibaba-graalpython-compat</artifactId>
+            <version>${revision}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.graalvm.python</groupId>
-            <artifactId>python-language</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.graalvm.truffle</groupId>
             <artifactId>truffle-api</artifactId>
@@ -214,10 +211,6 @@
         <dependency>
             <groupId>org.graalvm.sdk</groupId>
             <artifactId>graal-sdk</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.graalvm.polyglot</groupId>
-            <artifactId>polyglot</artifactId>
         </dependency>
 
         <!-- rocketmq -->
@@ -242,8 +235,14 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>io.modelcontextprotocol.sdk</groupId>
-            <artifactId>mcp</artifactId>
+            <groupId>cn.iocoder.spring-ai</groupId>
+            <artifactId>spring-ai-mcp-core-compat</artifactId>
+            <version>${spring-ai.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.iocoder.spring-ai</groupId>
+            <artifactId>spring-ai-mcp-json-jackson2-compat</artifactId>
+            <version>${spring-ai.version}</version>
         </dependency>
     </dependencies>
 </project>

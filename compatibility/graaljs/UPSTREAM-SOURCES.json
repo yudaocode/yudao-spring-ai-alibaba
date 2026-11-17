@@ -1,0 +1,14 @@
+{
+  "coordinates": "org.graalvm.js:js:22.0.0.2",
+  "binaryUrl": "https://repo.maven.apache.org/maven2/org/graalvm/js/js/22.0.0.2/js-22.0.0.2.jar",
+  "sourcesUrl": "https://repo.maven.apache.org/maven2/org/graalvm/js/js/22.0.0.2/js-22.0.0.2-sources.jar",
+  "hashes": {
+    "binary.sha256": "d6e66cf2ce0b1b498d19e72f6973e3b15296e3cde77beb0eebc28f5711a808d4",
+    "sources.sha256": "4a4adf8e936ae3dd44a93e55d5fa8e7cde8a25d1fbdb048c735a045027031827"
+  },
+  "changes": [
+    "Private ICU class/resource/string relocation; standard Polyglot/JSR223 API retained",
+    "Java8 base bytecode version checked, never lowered; JPMS/MR/native-image metadata excluded",
+    "Original source/license content retained with matching namespace relocation in generated source artifact"
+  ]
+}

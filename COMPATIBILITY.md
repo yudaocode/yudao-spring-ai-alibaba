@@ -151,3 +151,16 @@ bash ./mvnw -f compatibility-tests/admin-jgrapht/pom.xml test -Dcompat.test.jvm=
 源文件保留上游作者和EPL2.0/LGPL2.1-or-later双许可证，来源与变换见UPSTREAM-SOURCES.json；许可证/贡献者同时随jar打包。
 第三方源包保留原格式/许可头，因此仅此模块跳过Spring风格工具，依赖版本/字节码门禁及真实测试继续执行。
 本模块完成不代表Admin Core/Python或完整管理平台已在Java8完成；本批没有向Maven Central部署。
+
+## Admin Core / Graal Java8 checkpoint (2026-11-18)
+
+Default reactor now34 modules: native8 clean install8580 cases, zero failures/errors,286 conditional skips;609 XML suites, retries disabled.
+This supersedes the historical31-module JGraphT checkpoint above. Core42 cases, JS3 and Python3 pass with no skips.
+Standalone installed Core consumer4 cases pass on macOS/Corretto8 and Linux/Corretto8; host Boot2/H2/MyBatis and real JS/Python engines run.
+Core, GraalJS and GraalPython are included in the default reactor and BOM. OpenAPI/Start remain in the pending profile.
+The fork-specific Elasticsearch search extension no longer shadows Spring AI classes.
+The full consumer has352 jars with160085 effective base classes at major52 or below; four owned SDK jars have22740 classes and zero missing JDK API references.
+The whole dependency API scan still reports57 raw references; these are not all dismissed as false positives. Active Elasticsearch OpenTelemetry instrumentation and all optional external dependency paths remain unverified on8.
+See [Core usage/boundaries](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-core/README-COMPATIBILITY.md),
+[GraalJS](compatibility/graaljs/README-COMPATIBILITY.md), and[GraalPython](compatibility/graalpython/README-COMPATIBILITY.md).
+No full platform/cloud backend, native extension/LLVM, arbitrary PyPI, AOT or JIT performance claim; no Maven Central deployment.

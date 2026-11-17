@@ -22,7 +22,12 @@ import com.aliyun.oss.OSSException;
 import com.aliyun.oss.common.auth.CredentialsProvider;
 import com.aliyun.oss.common.auth.DefaultCredentialProvider;
 import com.aliyun.oss.common.utils.BinaryUtil;
-import com.aliyun.oss.model.*;
+import com.aliyun.oss.model.GetObjectRequest;
+import com.aliyun.oss.model.MatchMode;
+import com.aliyun.oss.model.OSSObject;
+import com.aliyun.oss.model.PolicyConditions;
+import com.aliyun.oss.model.PutObjectRequest;
+import com.aliyun.oss.model.PutObjectResult;
 import com.google.common.collect.ImmutableList;
 import com.alibaba.cloud.ai.studio.runtime.exception.BizException;
 import com.alibaba.cloud.ai.studio.runtime.enums.ErrorCode;
@@ -40,7 +45,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -251,7 +260,7 @@ public class OssManager implements InitializingBean {
 
 			LogUtils.monitor("ossManager", "downloadFile", start, SUCCESS, objectName, fileBytes);
 
-			return bos.toString(StandardCharsets.UTF_8);
+			return new String(bos.toByteArray(), StandardCharsets.UTF_8);
 		}
 		catch (Exception e) {
 			LogUtils.monitor("ossManager", "downloadFile", start, SUCCESS, objectName, e.getMessage(), e);

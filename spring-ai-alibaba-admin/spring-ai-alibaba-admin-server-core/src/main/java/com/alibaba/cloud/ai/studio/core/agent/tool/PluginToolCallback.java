@@ -25,7 +25,6 @@ import com.alibaba.cloud.ai.studio.runtime.utils.JsonUtils;
 import com.alibaba.cloud.ai.studio.core.base.service.ToolExecutionService;
 import com.alibaba.cloud.ai.studio.core.utils.api.OpenApiUtils;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.ai.model.ModelOptionsUtils;
 import org.springframework.ai.tool.definition.ToolDefinition;
 import org.springframework.ai.tool.metadata.ToolMetadata;
 
@@ -69,7 +68,7 @@ public class PluginToolCallback implements AgentToolCallback {
 		return ToolDefinition.builder()
 			.name(schema.getName())
 			.description(schema.getDescription())
-			.inputSchema(ModelOptionsUtils.toJsonString(schema.getInputSchema()))
+			.inputSchema(JsonUtils.toJson(schema.getInputSchema()))
 			.build();
 	}
 

@@ -88,23 +88,26 @@ spring:
 
 Admin runtime DTO/JSON 工具库已接入当前版本线：在现有 Alibaba BOM 下添加 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-admin-server-runtime`。
 版本为 `1.1.2.2-jdk8-SNAPSHOT`，须先源码安装；保留 `com.alibaba.cloud.ai.studio.runtime.*` 包名。
-当前完整30模块构建在原生JDK8通过1911项测试，零失败/错误、286项条件跳过；三路线安装包在Boot2/JDK8、Boot3/4×JDK17/25均完成真实HTTP文本/多模态验证。
-Boot4已补Jackson3转换器适配，Boot2/3继续使用Jackson2。Admin的core/openapi/start三个模块仍待兼容，本批不代表完整管理平台可部署。
+当前完整34模块构建在原生JDK8通过8580项测试，零失败/错误、286项条件跳过；三路线安装包在Boot2/JDK8、Boot3/4×JDK17/25均完成真实HTTP文本/多模态验证。
+Boot4已补Jackson3转换器适配，Boot2/3继续使用Jackson2。Core类库已经纳入默认构建；OpenAPI/Start继续迁移，本批不代表完整管理平台可部署。
 依赖示例、验证命令和边界见 [Admin runtime 使用说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-runtime/README-COMPATIBILITY.md)。
 
-## Admin Core 分支进展
+## Admin Core / Java8 JS、Python
 
-Boot3/4分支的Core类库已加入默认构建，并分别完成JDK17/25单测及独立Boot＋H2消费。
-当前Boot2分支的Core/OpenAPI/Start仍待迁移，不能使用现代分支jar替代。
-Java8内嵌Python原型13项通过，正式SDK的依赖隔离、构建和消费门禁仍在继续。
+Core类库已纳入Boot2默认构建和BOM，现有两份兼容BOM下添加`cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-admin-server-core`。
+JDK8版已接入GraalJS/GraalPython22.0.0.2及JGraphT1.5.2兼容依赖；Core42项、JS/Python各3项，独立Boot2/H2/MyBatis消费4项全部通过，零跳过。
+独立消费同时在macOS与Linux/Corretto8验证通过。三个Boot分支都已完成Core类库，OpenAPI/Start仍在推进。
+Python为3.8.5解释执行，不支持LLVM/原生C扩展，不代表完整Admin平台或所有第三方API路径可用。
+使用方式、依赖审计限制和验证命令见[Core说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-core/README-COMPATIBILITY.md)、
+[GraalJS说明](compatibility/graaljs/README-COMPATIBILITY.md)、[GraalPython说明](compatibility/graalpython/README-COMPATIBILITY.md)。
 
 ## Java8 图依赖（JGraphT 1.5.2）
 
 为继续移植Admin Core，Java8分支已增加完整JGraphT1.5.2 core回迁模块，未将原依赖降为旧版。
-默认构建现在31模块，native8全量8532项，零失败/错误、286条件跳过；图模块上游默认选择6621项及独立Boot2消费2项通过。
+默认构建现在34模块，native8全量8580项，零失败/错误、286条件跳过；图模块上游默认选择6621项及独立Boot2消费2项通过。
 在现有Alibaba BOM下添加`cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-jgrapht-compat`即可使用，包名org.jgrapht不变。
 移除同一应用中的原版org.jgrapht:jgrapht-core；具体接入、许可证和排除边界见[图依赖说明](compatibility/jgrapht-core/README-COMPATIBILITY.md)。
-Admin Core/Python、OpenAPI/Start仍在迁移；图依赖完成不等于完整管理平台可运行。
+Core/Python类库已通过独立Java8消费；OpenAPI/Start仍在迁移，完整管理平台尚待验收。
 
 <!-- YUDAO-COMPATIBILITY-INTRO-END -->
 

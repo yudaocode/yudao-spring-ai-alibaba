@@ -1,0 +1,24 @@
+{
+  "installer.url": "https://github.com/oracle/graalpython/releases/download/vm-22.0.0.2/python-installable-svm-java11-darwin-amd64-22.0.0.2.jar",
+  "installer.sha256": "67ee2f1cc10b0189e359344c31b22f423e636ff4ec2dd7d9437c3eb0ef54e601",
+  "source.url": "https://codeload.github.com/oracle/graalpython/zip/7f02e547a85d798db42f0af065fdc7cb8739dd2a",
+  "source.sha256": "17dcd2cc5a57a50522a4bbcd7439c413add5dd114dac2022fe28ab78f996363b",
+  "language.sha256": "5469249e581c20e5a0ed47adf75ad99e3863f0480f46e560c3e035099ed71f45",
+  "antlr.sha256": "120053628dd598d43cb7ac6b9ecc72529dfa5a5fd3292d37cf638a81cc0075f6",
+  "antlr.sources.sha256": "0e7c91953bc3dd22465af64ee6fa16645f66dfa0218d9881b92228cca883bd84",
+  "pythonCommit": "7f02e547a85d798db42f0af065fdc7cb8739dd2a",
+  "llvmToolchainApiCommit": "a8e3d29028a6d86bf8fda82462443f5cea64f1e3",
+  "llvmToolchainApiUrl": "https://raw.githubusercontent.com/oracle/graal/a8e3d29028a6d86bf8fda82462443f5cea64f1e3/sulong/projects/com.oracle.truffle.llvm.api/src/com/oracle/truffle/llvm/api/Toolchain.java",
+  "mode": "Python3.8.5 interpreted Java POSIX backend; native extensions/LLVM disabled, no LLVM provider registered",
+  "changes": [
+    "Real Java8 NIO Buffer invocation adaptation with original operations retained",
+    "Recompile two original Python source families with release8 and retain genuine LLVM Toolchain API source",
+    "Private ICU/XZ/ANTLR types, class-name strings and resources",
+    "Package911 portable stdlib files; leave native binaries outside the artifact"
+  ],
+  "patches": {
+    "src/patches/java/com/oracle/truffle/llvm/api/Toolchain.java": "1276c590b8426c84ebde8e77d616416f4f53daa0d2a0d76e0990e4f3be192b74",
+    "src/patches/java/com/oracle/graal/python/builtins/modules/GraalPythonModuleBuiltins.java": "53602963e41093da4d0dffb08820c9adcd4384eb55d86fc9369d6e6a525df034",
+    "src/patches/java/com/oracle/graal/python/builtins/modules/ImpModuleBuiltins.java": "9deb5f800727f3604b38d6c9bbf7e53805f35d12c1bd32d0be22f1ac6da70e6f"
+  }
+}

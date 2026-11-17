@@ -27,7 +27,11 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.alibaba.cloud.ai.studio.core.utils.common.IdGenerator;
 import com.alibaba.cloud.ai.studio.core.utils.LogUtils;
 import io.swagger.v3.core.util.Yaml;
-import io.swagger.v3.oas.models.*;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.Paths;
+import io.swagger.v3.oas.models.SpecVersion;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.MediaType;
@@ -45,7 +49,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.yaml.snakeyaml.error.YAMLException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Utility class for handling OpenAPI operations. Provides methods for parsing, converting

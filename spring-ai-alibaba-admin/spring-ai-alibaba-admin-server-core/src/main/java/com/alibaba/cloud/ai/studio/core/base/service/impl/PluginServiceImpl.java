@@ -55,7 +55,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.alibaba.cloud.ai.studio.core.base.constants.CacheConstants.*;
+import static com.alibaba.cloud.ai.studio.core.base.constants.CacheConstants.CACHE_EMPTY_ID;
+import static com.alibaba.cloud.ai.studio.core.base.constants.CacheConstants.CACHE_PLUGIN_WORKSPACE_ID_PREFIX;
+import static com.alibaba.cloud.ai.studio.core.base.constants.CacheConstants.CACHE_TOOL_WORKSPACE_ID_PREFIX;
 
 /**
  * Plugin service implementation for managing plugins and tools. Handles CRUD operations

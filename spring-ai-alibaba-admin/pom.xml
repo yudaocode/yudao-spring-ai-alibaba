@@ -31,6 +31,7 @@
     <url>https://github.com/alibaba/spring-ai-alibaba</url>
     <modules>
         <module>spring-ai-alibaba-admin-server-runtime</module>
+        <module>spring-ai-alibaba-admin-server-core</module>
     </modules>
     <scm>
         <connection>git://github.com/alibaba/spring-ai-alibaba.git</connection>
@@ -81,10 +82,10 @@
         <!-- ASM -->
         <asm.version>9.5</asm.version>
         <!-- GraalVM -->
-        <graalvm-js.version>22.3.1</graalvm-js.version>
+        <graalvm-js.version>22.0.0.2</graalvm-js.version>
         <graalvm-python.version>24.2.1</graalvm-python.version>
-        <graalvm-truffle.version>24.2.1</graalvm-truffle.version>
-        <graalvm-sdk.version>24.2.1</graalvm-sdk.version>
+        <graalvm-truffle.version>22.0.0.2</graalvm-truffle.version>
+        <graalvm-sdk.version>22.0.0.2</graalvm-sdk.version>
         <graalvm-polyglot.version>24.2.1</graalvm-polyglot.version>
         <!-- RocketMQ -->
         <rocketmq-client.version>5.0.7</rocketmq-client.version>
@@ -116,12 +117,12 @@
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-jsqlparser</artifactId>
+                <artifactId>mybatis-plus-jsqlparser-4.9</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
             <dependency>
@@ -176,6 +177,11 @@
                 <version>${springdoc.version}</version>
             </dependency>
             <!-- Redisson -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson-spring-boot-starter</artifactId>
@@ -377,7 +383,6 @@
             <id>admin-server-pending</id>
             <modules>
                 <module>spring-ai-alibaba-admin-server-start</module>
-                <module>spring-ai-alibaba-admin-server-core</module>
                 <module>spring-ai-alibaba-admin-server-openapi</module>
             </modules>
         </profile>

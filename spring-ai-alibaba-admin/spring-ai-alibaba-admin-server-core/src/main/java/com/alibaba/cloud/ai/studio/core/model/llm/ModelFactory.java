@@ -27,7 +27,6 @@ import com.alibaba.cloud.ai.studio.core.model.llm.domain.ProviderConfigInfo;
 import com.alibaba.cloud.ai.studio.core.model.embedding.EmbeddingModelDimension;
 import com.alibaba.cloud.ai.studio.core.model.reranker.dashscope.DashScopeRerankerOptions;
 import com.alibaba.cloud.ai.studio.core.model.reranker.dashscope.DashscopeReranker;
-import com.alibaba.cloud.ai.studio.core.utils.ErrorHandlerUtils;
 import com.alibaba.cloud.ai.studio.core.utils.api.ApiUtils;
 
 import io.micrometer.observation.ObservationRegistry;
@@ -38,11 +37,10 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.observation.ChatModelObservationConvention;
 import org.springframework.ai.document.MetadataMode;
 import org.springframework.ai.embedding.EmbeddingModel;
-import org.springframework.ai.model.tool.ToolCallingManager;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.ai.openai.OpenAiEmbeddingOptions;
-import org.springframework.ai.openai.api.OpenAiApi;
+import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -84,13 +82,17 @@ public class ModelFactory {
 		// TODO will adapt other provider in future, now it's only for OpenAI compatible
 		// API
 
-		OpenAiApi openAiApi = buildOpenAiApi(credential);
+		OpenAiChatOptions options = OpenAiChatOptions.builder()
+            .apiKey(credential.getApiKey())
+            .baseUrl(normalizedBaseUrl(credential))
+            .customHeaders(ApiUtils.getBaseHeaders().toSingleValueMap())
+            .build();
 		OpenAiChatModel openAiChatModel = OpenAiChatModel.builder()
-				.openAiApi(openAiApi)
+				.options(options)
 				.observationRegistry(observationRegistry)
 				.build();
 		openAiChatModel.setObservationConvention(customChatModelObservationConvention);
-		return openAiChatModel;
+		return ModelErrorAdapters.chat(openAiChatModel);
 	}
 
 	/**
@@ -105,9 +107,17 @@ public class ModelFactory {
 
 		int dimension = EmbeddingModelDimension.getDimension(indexConfig.getEmbeddingModel(), DEFAULT_DIMENSION);
 
-		OpenAiApi openAiApi = buildOpenAiApi(credential);
-		return new OpenAiEmbeddingModel(openAiApi, metadataMode,
-				OpenAiEmbeddingOptions.builder().model(indexConfig.getEmbeddingModel()).dimensions(dimension).build());
+		return ModelErrorAdapters.embedding(OpenAiEmbeddingModel.builder()
+            .metadataMode(metadataMode)
+            .observationRegistry(observationRegistry)
+            .options(OpenAiEmbeddingOptions.builder()
+                .apiKey(credential.getApiKey())
+                .baseUrl(normalizedBaseUrl(credential))
+                .customHeaders(ApiUtils.getBaseHeaders().toSingleValueMap())
+                .model(indexConfig.getEmbeddingModel())
+                .dimensions(dimension)
+                .build())
+            .build());
 	}
 
 	/**
@@ -156,27 +166,15 @@ public class ModelFactory {
 	}
 
 	/**
-	 * Builds an OpenAI API instance with the provided credentials
-	 * @param credential The model credentials
-	 * @return OpenAiApi instance
-	 */
-	private OpenAiApi buildOpenAiApi(ModelCredential credential) {
-		OpenAiApi.Builder openAiApiBuilder = OpenAiApi.builder()
-			.apiKey(credential.getApiKey())
-			.responseErrorHandler(ErrorHandlerUtils.OPENAI_RESPONSE_ERROR_HANDLER)
-			.headers(ApiUtils.getBaseHeaders());
-		if (StringUtils.isNotBlank(credential.getEndpoint())) {
-			String endpoint = credential.getEndpoint();
-
-			// to remove the /v1 part as spring ai client will add it
-			if (endpoint.endsWith("/v1") || endpoint.endsWith("/v1/")) {
-				endpoint = endpoint.replaceAll("/v1/?$", "");
-			}
-
-			openAiApiBuilder.baseUrl(endpoint);
-		}
-
-		return openAiApiBuilder.build();
-	}
+     * Preserve the old endpoint contract while configuring the SDK-based model.
+     * The old transport appended /v1; the SDK expects that prefix in its base URL.
+     */
+    private String normalizedBaseUrl(ModelCredential credential) {
+        if (StringUtils.isBlank(credential.getEndpoint())) {
+            return null;
+        }
+        String endpoint = credential.getEndpoint().replaceAll("/+$", "");
+        return endpoint.endsWith("/v1") ? endpoint : endpoint + "/v1";
+    }
 
 }

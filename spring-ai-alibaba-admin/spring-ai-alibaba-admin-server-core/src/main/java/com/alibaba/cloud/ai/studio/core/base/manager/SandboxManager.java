@@ -18,14 +18,14 @@ package com.alibaba.cloud.ai.studio.core.base.manager;
 import com.alibaba.cloud.ai.studio.runtime.enums.ErrorCode;
 import com.alibaba.cloud.ai.studio.runtime.domain.Result;
 import com.alibaba.cloud.ai.studio.runtime.utils.JsonUtils;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.graalvm.polyglot.Context;
+import cn.iocoder.spring.ai.alibaba.compat.graalpython.GraalPyContexts;
+import cn.iocoder.spring.ai.alibaba.compat.graalpython.GraalPyValues;
 import org.graalvm.polyglot.Value;
-import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.springframework.stereotype.Component;
 
 import javax.script.Bindings;
@@ -36,7 +36,6 @@ import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -133,9 +132,7 @@ public class SandboxManager {
 	public Result<String> executePython3Script(String scriptContent, Map<String, Object> variables, String requestId) {
 		try {
 			// Use GraalVM Python API to execute Python script directly
-			Context.Builder contextBuilder = Context.newBuilder("python")
-				.allowAllAccess(true)
-				.option("python.ForceImportSite", "true");
+			Context.Builder contextBuilder = GraalPyContexts.newContextBuilder().allowAllAccess(true);
 
 			// Create isolated execution environment
 			try (Context context = contextBuilder.build()) {
@@ -167,16 +164,13 @@ public class SandboxManager {
 				else if (result.isBoolean()) {
 					innerMap.put(OUTPUT_DECORATE_PARAM_KEY, result.asBoolean());
 				}
-				else if (result.hasArrayElements()) {
-					List<Object> list = Lists.newArrayList();
-					for (long i = 0; i < result.getArraySize(); i++) {
-						list.add(result.getArrayElement(i).as(Object.class));
-					}
-					innerMap.put(OUTPUT_DECORATE_PARAM_KEY, list);
-				}
-				else if (result.hasMembers()) {
-					innerMap.putAll(result.as(Map.class));
-				}
+                else if (result.hasArrayElements()) {
+                    innerMap.put(OUTPUT_DECORATE_PARAM_KEY, GraalPyValues.toJavaObject(result));
+                }
+                else if (result.hasHashEntries()) {
+                    innerMap.putAll((Map) GraalPyValues.toJavaObject(result));
+                }
+
 				resultMap.put("data", innerMap);
 
 				// Convert to JSON and return
@@ -202,7 +196,10 @@ public class SandboxManager {
 			// For Nashorn engine, use ES6 configuration
 			if (ENGINE_NAME_NASHORN.equals(engineName)) {
 				try {
-					engine = new NashornScriptEngineFactory().getScriptEngine("--language=es6");
+					engine = (ScriptEngine) Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory")
+                            .getMethod("getScriptEngine", String[].class)
+                            .invoke(Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory")
+                                    .getConstructor().newInstance(), (Object) new String[] { "--language=es6" });
 					log.info("Successfully created Nashorn script engine (ES6 mode): {}", engine.getClass().getName());
 				}
 				catch (Exception e) {

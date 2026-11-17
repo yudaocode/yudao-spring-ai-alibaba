@@ -36,7 +36,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.*;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_DOC_ID;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_DOC_NAME;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_ENABLED;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_WORKSPACE_ID;
 import static com.alibaba.cloud.ai.studio.core.utils.LogUtils.FAIL;
 import static com.alibaba.cloud.ai.studio.core.utils.LogUtils.SUCCESS;
 

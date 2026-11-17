@@ -48,6 +48,8 @@
     </developers>
 
     <modules>
+        <module>compatibility/graaljs</module>
+        <module>compatibility/graalpython</module>
         <module>compatibility/jgrapht-core</module>
         <module>compatibility/a2a-spec</module>
         <module>compatibility/a2a-common</module>

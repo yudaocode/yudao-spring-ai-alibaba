@@ -135,12 +135,7 @@ public class MCPManager {
 						McpTool tool = new McpTool();
 						tool.setName(e.name());
 						tool.setDescription(e.description());
-						McpSchema.JsonSchema jsonSchema = e.inputSchema();
-						InputSchema inputSchema = new InputSchema();
-						inputSchema.setType(jsonSchema.type());
-						inputSchema.setProperties(jsonSchema.properties());
-						inputSchema.setRequired(jsonSchema.required());
-						inputSchema.setAdditionalProperties(jsonSchema.additionalProperties());
+						InputSchema inputSchema = JsonUtils.getObjectMapper().convertValue(e.inputSchema(), InputSchema.class);
 						tool.setInputSchema(inputSchema);
 						tools.add(tool);
 					});
