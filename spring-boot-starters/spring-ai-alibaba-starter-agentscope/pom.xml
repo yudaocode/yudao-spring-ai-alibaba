@@ -51,7 +51,7 @@
     </scm>
 
     <properties>
-        <agentscope.version>3.0.0-SNAPSHOT</agentscope.version>
+        <agentscope.version>2.1.0-SNAPSHOT</agentscope.version>
     </properties>
 
     <dependencies>

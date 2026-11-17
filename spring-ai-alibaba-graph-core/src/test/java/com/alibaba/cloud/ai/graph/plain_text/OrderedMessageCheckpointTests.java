@@ -43,7 +43,8 @@ import org.springframework.ai.deepseek.DeepSeekAssistantMessage;
 import org.springframework.ai.zhipuai.ZhiPuAiAssistantMessage;
 import org.springframework.util.MimeTypeUtils;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Verifies checkpoint replay preserves content needed by modern model providers.

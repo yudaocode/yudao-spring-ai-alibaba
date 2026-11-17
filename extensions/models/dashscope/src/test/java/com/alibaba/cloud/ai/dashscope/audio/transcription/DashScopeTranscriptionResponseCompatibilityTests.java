@@ -22,7 +22,7 @@ import com.alibaba.cloud.ai.dashscope.metadata.audio.DashScopeAudioTranscription
 import com.alibaba.cloud.ai.dashscope.metadata.audio.DashScopeAudioTranscriptionResponseMetadata.Usage;
 import tools.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Pins the common Spring AI transcription contract for provider response containers.
