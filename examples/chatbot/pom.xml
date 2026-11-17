@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!--
   ~ Copyright 2024-2026 the original author or authors.
   ~
@@ -13,9 +13,7 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
--->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+--><project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -32,9 +30,9 @@
 
 	<properties>
 		<java.version>17</java.version>
-		<spring-ai.version>3.0.0-SNAPSHOT</spring-ai.version>
-		<spring-ai-alibaba.version>3.0.0-SNAPSHOT</spring-ai-alibaba.version>
-		<spring-ai-alibaba-extensions.version>3.0.0-SNAPSHOT</spring-ai-alibaba-extensions.version>
+		<spring-ai.version>2.1.0-jdk17-SNAPSHOT</spring-ai.version>
+		<spring-ai-alibaba.version>1.1.2.2-jdk17-SNAPSHOT</spring-ai-alibaba.version>
+		<spring-ai-alibaba-extensions.version>1.1.2.2-jdk17-SNAPSHOT</spring-ai-alibaba-extensions.version>
 
 		<graalvm.polyglot.version>24.2.1</graalvm.polyglot.version>
 	</properties>
@@ -131,4 +129,3 @@
 		</repository>
 	</repositories>
 </project>
-

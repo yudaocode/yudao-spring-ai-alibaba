@@ -1,4 +1,8 @@
 <!-- YUDAO-COMPATIBILITY-INTRO-BEGIN -->
+
+> 版本命名：保留当前源码基线的官方版本号；共用现代制品不加 JDK 后缀，隔离维护的兼容路线添加 `jdk8` / `jdk17` / `jdk25`。SNAPSHOT 尚未发布 Maven Central。JDK 路线后缀不等于最低字节码版本，框架依赖仍按 Boot 版本选择。
+> 完整版本规则与预览命名见 [VERSIONING.md](VERSIONING.md)。
+
 # yudao-spring-ai-alibaba
 
 yudao-spring-ai-alibaba 是 [Spring AI Alibaba](https://github.com/alibaba/spring-ai-alibaba) 的芋道社区兼容维护版本，并非官方发布。补齐 **Spring AI 2.x** 的 API 和依赖适配，让 **Spring Boot 2.x、Spring Boot 3.x、Spring Boot 4.x** 项目选择对应兼容版本。
@@ -10,17 +14,17 @@ yudao-spring-ai-alibaba 是 [Spring AI Alibaba](https://github.com/alibaba/sprin
 | Gitee | [yudao-spring-ai-alibaba](https://gitee.com/yudaocode/yudao-spring-ai-alibaba) |
 | GitHub | [yudao-spring-ai-alibaba](https://github.com/yudaocode/yudao-spring-ai-alibaba) |
 
-| 分支 | 已验证 Spring Boot | 运行 JDK | 源码开发版本 | 首个正式版本计划 |
+| 分支 | 已验证 Spring Boot | 运行 JDK | 源码开发版本 | 发布规则 |
 | --- | --- | --- | --- | --- |
-| [`main`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main) | 4.1.2 | 17+（业务消费使用25） | `4.0.0-SNAPSHOT` | `4.0.0` |
-| [`main-jdk17`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk17) | 3.5.15 | 17+ | `3.0.0-SNAPSHOT` | `3.0.0` |
-| [`main-jdk8`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk8) | 2.7.18 | 8+ | `2.0.0-SNAPSHOT` | `2.0.0` |
+| [`main`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main) | 4.1.2 | 17+（业务消费使用25） | `1.1.2.2-jdk25-SNAPSHOT` | 官方版本 + 路线 + 日期 |
+| [`main-jdk17`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk17) | 3.5.15 | 17+ | `1.1.2.2-jdk17-SNAPSHOT` | 官方版本 + 日期 |
+| [`main-jdk8`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk8) | 2.7.18 | 8+ | `1.1.2.2-jdk8-SNAPSHOT` | 官方版本 + 路线 + 日期 |
 
-版本主号对应宿主的 Boot 大版本；上游源码基线另行记录，不代表使用官方 Spring AI 的同名版本。当前分支：**`main-jdk17`**。
+版本保留上游源码基线编号，以 JDK 路线隔离 Boot 依赖；发布时追加北京时间日期，不增加同日序号。当前分支：**`main-jdk17`**。
 
 Maven groupId 为 **`cn.iocoder.spring-ai-alibaba`**，artifactId 和 Java 包名沿用官方。同一个应用只选择一条版本线，同一项目的模块使用同一版本；替换已有依赖时，也要移除对应官方 groupId 下的同类模块，避免重复类。
 
-**当前仅提供源码开发版，尚未发布这些坐标到 Maven Central 或远端 SNAPSHOT 仓库。** 正式版本列为计划，不能直接从 Central 下载；下面的 SNAPSHOT 示例须先从源码安装到本地仓库。正式发布后，将版本改为对应 `x.0.0` 即可从 Central 引入。
+**当前仅提供源码开发版，尚未发布这些坐标到 Maven Central 或远端 SNAPSHOT 仓库。** 下面的 SNAPSHOT 示例须先从源码安装到本地仓库。发布版本按 `官方版本[-jdk数字][-preview]-YYYYMMDD` 命名；共用制品省略 JDK，未发布上游基线增加 preview，无同日序号。
 
 ## 如何使用
 
@@ -36,14 +40,14 @@ bash ./mvnw -DskipTests -Dmaven.javadoc.skip=true install
 
 ```xml
 <properties>
-    <yudao-spring-ai-alibaba.version>3.0.0-SNAPSHOT</yudao-spring-ai-alibaba.version>
+    <yudao-spring-ai-alibaba.version>1.1.2.2-jdk17-SNAPSHOT</yudao-spring-ai-alibaba.version>
 </properties>
 <dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>cn.iocoder.spring-ai</groupId>
             <artifactId>spring-ai-bom</artifactId>
-            <version>${yudao-spring-ai-alibaba.version}</version>
+            <version>2.1.0-jdk17-SNAPSHOT</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -74,7 +78,7 @@ spring:
           model: qwen-plus
 ```
 
-配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。三个分支均已适配可选 AgentScope starter：Boot 3/4 使用 `cn.iocoder.agentscope:agentscope-core:3.0.0-SNAPSHOT`，Boot 2 使用 `2.0.0-SNAPSHOT`。需先安装对应 AgentScope 源码版本，再显式引入 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-starter-agentscope`（版本由 Alibaba BOM 管理）；状态存储使用 `stateStore(AgentStateStore)`。详细示例见下方兼容说明。三个分支均提供可选 sandbox 模块，具体接入见兼容说明。AgentScope 集成不会成为 DashScope starter 的强制依赖。
+配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。三个分支均已适配可选 AgentScope starter：Boot 3/4 使用 `cn.iocoder.agentscope:agentscope-core:2.1.0-SNAPSHOT`，Boot 2 使用 `1.1.2.2-jdk8-SNAPSHOT`。需先安装对应 AgentScope 源码版本，再显式引入 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-starter-agentscope`（版本由 Alibaba BOM 管理）；状态存储使用 `stateStore(AgentStateStore)`。详细示例见下方兼容说明。三个分支均提供可选 sandbox 模块，具体接入见兼容说明。AgentScope 集成不会成为 DashScope starter 的强制依赖。
 
 详细构建、源码基线、API 差异及当前支持边界见 [COMPATIBILITY.md](COMPATIBILITY.md)。
 

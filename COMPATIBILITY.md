@@ -6,7 +6,7 @@
 | main-jdk17 | Spring Boot 3 | 17 | ruoyi-vue-pro-jdk25 |
 | main-jdk8 | Spring Boot 2 | 8 | ruoyi-vue-pro-jdk8 |
 
-This branch targets Spring AI `3.0.0-SNAPSHOT` and Boot 3.5.15; minimum target Java 17, consumer validation JVM 17.
+This branch targets Spring AI `2.1.0-jdk17-SNAPSHOT` and Boot 3.5.15; minimum target Java 17, consumer validation JVM 17.
 Default reactor unit tests and dependency gates have passed by recorded full/closure runs. Consumer source alignment is still in progress.
 No release has been published. Maven groups are cn.iocoder.spring-ai-alibaba and cn.iocoder.spring-ai; upstream artifactIds and Java packages are retained.
 
@@ -30,13 +30,13 @@ Native DashScope sync/UTF8 SSE/provider errors and ChatClient option merging hav
 
 Tika parser's original14 tests pass on each line with the corresponding family (2.9.4/3.3.1/4.0.0); Boot4 uses TikaInputStream and standard-package type pom.
 
-The three frozen business consumers start and pass local chat/image/knowledge flows. The optional AgentScope adapter uses the Yudao SDK on every branch: main/main-jdk17 use 3.0.0-SNAPSHOT and main-jdk8 uses 2.0.0-SNAPSHOT. The Java8 adapter is included in its default reactor/BOM; its runtime-sandbox module is also included after the independent Java8 port. Original consumer working directories remain untouched. No remote release has been published.
+The three frozen business consumers start and pass local chat/image/knowledge flows. The optional AgentScope adapter uses the Yudao SDK on every branch: main/main-jdk17 use 1.1.2.2-jdk17-SNAPSHOT and main-jdk8 uses 1.1.2.2-jdk8-SNAPSHOT. The Java8 adapter is included in its default reactor/BOM; its runtime-sandbox module is also included after the independent Java8 port. Original consumer working directories remain untouched. No remote release has been published.
 
 ## Additional validation and limits
 
 The same ten local HTTP acceptance tests pass in all three business lines, including native DashScope embedding/image credentials, requested/default models and application observation callbacks. The matched chat service/tool regressions pass on actual JVM8/17/25 (51/54/61 tests). Streaming reasoning consumption uses the delegate delta rather than appending cumulative content.
 
-The optional AgentScope adapter uses `cn.iocoder.agentscope:agentscope-core:3.0.0-SNAPSHOT`, from the pinned current AgentScope source (the compatibility version is independent of upstream's version). It uses `AgentStateStore` instead of the removed `Session` API. Each invocation copies the builder, scopes persisted state by graph thread and agent name, creates the temporary agent on subscription, and closes it on termination. `session(AgentStateStore)` is retained as a deprecated builder alias; use `stateStore(AgentStateStore)` for new code. Model errors save safe input before propagating; cancellation retains committed file state without an extra blanket save.
+The optional AgentScope adapter uses `cn.iocoder.agentscope:agentscope-core:2.1.0-SNAPSHOT`, from the pinned current AgentScope source (the compatibility version is independent of upstream's version). It uses `AgentStateStore` instead of the removed `Session` API. Each invocation copies the builder, scopes persisted state by graph thread and agent name, creates the temporary agent on subscription, and closes it on termination. `session(AgentStateStore)` is retained as a deprecated builder alias; use `stateStore(AgentStateStore)` for new code. Model errors save safe input before propagating; cancellation retains committed file state without an extra blanket save.
 
 The adapter's local regression suite passes on native JDK17 for both Boot3 and Boot4: 18 tests, 0 failures/errors, 5 external-service skips. It covers multi-turn/thread/agent isolation, lazy lifecycle, failed model calls and cancellation recovery through a fresh graph. This is local adapter evidence; skipped provider integrations are not covered by it.
 
@@ -59,7 +59,7 @@ Then return to your Alibaba checkout for its build. Alongside the Spring AI/Alib
 </dependency>
 ```
 
-The Alibaba BOM manages the adapter version; its POM selects AgentScope `3.0.0-SNAPSHOT` on both Boot3 and Boot4. Do not use the Boot4 Alibaba version as the AgentScope version. Configure an AgentScope `ReActAgent.Builder` with your `Model`, then wrap it with `AgentScopeAgent.fromBuilder(builder).name("assistant").stateStore(store).build()`. `store` is an AgentScope `AgentStateStore` such as `InMemoryAgentStateStore` or `JsonFileAgentStateStore`; pass a graph `RunnableConfig` with a thread ID for persisted conversations. Java packages remain `io.agentscope.*` and `com.alibaba.cloud.ai.*`. DashScope starter does not acquire AgentScope unless this adapter is explicitly added.
+The Alibaba BOM manages the adapter version; its POM selects AgentScope `1.1.2.2-jdk17-SNAPSHOT` on both Boot3 and Boot4. Do not use the Boot4 Alibaba version as the AgentScope version. Configure an AgentScope `ReActAgent.Builder` with your `Model`, then wrap it with `AgentScopeAgent.fromBuilder(builder).name("assistant").stateStore(store).build()`. `store` is an AgentScope `AgentStateStore` such as `InMemoryAgentStateStore` or `JsonFileAgentStateStore`; pass a graph `RunnableConfig` with a thread ID for persisted conversations. Java packages remain `io.agentscope.*` and `com.alibaba.cloud.ai.*`. DashScope starter does not acquire AgentScope unless this adapter is explicitly added.
 
 ## Retained admin source boundary
 
@@ -67,9 +67,9 @@ The retained `spring-ai-alibaba-admin` source tree is outside the supported defa
 
 ## Runtime sandbox (optional)
 
-`cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-sandbox:3.0.0-SNAPSHOT` uses
-`cn.iocoder.agentscope:agentscope-runtime-sandbox-core:3.0.0-SNAPSHOT`. Boot4 deliberately
-shares AgentScope version3 with Boot3. These development artifacts must be installed
+`cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-sandbox:1.1.2.2-jdk17-SNAPSHOT` uses
+`cn.iocoder.agentscope:agentscope-runtime-sandbox-core:2.1.0-SNAPSHOT`. Boot4 deliberately
+shares AgentScope 2.1.0-SNAPSHOT with Boot3. These development artifacts must be installed
 from source before use; no remote artifact release has been published.
 
 First install matching yudao-spring-ai. In yudao-agentscope-java branch `main`,
@@ -103,3 +103,5 @@ arguments, response JSON, sandbox reuse and cleanup. Complete reactor verify pas
 on all three lines: Boot2=28 modules/1896 tests/286 skips; Boot3/4=23 modules/1895
 tests/288 skips each, with no failures or errors. Provider-gated tests stay skipped;
 these gates do not claim acceptance of every remote sandbox backend.
+
+Development coordinates now retain Alibaba baseline1.1.2.2 and use the selected jdk8/jdk17/jdk25 route. The Spring AI BOM is separately versioned2.1.0 with the same route; AgentScope modern version is2.1.0-SNAPSHOT without a JDK suffix. Do not reuse the Alibaba version property for these other BOMs. Date-only release naming is described in VERSIONING.md.
