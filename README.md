@@ -98,6 +98,14 @@ Boot3/4分支的Core类库已加入默认构建，并分别完成JDK17/25单测�
 当前Boot2分支的Core/OpenAPI/Start仍待迁移，不能使用现代分支jar替代。
 Java8内嵌Python原型13项通过，正式SDK的依赖隔离、构建和消费门禁仍在继续。
 
+## Java8 图依赖（JGraphT 1.5.2）
+
+为继续移植Admin Core，Java8分支已增加完整JGraphT1.5.2 core回迁模块，未将原依赖降为旧版。
+默认构建现在31模块，native8全量8532项，零失败/错误、286条件跳过；图模块上游默认选择6621项及独立Boot2消费2项通过。
+在现有Alibaba BOM下添加`cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-jgrapht-compat`即可使用，包名org.jgrapht不变。
+移除同一应用中的原版org.jgrapht:jgrapht-core；具体接入、许可证和排除边界见[图依赖说明](compatibility/jgrapht-core/README-COMPATIBILITY.md)。
+Admin Core/Python、OpenAPI/Start仍在迁移；图依赖完成不等于完整管理平台可运行。
+
 <!-- YUDAO-COMPATIBILITY-INTRO-END -->
 
 ---

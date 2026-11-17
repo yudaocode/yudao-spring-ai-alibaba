@@ -137,6 +137,11 @@
         <dependency><groupId>cn.iocoder.spring-ai-alibaba</groupId><artifactId>spring-ai-alibaba-sandbox</artifactId><version>${project.version}</version></dependency>
             <dependency>
                 <groupId>cn.iocoder.spring-ai-alibaba</groupId>
+                <artifactId>spring-ai-alibaba-jgrapht-compat</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.iocoder.spring-ai-alibaba</groupId>
                 <artifactId>spring-ai-alibaba-admin-server-runtime</artifactId>
                 <version>${project.version}</version>
             </dependency>

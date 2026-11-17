@@ -48,6 +48,7 @@
     </developers>
 
     <modules>
+        <module>compatibility/jgrapht-core</module>
         <module>compatibility/a2a-spec</module>
         <module>compatibility/a2a-common</module>
         <module>compatibility/a2a-client</module>

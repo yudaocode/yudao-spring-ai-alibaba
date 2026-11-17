@@ -1,0 +1,7 @@
+# Preserve third-party JGraphT source/license formatting; keep whitespace checks elsewhere.
+compatibility/jgrapht-core/src/main/java/** whitespace=-blank-at-eol,-blank-at-eof
+compatibility/jgrapht-core/src/test/java/** whitespace=-blank-at-eol,-blank-at-eof
+compatibility/jgrapht-core/license-*.txt whitespace=-blank-at-eol,-blank-at-eof
+compatibility/jgrapht-core/CONTRIBUTORS.md whitespace=-blank-at-eol,-blank-at-eof
+compatibility/jgrapht-core/src/main/resources/META-INF/* whitespace=-blank-at-eol,-blank-at-eof
+compatibility/jgrapht-core/src/test/resources/** whitespace=-blank-at-eol,-blank-at-eof
