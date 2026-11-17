@@ -38,5 +38,5 @@ Elasticsearch搜索使用真实HTTP本地fixture覆盖三种检索模式和conte
 ## 边界
 
 内嵌Python为GraalPython22.0.0.2/Python3.8.5解释执行路线；不支持LLVM、原生C扩展和任意PyPI依赖。
-普通Java8不会提供Graal JIT性能。详见[GraalPython说明](../../../compatibility/graalpython/README-COMPATIBILITY.md)。
+普通Java8不会提供Graal JIT性能。详见[GraalPython说明](../../compatibility/graalpython/README-COMPATIBILITY.md)。
 OpenAPI/Start、完整Admin服务装配、真实MySQL/Redis/ES/OSS/云模型等仍待验收；Core类库通过不等于整个平台可以部署。

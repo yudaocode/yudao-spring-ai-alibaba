@@ -164,3 +164,9 @@ The whole dependency API scan still reports57 raw references; these are not all 
 See [Core usage/boundaries](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-core/README-COMPATIBILITY.md),
 [GraalJS](compatibility/graaljs/README-COMPATIBILITY.md), and[GraalPython](compatibility/graalpython/README-COMPATIBILITY.md).
 No full platform/cloud backend, native extension/LLVM, arbitrary PyPI, AOT or JIT performance claim; no Maven Central deployment.
+
+## OpenAPI default-reactor checkpoint (2026-11-18)
+
+35 modules, 8590 cases, zero failures/errors, 286 conditional skips; full clean install on native1.8, retries disabled. This supersedes older aggregate counts above.
+Ten MVC cases and one installed-jar real HTTP consumer case pass per target VM (Boot2/native8; Boot3/4/native17 and25). Consumer fixtures replace application services, not servlet/JSON/SSE transport.
+OpenAPI is included in reactor/BOM. Start remains pending; no complete platform/backend or every endpoint/API-path claim. See OpenAPI module README for usage and limits.
