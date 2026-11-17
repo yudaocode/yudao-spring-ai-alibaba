@@ -17,7 +17,7 @@ yudao-spring-ai-alibaba 是 [Spring AI Alibaba](https://github.com/alibaba/sprin
 | 分支 | 已验证 Spring Boot | 运行 JDK | 源码开发版本 | 发布规则 |
 | --- | --- | --- | --- | --- |
 | [`main`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main) | 4.1.2 | 17+（业务消费使用25） | `1.1.2.2-jdk25-SNAPSHOT` | 官方版本 + 路线 + 日期 |
-| [`main-jdk17`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk17) | 3.5.15 | 17+ | `1.1.2.2-jdk17-SNAPSHOT` | 官方版本 + 日期 |
+| [`main-jdk17`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk17) | 3.5.15 | 17+ | `1.1.2.2-jdk17-SNAPSHOT` | 官方版本 + 路线 + 日期 |
 | [`main-jdk8`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk8) | 2.7.18 | 8+ | `1.1.2.2-jdk8-SNAPSHOT` | 官方版本 + 路线 + 日期 |
 
 版本保留上游源码基线编号，以 JDK 路线隔离 Boot 依赖；发布时追加北京时间日期，不增加同日序号。当前分支：**`main`**。
@@ -87,8 +87,29 @@ spring:
 Admin runtime DTO/JSON 工具库已接入当前版本线：在现有 Alibaba BOM 下添加 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-admin-server-runtime`。
 版本为 `1.1.2.2-jdk25-SNAPSHOT`，须先源码安装；保留 `com.alibaba.cloud.ai.studio.runtime.*` 包名。
 当前完整25模块构建在原生JDK17通过1913项测试，零失败/错误、288项条件跳过；三路线安装包在Boot2/JDK8、Boot3/4×JDK17/25均完成真实HTTP文本/多模态验证。
-Boot4已补Jackson3转换器适配，Boot2/3继续使用Jackson2。Admin的core/openapi/start三个模块仍待兼容，本批不代表完整管理平台可部署。
+Boot4已补Jackson3转换器适配，Boot2/3继续使用Jackson2。Boot3/4 的 Core 类库已纳入默认构建；OpenAPI/Start 继续迁移。Boot2 的 Core 仍待兼容，本批不代表完整管理平台可部署。
 依赖示例、验证命令和边界见 [Admin runtime 使用说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-runtime/README-COMPATIBILITY.md)。
+
+## Admin Core（Boot 3 / Boot 4）
+
+现代分支的 `spring-ai-alibaba-admin-server-core` 已加入默认 reactor 和 Alibaba BOM。
+当前分支完整 26 模块 clean install：1955 项，0 失败/错误，288 条件跳过；
+Core 自身 42 项在 JDK17/25 均零失败/错误/跳过。
+每个 JVM 另有 4 项独立安装 jar 消费测试，实际启动 Boot、H2/MyBatis、JS/Python，并验证同步/流式/向量调用的 HTTP 错误映射。
+
+在前述 BOM 下按需添加：
+
+```xml
+<dependency>
+    <groupId>cn.iocoder.spring-ai-alibaba</groupId>
+    <artifactId>spring-ai-alibaba-admin-server-core</artifactId>
+</dependency>
+```
+
+这是 Core 类库，不是完整 Admin 服务。检索扩展已迁入 Admin 自己的包，不再覆盖 Spring AI 官方类；
+Boot4 的 Elasticsearch JSON 映射、GraalPy 标准库和 OpenAI SDK 业务错误映射已有实际回归。
+Boot2 Core/Python 的正式移植，以及 OpenAPI/Start、完整服务装配和外部后端验收仍在推进。
+接入、测试和边界见 [Core 使用说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-core/README-COMPATIBILITY.md)。
 
 <!-- YUDAO-COMPATIBILITY-INTRO-END -->
 

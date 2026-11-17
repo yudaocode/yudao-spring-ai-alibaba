@@ -23,7 +23,11 @@ import org.springframework.ai.document.Document;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.*;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_DOC_ID;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_DOC_NAME;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_ENABLED;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_TITLE;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_WORKSPACE_ID;
 
 /**
  * Utility class for converting between Document and DocumentChunk objects. Provides

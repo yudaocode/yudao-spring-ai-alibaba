@@ -19,7 +19,8 @@ package com.alibaba.cloud.ai.studio.core.crypto;
 import com.alibaba.cloud.ai.studio.core.utils.security.PasswordCryptUtils;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Title Unit test cases for PasswordCrypt.<br/>

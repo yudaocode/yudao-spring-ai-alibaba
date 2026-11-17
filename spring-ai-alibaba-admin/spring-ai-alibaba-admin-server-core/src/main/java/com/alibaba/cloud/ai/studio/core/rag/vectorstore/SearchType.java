@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package org.springframework.ai.vectorstore;
+package com.alibaba.cloud.ai.studio.core.rag.vectorstore;
 
 /**
  * Title search type.<br>
  * Description search type.<br>
- *
+ * @author 芋道源码
  * @since 1.0.0.3
  */
 

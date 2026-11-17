@@ -24,7 +24,7 @@ import com.alibaba.cloud.ai.studio.runtime.domain.account.LoginRequest;
 import com.alibaba.cloud.ai.studio.runtime.domain.account.RefreshTokenRequest;
 import com.alibaba.cloud.ai.studio.runtime.domain.account.TokenResponse;
 import com.alibaba.cloud.ai.studio.core.base.entity.AccountEntity;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.alibaba.cloud.ai.studio.runtime.domain.account.Oauth2User;
 
 /**

@@ -112,8 +112,8 @@ The Admin parent and `spring-ai-alibaba-admin-server-runtime` now join this bran
 The runtime retains the146 upstream DTO/utility source files; unused Guava is removed, wildcard imports are made explicit and framework/Java versions come from the branch root.
 The parent/runtime use the same fork revision and publication configuration as the root, rather than independent1.0.0 snapshots.
 This is the runtime library, not a completed Admin server.
-Core, OpenAPI and Start remain outside the supported default reactor in the explicit `admin-server-pending` profile.
-Their historical official core/graph/ARMS dependencies are not produced by this fork and have no compatibility claim yet.
+OpenAPI and Start remain outside the supported default reactor in the explicit `admin-server-pending` profile; the Core library checkpoint is recorded below.
+Their historical official graph/ARMS dependencies are not produced by this fork and have no compatibility claim yet.
 
 This branch's full25-module clean install passed1913 cases, zero failures/errors and288 conditional skips on nativeJDK17, with retries disabled.
 The focused runtime suite has18 cases; Boot3/4 also passed those cases on native25.
@@ -130,3 +130,26 @@ The original3.22.1 metadata matches Maven Central byte-for-byte; no local cache 
 This warning is separate from the zero test failure/error counts and is not represented as fully cleaned dependency metadata.
 No real Nacos/KMS/cloud account, complete Admin UI/database deployment or Maven Central release is claimed by this batch.
 See [runtime usage and boundaries](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-runtime/README-COMPATIBILITY.md).
+
+## Admin Core library checkpoint (2026-11-18)
+
+The modern branch now includes Core in its default reactor and BOM. Full native17 clean install:
+26 modules, 1955 cases, zero failures/errors, 288 conditional skips, retries disabled.
+The previous25-module runtime-only count above remains a historical checkpoint.
+Core42 tests pass on native17 and25; four standalone installed-jar cases pass on each VM.
+The standalone consumer starts the host Boot context, real H2 JDBC/MyBatis and JS/Python engines;
+it also preserves provider401 status/code/Unicode messages for sync chat, streaming and embedding.
+
+The old official1.0 core dependency is replaced by the current fork DashScope module.
+MCP uses current core plus Jackson2 transport, not a Jackson3 umbrella on Boot3.
+GraalJS/Python/Truffle use24.2.1 with the Python standard-library resource dependency.
+Core depends directly on Redisson SDK because its own configuration already creates the client;
+database pool selection stays in the host/application layer.
+Boot4 uses its matching MyBatis starter/service imports and Spring7 HTTP callback/header APIs.
+The three org.springframework.ai source copies are relocated into Admin-owned namespaces.
+Elasticsearch reads its storage DTO before building a Spring AI Document, supporting content/text
+on both Jackson families without injecting replacement framework classes.
+
+The pre-fix consumer401 regression and Boot4 Document deserialization failures are retained in the
+task notes. No all-provider/cloud credentials, complete Admin UI/database/MQ deployment or Maven Central
+release is claimed. Core on Java8 remains pending. See the Core module's README-COMPATIBILITY.md.

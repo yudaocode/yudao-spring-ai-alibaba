@@ -18,7 +18,12 @@ package com.alibaba.cloud.ai.studio.core.rag.vectorstore.elasticsearch;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
-import co.elastic.clients.elasticsearch._types.mapping.*;
+import co.elastic.clients.elasticsearch._types.mapping.DenseVectorProperty;
+import co.elastic.clients.elasticsearch._types.mapping.KeywordProperty;
+import co.elastic.clients.elasticsearch._types.mapping.ObjectProperty;
+import co.elastic.clients.elasticsearch._types.mapping.Property;
+import co.elastic.clients.elasticsearch._types.mapping.TextProperty;
+import co.elastic.clients.elasticsearch._types.mapping.TypeMapping;
 import co.elastic.clients.elasticsearch.core.BulkRequest;
 import co.elastic.clients.elasticsearch.core.BulkResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
@@ -44,10 +49,9 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.document.MetadataMode;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.embedding.EmbeddingOptions;
-import org.springframework.ai.vectorstore.SearchRequest;
+import com.alibaba.cloud.ai.studio.core.rag.vectorstore.AdminSearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.elasticsearch.ElasticsearchAiSearchFilterExpressionConverter;
-import org.springframework.ai.vectorstore.elasticsearch.ElasticsearchVectorStore;
 import org.springframework.ai.vectorstore.elasticsearch.ElasticsearchVectorStoreOptions;
 import org.springframework.ai.vectorstore.elasticsearch.SimilarityFunction;
 import org.springframework.ai.vectorstore.filter.FilterExpressionConverter;
@@ -56,9 +60,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.*;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.DEFAULT_DIMENSION;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_CHUNK_INDEX;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_DOC_ID;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_ENABLED;
+import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.KEY_WORKSPACE_ID;
 
 /**
  * Elasticsearch vector store service implementation. Provides functionality for managing
@@ -183,7 +195,7 @@ public class ElasticSearchVectorStoreService implements VectorStoreService {
 		storeOptions.setSimilarity(SimilarityFunction.cosine);
 		storeOptions.setDimensions(dimension);
 
-		return ElasticsearchVectorStore.builder(restClient, embeddingModel)
+		return AdminElasticsearchVectorStore.builder(restClient, embeddingModel)
 			.options(storeOptions)
 			.initializeSchema(false)
 			.batchingStrategy(new DefaultBatchingStrategy())
@@ -196,7 +208,7 @@ public class ElasticSearchVectorStoreService implements VectorStoreService {
 	 * @param searchRequest Search parameters including pagination and filters
 	 * @return Paginated list of document chunks
 	 */
-	public PagingList<DocumentChunk> listDocumentChunks(IndexConfig indexConfig, SearchRequest searchRequest) {
+	public PagingList<DocumentChunk> listDocumentChunks(IndexConfig indexConfig, AdminSearchRequest searchRequest) {
 		try {
 			int from = searchRequest.getFrom();
 			int size = searchRequest.getTopK();
@@ -244,7 +256,7 @@ public class ElasticSearchVectorStoreService implements VectorStoreService {
 					new DefaultBatchingStrategy());
 
 			for (Document document : documents) {
-				ElasticsearchVectorStore.ElasticSearchDocument doc = new ElasticsearchVectorStore.ElasticSearchDocument(
+				AdminElasticsearchVectorStore.ElasticSearchDocument doc = new AdminElasticsearchVectorStore.ElasticSearchDocument(
 						document.getId(), document.getText(), document.getMetadata(),
 						embeddings.get(documents.indexOf(document)));
 				bulkRequestBuilder.operations(op -> op
@@ -269,7 +281,7 @@ public class ElasticSearchVectorStoreService implements VectorStoreService {
 		try {
 			BulkRequest.Builder bulkRequestBuilder = new BulkRequest.Builder();
 			for (String chunkId : chunkIds) {
-				ElasticsearchVectorStore.ElasticSearchDocument doc = new ElasticsearchVectorStore.ElasticSearchDocument(
+				AdminElasticsearchVectorStore.ElasticSearchDocument doc = new AdminElasticsearchVectorStore.ElasticSearchDocument(
 						chunkId, null, Map.of(KEY_ENABLED, enabled), null);
 				bulkRequestBuilder.operations(
 						op -> op.update(idx -> idx.index(indexConfig.getName()).id(chunkId).action(a -> a.doc(doc))));

@@ -19,7 +19,7 @@ package com.alibaba.cloud.ai.studio.core.base.service;
 import com.alibaba.cloud.ai.studio.core.base.entity.AgentSchemaEntity;
 import com.alibaba.cloud.ai.studio.runtime.domain.PagingList;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 
 import java.util.List;
 

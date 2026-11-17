@@ -31,4 +31,4 @@ From the repository root, build with JDK17 and set the actual test VM explicitly
 For modern routes repeat the standalone case with JDK25 and `-Dcompat.expected.vm=25`.
 For Boot2 use a real JDK8 test VM even though the source transformation/compiler toolchain runs on JDK17.
 This library does not start the Admin platform, configure its database or validate cloud services.
-Admin core/openapi/start remain pending; the `admin-server-pending` profile is retained for porting work, not advertised as a working server distribution.
+Core is included on Boot3/4 after its separate library gates; Admin openapi/start remain pending; the `admin-server-pending` profile is retained for porting work, not advertised as a working server distribution.

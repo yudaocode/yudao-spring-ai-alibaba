@@ -18,6 +18,7 @@ package com.alibaba.cloud.ai.studio.core.utils.api;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.LinkedMultiValueMap;
 
 /**
  * Utility class for API-related operations. Provides methods for generating user agent
@@ -44,7 +45,7 @@ public class ApiUtils {
 	 * @return MultiValueMap containing the base headers
 	 */
 	public static MultiValueMap<String, String> getBaseHeaders() {
-		MultiValueMap<String, String> headers = new HttpHeaders();
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 		headers.add(HttpHeaders.USER_AGENT, userAgent());
 
 		return headers;
