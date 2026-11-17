@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ai.vectorstore.elasticsearch;
+package com.alibaba.cloud.ai.studio.core.rag.vectorstore.elasticsearch;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.BulkRequest;
@@ -27,6 +27,7 @@ import co.elastic.clients.transport.Version;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import com.alibaba.cloud.ai.studio.runtime.exception.BizException;
 import com.alibaba.cloud.ai.studio.runtime.enums.ErrorCode;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.client.RestClient;
@@ -38,8 +39,11 @@ import org.springframework.ai.model.EmbeddingUtils;
 import org.springframework.ai.observation.conventions.VectorStoreProvider;
 import org.springframework.ai.observation.conventions.VectorStoreSimilarityMetric;
 import org.springframework.ai.vectorstore.AbstractVectorStoreBuilder;
-import org.springframework.ai.vectorstore.SearchRequest;
-import org.springframework.ai.vectorstore.SearchType;
+import org.springframework.ai.vectorstore.elasticsearch.ElasticsearchVectorStoreOptions;
+import org.springframework.ai.vectorstore.elasticsearch.SimilarityFunction;
+import org.springframework.ai.vectorstore.elasticsearch.ElasticsearchAiSearchFilterExpressionConverter;
+import com.alibaba.cloud.ai.studio.core.rag.vectorstore.AdminSearchRequest;
+import com.alibaba.cloud.ai.studio.core.rag.vectorstore.SearchType;
 import org.springframework.ai.vectorstore.filter.Filter;
 import org.springframework.ai.vectorstore.filter.FilterExpressionConverter;
 import org.springframework.ai.vectorstore.observation.AbstractObservationVectorStore;
@@ -48,7 +52,11 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -84,7 +92,7 @@ import static com.alibaba.cloud.ai.studio.core.utils.concurrent.ThreadPoolUtils.
  * Basic usage example:
  * </p>
  * <pre>{@code
- * ElasticsearchVectorStore vectorStore = ElasticsearchVectorStore.builder(restClient, embeddingModel)
+ * AdminElasticsearchVectorStore vectorStore = AdminElasticsearchVectorStore.builder(restClient, embeddingModel)
  *     .initializeSchema(true)
  *     .build();
  *
@@ -96,10 +104,10 @@ import static com.alibaba.cloud.ai.studio.core.utils.concurrent.ThreadPoolUtils.
  *
  * // Search with filters
  * List<Document> results = vectorStore.similaritySearch(
- *     SearchRequest.query("search text")
- *         .withTopK(5)
- *         .withSimilarityThreshold(0.7)
- *         .withFilterExpression("key1 == 'value1'")
+ *     AdminSearchRequest.adminBuilder().query("search text")
+ *         .topK(5)
+ *         .similarityThreshold(0.7)
+ *         .filterExpression("key1 == 'value1'").build()
  * );
  * }</pre>
  *
@@ -112,7 +120,7 @@ import static com.alibaba.cloud.ai.studio.core.utils.concurrent.ThreadPoolUtils.
  * options.setSimilarity(SimilarityFunction.dot_product);
  * options.setDimensions(1536);
  *
- * ElasticsearchVectorStore vectorStore = ElasticsearchVectorStore.builder(restClient, embeddingModel)
+ * AdminElasticsearchVectorStore vectorStore = AdminElasticsearchVectorStore.builder(restClient, embeddingModel)
  *     .options(options)
  *     .initializeSchema(true)
  *     .batchingStrategy(new TokenCountBatchingStrategy())
@@ -148,8 +156,9 @@ import static com.alibaba.cloud.ai.studio.core.utils.concurrent.ThreadPoolUtils.
  * @author Thomas Vitale
  * @author Ilayaperumal Gopinathan
  * @since 1.0.0
+ * @author 芋道源码
  */
-public class ElasticsearchVectorStore extends AbstractObservationVectorStore implements InitializingBean {
+public class AdminElasticsearchVectorStore extends AbstractObservationVectorStore implements InitializingBean {
 
 	private static final Map<SimilarityFunction, VectorStoreSimilarityMetric> SIMILARITY_TYPE_MAPPING = Map.of(
 			SimilarityFunction.cosine, VectorStoreSimilarityMetric.COSINE, SimilarityFunction.l2_norm,
@@ -163,7 +172,7 @@ public class ElasticsearchVectorStore extends AbstractObservationVectorStore imp
 
 	private final boolean initializeSchema;
 
-	protected ElasticsearchVectorStore(Builder builder) {
+	protected AdminElasticsearchVectorStore(Builder builder) {
 		super(builder);
 
 		Assert.notNull(builder.restClient, "RestClient must not be null");
@@ -251,7 +260,9 @@ public class ElasticsearchVectorStore extends AbstractObservationVectorStore imp
 	}
 
 	@Override
-	public List<Document> doSimilaritySearch(SearchRequest searchRequest) {
+	public List<Document> doSimilaritySearch(org.springframework.ai.vectorstore.SearchRequest request) {
+        Assert.notNull(request, "The search request must not be null.");
+        AdminSearchRequest searchRequest = AdminSearchRequest.copyOf(request).build();
 		Assert.notNull(searchRequest, "The search request must not be null.");
 
 		return switch (searchRequest.getSearchType()) {
@@ -268,9 +279,13 @@ public class ElasticsearchVectorStore extends AbstractObservationVectorStore imp
 
 	}
 
-	private Document toDocument(Hit<Document> hit, SearchType searchType) {
-		Document document = hit.source();
-		Document.Builder documentBuilder = document.mutate();
+	private Document toDocument(Hit<ElasticSearchDocument> hit, SearchType searchType) {
+        ElasticSearchDocument source = hit.source();
+        Assert.notNull(source, "Elasticsearch hit must contain a document source");
+        Document.Builder documentBuilder = Document.builder()
+                .id(source.id() == null ? hit.id() : source.id())
+                .text(source.content())
+                .metadata(source.metadata() == null ? java.util.Collections.emptyMap() : source.metadata());
 		if (hit.score() != null) {
 			documentBuilder.metadata(DocumentMetadata.DISTANCE.value(), 1 - normalizeSimilarityScore(hit.score()));
 
@@ -360,7 +375,7 @@ public class ElasticsearchVectorStore extends AbstractObservationVectorStore imp
 	}
 
 	/**
-	 * Creates a new builder instance for ElasticsearchVectorStore.
+	 * Creates a new builder instance for AdminElasticsearchVectorStore.
 	 * @return a new ElasticsearchBuilder instance
 	 */
 	public static Builder builder(RestClient restClient, EmbeddingModel embeddingModel) {
@@ -375,7 +390,7 @@ public class ElasticsearchVectorStore extends AbstractObservationVectorStore imp
 	 * @param metadata The metadata of the document
 	 * @param embedding The vectors representing the content of the document
 	 */
-	public record ElasticSearchDocument(String id, String content, Map<String, Object> metadata, float[] embedding) {
+	public record ElasticSearchDocument(String id, @JsonAlias("text") String content, Map<String, Object> metadata, float[] embedding) {
 	}
 
 	public static class Builder extends AbstractVectorStoreBuilder<Builder> {
@@ -434,18 +449,18 @@ public class ElasticsearchVectorStore extends AbstractObservationVectorStore imp
 		}
 
 		/**
-		 * Builds the ElasticsearchVectorStore instance.
-		 * @return a new ElasticsearchVectorStore instance
+		 * Builds the AdminElasticsearchVectorStore instance.
+		 * @return a new AdminElasticsearchVectorStore instance
 		 * @throws IllegalStateException if the builder is in an invalid state
 		 */
 		@Override
-		public ElasticsearchVectorStore build() {
-			return new ElasticsearchVectorStore(this);
+		public AdminElasticsearchVectorStore build() {
+			return new AdminElasticsearchVectorStore(this);
 		}
 
 	}
 
-	protected List<Document> searchBySemantic(SearchRequest searchRequest) {
+	protected List<Document> searchBySemantic(AdminSearchRequest searchRequest) {
 		try {
 			float threshold = (float) searchRequest.getSimilarityThreshold();
 			// reverting l2_norm distance to its original value
@@ -455,7 +470,7 @@ public class ElasticsearchVectorStore extends AbstractObservationVectorStore imp
 			final float finalThreshold = threshold;
 			float[] vectors = this.embeddingModel.embed(searchRequest.getQuery());
 
-			SearchResponse<Document> res = this.elasticsearchClient.search(sr -> sr.index(this.options.getIndexName())
+			SearchResponse<ElasticSearchDocument> res = this.elasticsearchClient.search(sr -> sr.index(this.options.getIndexName())
 				.knn(knn -> knn.queryVector(EmbeddingUtils.toList(vectors))
 					.similarity(finalThreshold)
 					.k((long) searchRequest.getTopK())
@@ -463,7 +478,7 @@ public class ElasticsearchVectorStore extends AbstractObservationVectorStore imp
 					.numCandidates((long) (1.5 * searchRequest.getTopK()))
 					.filter(fl -> fl
 						.queryString(qs -> qs.query(getElasticsearchQueryString(searchRequest.getFilterExpression())))))
-				.size(searchRequest.getTopK()), Document.class);
+				.size(searchRequest.getTopK()), ElasticSearchDocument.class);
 
 			return res.hits().hits().stream().map(x -> toDocument(x, SearchType.SEMANTIC)).collect(Collectors.toList());
 		}
@@ -472,9 +487,9 @@ public class ElasticsearchVectorStore extends AbstractObservationVectorStore imp
 		}
 	}
 
-	protected List<Document> searchByFullText(SearchRequest searchRequest) {
+	protected List<Document> searchByFullText(AdminSearchRequest searchRequest) {
 		try {
-			SearchResponse<Document> res = this.elasticsearchClient.search(
+			SearchResponse<ElasticSearchDocument> res = this.elasticsearchClient.search(
 					sr -> sr.index(this.options.getIndexName())
 						.query(q -> q.bool(m -> m
 							.must(qm -> qm.match(mm -> mm.field("content").query(searchRequest.getQuery())))
@@ -482,7 +497,7 @@ public class ElasticsearchVectorStore extends AbstractObservationVectorStore imp
 									qs -> qs.query(getElasticsearchQueryString(searchRequest.getFilterExpression()))))))
 						.minScore(searchRequest.getSimilarityThreshold())
 						.size((int) (1.5 * searchRequest.getTopK())),
-					Document.class);
+					ElasticSearchDocument.class);
 
 			return res.hits()
 				.hits()
@@ -495,7 +510,7 @@ public class ElasticsearchVectorStore extends AbstractObservationVectorStore imp
 		}
 	}
 
-	protected List<Document> searchByHybrid(SearchRequest searchRequest) {
+	protected List<Document> searchByHybrid(AdminSearchRequest searchRequest) {
 		List<CompletableFuture<List<Document>>> futureList = new ArrayList<>();
 
 		if (searchRequest.getHybridWeight() < 0 || searchRequest.getHybridWeight() > 1) {
@@ -505,7 +520,7 @@ public class ElasticsearchVectorStore extends AbstractObservationVectorStore imp
 		try {
 			CompletableFuture<List<Document>> textFuture = CompletableFuture.supplyAsync(() -> {
 				int textTopK = Math.round(searchRequest.getTopK() * (1 - searchRequest.getHybridWeight()));
-				return searchByFullText(SearchRequest.builder()
+				return searchByFullText(AdminSearchRequest.adminBuilder()
 					.query(searchRequest.getQuery())
 					.similarityThreshold(searchRequest.getSimilarityThreshold())
 					.topK(textTopK)
@@ -517,7 +532,7 @@ public class ElasticsearchVectorStore extends AbstractObservationVectorStore imp
 			// 基于向量检索召回内容
 			CompletableFuture<List<Document>> vectorFuture = CompletableFuture.supplyAsync(() -> {
 				int textTopK = Math.round(searchRequest.getTopK() * searchRequest.getHybridWeight());
-				return searchBySemantic(SearchRequest.builder()
+				return searchBySemantic(AdminSearchRequest.adminBuilder()
 					.query(searchRequest.getQuery())
 					.similarityThreshold(searchRequest.getSimilarityThreshold())
 					.topK(textTopK)

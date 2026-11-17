@@ -19,7 +19,6 @@ package com.alibaba.cloud.ai.studio.core.rag.vectorstore;
 import com.alibaba.cloud.ai.studio.runtime.domain.PagingList;
 import com.alibaba.cloud.ai.studio.runtime.domain.knowledgebase.DocumentChunk;
 import com.alibaba.cloud.ai.studio.runtime.domain.knowledgebase.IndexConfig;
-import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 
 import java.util.List;
@@ -57,7 +56,7 @@ public interface VectorStoreService {
 	 * @param searchRequest Search parameters
 	 * @return Paged list of document chunks
 	 */
-	PagingList<DocumentChunk> listDocumentChunks(IndexConfig indexConfig, SearchRequest searchRequest);
+	PagingList<DocumentChunk> listDocumentChunks(IndexConfig indexConfig, AdminSearchRequest searchRequest);
 
 	/**
 	 * Updates multiple document chunks in the vector store.

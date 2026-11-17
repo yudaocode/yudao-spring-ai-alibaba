@@ -57,7 +57,11 @@ import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.messages.*;
+import org.springframework.ai.chat.messages.AssistantMessage;
+import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.chat.messages.SystemMessage;
+import org.springframework.ai.chat.messages.ToolResponseMessage;
+import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.metadata.ChatResponseMetadata;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
@@ -85,7 +89,11 @@ import reactor.core.publisher.Mono;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.alibaba.cloud.ai.studio.core.rag.RagConstants.FILE_SEARCH_CALL;
@@ -144,11 +152,11 @@ public class BasicAgentExecutor extends AbstractAgentExecutor {
 		// build chat options
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		AgentConfig config = context.getConfig();
-		ToolCallingChatOptions chatOptions = buildChatOptions(config);
 
 		// build tool callback provider
 		ToolCallingManager toolCallingManager = ToolCallingManager.builder().build();
 		CompositeToolCallbackProvider toolCallbackProvider = buildToolCallbackProvider(config, request.getExtraPrams());
+		ToolCallingChatOptions chatOptions = withToolCallbacks(buildChatOptions(config), toolCallbackProvider);
 
 		// build messages
 		List<Message> messages = buildMessages(context);
@@ -175,11 +183,11 @@ public class BasicAgentExecutor extends AbstractAgentExecutor {
 	public AgentResponse execute(AgentContext context, AgentRequest request) {
 		AgentConfig config = context.getConfig();
 		// build chat options
-		ToolCallingChatOptions chatOptions = buildChatOptions(config);
 
 		// build tool callback provider
 		ToolCallingManager toolCallingManager = ToolCallingManager.builder().build();
 		CompositeToolCallbackProvider toolCallbackProvider = buildToolCallbackProvider(config, request.getExtraPrams());
+		ToolCallingChatOptions chatOptions = withToolCallbacks(buildChatOptions(config), toolCallbackProvider);
 
 		// build messages
 		List<Message> messages = buildMessages(context);
@@ -188,7 +196,7 @@ public class BasicAgentExecutor extends AbstractAgentExecutor {
 		ChatClient.Builder chatClientBuilder = buildChatClient(context, chatOptions, toolCallbackProvider);
 
 		Prompt prompt = new Prompt(messages, chatOptions);
-		ChatResponse response = chatClientBuilder.build().prompt(prompt).options(chatOptions).call().chatResponse();
+		ChatResponse response = chatClientBuilder.build().prompt(prompt).options(chatOptions.mutate()).call().chatResponse();
 
 		Assert.notNull(response, "response can not be null");
 		if (response.hasToolCalls()) {
@@ -228,8 +236,7 @@ public class BasicAgentExecutor extends AbstractAgentExecutor {
 	private OpenAiChatOptions buildChatOptions(AgentConfig config) {
 		OpenAiChatOptions.Builder builder = OpenAiChatOptions.builder()
 			.model(config.getModel())
-			.streamUsage(true)
-			.internalToolExecutionEnabled(false);
+			.streamUsage(true);
 
 		if (config.getParameter() != null) {
 			builder.maxTokens(config.getParameter().getMaxTokens())
@@ -292,14 +299,16 @@ public class BasicAgentExecutor extends AbstractAgentExecutor {
 			chatClientBuilder.defaultAdvisors(retrievalAdvisor);
 		}
 
-		// Add tool callbacks
-		ToolCallback[] toolCallbacks = toolCallbackProvider.getToolCallbacks();
-		if (!ArrayUtils.isEmpty(toolCallbacks)) {
-			chatOptions.setToolCallbacks(Arrays.stream(toolCallbacks).toList());
-		}
 
 		return chatClientBuilder;
 	}
+
+    private ToolCallingChatOptions withToolCallbacks(ToolCallingChatOptions options,
+            ToolCallbackProvider provider) {
+        ToolCallback[] callbacks = provider.getToolCallbacks();
+        return ArrayUtils.isEmpty(callbacks) ? options
+                : options.mutate().toolCallbacks(Arrays.asList(callbacks)).build();
+    }
 
 	/**
 	 * Builds message list from agent context

@@ -31,6 +31,7 @@
     <url>https://github.com/alibaba/spring-ai-alibaba</url>
     <modules>
         <module>spring-ai-alibaba-admin-server-runtime</module>
+        <module>spring-ai-alibaba-admin-server-core</module>
     </modules>
     <scm>
         <connection>git://github.com/alibaba/spring-ai-alibaba.git</connection>
@@ -81,7 +82,7 @@
         <!-- ASM -->
         <asm.version>9.5</asm.version>
         <!-- GraalVM -->
-        <graalvm-js.version>22.3.1</graalvm-js.version>
+        <graalvm-js.version>24.2.1</graalvm-js.version>
         <graalvm-python.version>24.2.1</graalvm-python.version>
         <graalvm-truffle.version>24.2.1</graalvm-truffle.version>
         <graalvm-sdk.version>24.2.1</graalvm-sdk.version>
@@ -178,6 +179,11 @@
             <!-- Redisson -->
             <dependency>
                 <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
                 <artifactId>redisson-spring-boot-starter</artifactId>
                 <version>${redisson.version}</version>
             </dependency>
@@ -263,7 +269,7 @@
             <!-- GraalVM -->
             <dependency>
                 <groupId>org.graalvm.js</groupId>
-                <artifactId>js</artifactId>
+                <artifactId>js-language</artifactId>
                 <version>${graalvm-js.version}</version>
             </dependency>
             <dependency>
@@ -377,7 +383,6 @@
             <id>admin-server-pending</id>
             <modules>
                 <module>spring-ai-alibaba-admin-server-start</module>
-                <module>spring-ai-alibaba-admin-server-core</module>
                 <module>spring-ai-alibaba-admin-server-openapi</module>
             </modules>
         </profile>

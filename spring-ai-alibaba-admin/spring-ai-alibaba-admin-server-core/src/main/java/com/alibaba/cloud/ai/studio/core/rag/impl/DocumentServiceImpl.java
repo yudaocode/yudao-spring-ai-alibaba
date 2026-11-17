@@ -57,7 +57,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.apis.producer.Producer;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.ai.vectorstore.SearchRequest;
+import com.alibaba.cloud.ai.studio.core.rag.vectorstore.AdminSearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -433,7 +433,7 @@ public class DocumentServiceImpl extends ServiceImpl<DocumentMapper, DocumentEnt
 
 		return vectorStoreFactory.getVectorStoreService()
 			.listDocumentChunks(knowledgeBase.getIndexConfig(),
-					SearchRequest.builder().from((current - 1) * size).topK(size).filterExpression(exp).build());
+					AdminSearchRequest.adminBuilder().from((current - 1) * size).topK(size).filterExpression(exp).build());
 	}
 
 	/**

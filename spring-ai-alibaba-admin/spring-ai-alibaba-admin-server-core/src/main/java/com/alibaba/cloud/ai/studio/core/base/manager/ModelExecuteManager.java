@@ -33,7 +33,7 @@ import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.openai.api.ResponseFormat;
+import org.springframework.ai.openai.OpenAiChatModel.ResponseFormat;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
@@ -103,7 +103,7 @@ public class ModelExecuteManager {
 		Prompt prompt = new Prompt(messages);
 		return chatClientBuilder.build()
 			.prompt(prompt)
-			.options(chatOptions)
+			.options(chatOptions.mutate())
 			.stream()
 			.chatResponse()
 			.concatMap(response -> convertResponse(response).flux());

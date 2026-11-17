@@ -45,7 +45,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.alibaba.cloud.ai.studio.core.base.constants.CacheConstants.*;
+import static com.alibaba.cloud.ai.studio.core.base.constants.CacheConstants.CACHE_API_KEY_ID_UID_PREFIX;
+import static com.alibaba.cloud.ai.studio.core.base.constants.CacheConstants.CACHE_API_KEY_PREFIX;
+import static com.alibaba.cloud.ai.studio.core.base.constants.CacheConstants.CACHE_EMPTY_ID;
 
 /**
  * Service implementation for managing API keys. Handles CRUD operations for API keys with

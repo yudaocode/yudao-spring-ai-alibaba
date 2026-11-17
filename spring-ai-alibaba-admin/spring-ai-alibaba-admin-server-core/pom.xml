@@ -54,11 +54,6 @@
 
         <!-- db -->
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
         </dependency>
@@ -73,7 +68,7 @@
         </dependency>
         <dependency>
             <groupId>org.redisson</groupId>
-            <artifactId>redisson-spring-boot-starter</artifactId>
+            <artifactId>redisson</artifactId>
         </dependency>
 
         <!-- oss -->
@@ -97,8 +92,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud.ai</groupId>
-            <artifactId>spring-ai-alibaba-core</artifactId>
+            <groupId>cn.iocoder.spring-ai-alibaba</groupId>
+            <artifactId>spring-ai-alibaba-dashscope</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
@@ -196,7 +192,7 @@
         <!-- GraalJS JavaScript Engine (alternative to Nashorn) -->
         <dependency>
             <groupId>org.graalvm.js</groupId>
-            <artifactId>js</artifactId>
+            <artifactId>js-language</artifactId>
         </dependency>
         <dependency>
             <groupId>org.graalvm.js</groupId>
@@ -206,6 +202,13 @@
         <dependency>
             <groupId>org.graalvm.python</groupId>
             <artifactId>python-language</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.graalvm.polyglot</groupId>
+            <artifactId>python-community</artifactId>
+            <version>${graalvm-python.version}</version>
+            <type>pom</type>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.graalvm.truffle</groupId>
@@ -243,7 +246,13 @@
         </dependency>
         <dependency>
             <groupId>io.modelcontextprotocol.sdk</groupId>
-            <artifactId>mcp</artifactId>
+            <artifactId>mcp-core</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.modelcontextprotocol.sdk</groupId>
+            <artifactId>mcp-json-jackson2</artifactId>
+            <version>2.2.0</version>
         </dependency>
     </dependencies>
 </project>

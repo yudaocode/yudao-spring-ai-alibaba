@@ -147,8 +147,13 @@ public class KnowledgeBaseIndexPipeline implements IndexPipeline {
 			splitter = new RegexTextSplitter(regex, processConfig.getChunkOverlap());
 		}
 		else {
-			splitter = new TokenTextSplitter(processConfig.getChunkSize(), processConfig.getChunkOverlap(), 1, 10000,
-					false);
+			splitter = TokenTextSplitter.builder()
+                .withChunkSize(processConfig.getChunkSize())
+                .withMinChunkSizeChars(processConfig.getChunkOverlap())
+                .withMinChunkLengthToEmbed(1)
+                .withMaxNumChunks(10000)
+                .withKeepSeparator(false)
+                .build();
 		}
 		List<Document> transformedDocs = splitter.apply(documents);
 
