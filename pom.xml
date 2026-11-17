@@ -65,6 +65,7 @@
         <module>spring-boot-starters/spring-ai-alibaba-starter-builtin-nodes</module>
         <module>spring-boot-starters/spring-ai-alibaba-starter-agentscope</module>
         <module>spring-ai-alibaba-sandbox</module>
+        <module>spring-ai-alibaba-admin</module>
     </modules>
 
     <scm>

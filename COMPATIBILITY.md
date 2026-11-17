@@ -24,7 +24,7 @@ The branch is a development SNAPSHOT. Maven artifact publication is managed sepa
 
 ## Verified scope (2026-11-16)
 
-Default reactor: Boot2=28 modules; Boot3/4=23 modules. Unit suites and dependency gates passed by combined module/closure receipts; this is not a claim that every external integration ran. Boot2 executes on real Java8; Boot3 on Java17; Boot4 consumer tests on Java25.
+Earlier reactor checkpoint: Boot2=28 modules; Boot3/4=23 modules. Current Admin runtime expansion is recorded below. Unit suites and dependency gates passed by combined module/closure receipts; this is not a claim that every external integration ran. Boot2 executes on real Java8; Boot3 on Java17; Boot4 consumer tests on Java25.
 
 Native DashScope sync/UTF8 SSE/provider errors and ChatClient option merging have five common HTTP tests passing on each JVM. The native getOptions method returns defensive copies; the legacy getter delegates. Global embedding selection uses spring.ai.model.embedding. The extensions BOM does not mark the model runtime optional.
 
@@ -40,9 +40,6 @@ The Java8 optional AgentScope adapter uses `cn.iocoder.agentscope:agentscope-cor
 
 The expanded 28-module Java8 default verify passes 1896 tests with 0 failures/errors and 286 skips; skipped cases requiring external services are not acceptance evidence. The optional adapter's 18 tests include local multi-turn state isolation, direct failure/cancellation persistence checks with a rebuilt graph, and lazy agent lifecycle coverage; 5 external-service cases remain skipped. Runtime sandbox is now included in the default reactor/BOM. No model provider credentials or remote model calls are required for these local gates.
 
-## Retained admin source boundary
-
-The retained `spring-ai-alibaba-admin` source tree is outside the supported default reactor and BOM. Its historical external `spring-ai-alibaba-core:1.0.0.3`, `spring-ai-alibaba-graph-core:1.0.0.4` and `spring-ai-alibaba-autoconfigure-arms-observation:1.0.0.4` dependencies keep the official `com.alibaba.cloud.ai` coordinates; these releases are not produced by this fork. Fork-owned admin project references use `cn.iocoder.spring-ai-alibaba`. No Boot/JDK compatibility is claimed for this retained admin tree.
 
 ## Runtime sandbox (optional)
 
@@ -88,3 +85,28 @@ these gates do not claim acceptance of every remote sandbox backend.
 The Networknt schema paths exclude `com.ethlo.time:itu`; MCP common explicitly consumes `cn.iocoder.spring-ai:spring-ai-itu-compat`. This avoids a Java 9-only Math overload in original ITU binaries, verified by a real Java 8 duration-parsing regression. Keep the Spring AI compatibility BOM at the matching revision.
 
 Development coordinates now retain Alibaba baseline1.1.2.2 and use the selected jdk8/jdk17/jdk25 route. The Spring AI BOM is separately versioned2.1.0 with the same route; AgentScope modern version is2.1.0-SNAPSHOT without a JDK suffix. Do not reuse the Alibaba version property for these other BOMs. Date-only release naming is described in VERSIONING.md.
+
+## Admin runtime compatibility
+
+The Admin parent and `spring-ai-alibaba-admin-server-runtime` now join this branch's default reactor and BOM.
+The runtime retains the146 upstream DTO/utility source files; unused Guava is removed, wildcard imports are made explicit and framework/Java versions come from the branch root.
+The parent/runtime use the same fork revision and publication configuration as the root, rather than independent1.0.0 snapshots.
+This is the runtime library, not a completed Admin server.
+Core, OpenAPI and Start remain outside the supported default reactor in the explicit `admin-server-pending` profile.
+Their historical official core/graph/ARMS dependencies are not produced by this fork and have no compatibility claim yet.
+
+This branch's full30-module clean install passed1911 cases, zero failures/errors and286 conditional skips on nativeJDK8, with retries disabled.
+The focused runtime suite has14 cases; Boot3/4 also passed those cases on native25.
+Five standalone installed-jar HTTP cases cover Boot2/native8 and Boot3/4 × native17/25.
+Each uses the host's real MVC converter and tests Unicode text, typed multimodal content, response field names, ignored future fields and the MDC/Marker paths.
+Boot4 initially returned500 for multimodal requests because its default Jackson3 mapper ignored the Jackson2 custom deserializer.
+The Boot4 route adds a Jackson3 annotation/deserializer bridge while retaining the runtime's existing Jackson2 utility/tree representation; Boot2/3 do not acquire that Jackson3 dependency.
+The Java8 runtime jar has234 classes, all <=major52, with zero missing JDK/Spring/Jackson/Mybatis members against the actual consumer classpath.
+The full consumer test/runtime closure has63 jars/20099 effective base classes, all <=major52.
+Its two raw static findings are SLF4J binder fallback references; the native8 MDC/Marker regression passes, and these findings remain disclosed rather than being called an all-dependency zero scan.
+
+The Boot2/Boot3 full logs retain an upstream protobuf-java-util3.22.1 invalid-POM warning during intermediate dependency traversal; the inspected Boot3 Nacos/KMS classpath selects4.0.0-rc-2 for both protobuf artifacts.
+The original3.22.1 metadata matches Maven Central byte-for-byte; no local cache patch was made.
+This warning is separate from the zero test failure/error counts and is not represented as fully cleaned dependency metadata.
+No real Nacos/KMS/cloud account, complete Admin UI/database deployment or Maven Central release is claimed by this batch.
+See [runtime usage and boundaries](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-runtime/README-COMPATIBILITY.md).

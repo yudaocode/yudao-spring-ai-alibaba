@@ -23,7 +23,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static com.alibaba.cloud.ai.studio.runtime.constants.ApiConstants.*;
+import static com.alibaba.cloud.ai.studio.runtime.constants.ApiConstants.INVALID_REQUEST_ERROR;
+import static com.alibaba.cloud.ai.studio.runtime.constants.ApiConstants.OPERATION_CANCEL;
+import static com.alibaba.cloud.ai.studio.runtime.constants.ApiConstants.RESPONSE_ERROR;
 
 /**
  * Title error code enum.<br>
