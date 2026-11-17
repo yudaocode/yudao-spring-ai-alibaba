@@ -17,6 +17,8 @@
 package com.alibaba.cloud.ai.studio.runtime;
 
 import com.alibaba.cloud.ai.studio.runtime.domain.chat.ChatMessage;
+import com.alibaba.cloud.ai.studio.runtime.domain.agent.AgentRequest;
+import org.junit.jupiter.api.Test;
 import com.alibaba.cloud.ai.studio.runtime.utils.JsonUtils;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -40,6 +42,15 @@ class AdminRuntimeJackson3Tests {
 		ChatMessage modern = JsonMapper.builder().build().readValue(json, ChatMessage.class);
 		assertThat(modern.getContent()).isEqualTo(existing.getContent());
 		assertThat(modern.getRole()).isEqualTo(existing.getRole());
+	}
+
+	@Test
+	void absentDraftUsesTheSameDefaultWithBothMappers() {
+		AgentRequest modern = JsonMapper.builder().build().readValue("{\"stream\":true}", AgentRequest.class);
+		AgentRequest existing = JsonUtils.fromJson("{\"stream\":true}", AgentRequest.class);
+		assertThat(modern.isDraft()).isFalse();
+		assertThat(modern.getStream()).isEqualTo(existing.getStream());
+		assertThat(modern.isDraft()).isEqualTo(existing.isDraft());
 	}
 
 }

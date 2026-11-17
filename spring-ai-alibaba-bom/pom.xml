@@ -149,6 +149,11 @@
                 <artifactId>spring-ai-alibaba-admin-server-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>cn.iocoder.spring-ai-alibaba</groupId>
+                <artifactId>spring-ai-alibaba-admin-server-openapi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>

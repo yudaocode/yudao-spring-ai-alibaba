@@ -18,6 +18,7 @@ package com.alibaba.cloud.ai.studio.runtime.domain.agent;
 
 import com.alibaba.cloud.ai.studio.runtime.domain.chat.ChatMessage;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,7 +35,7 @@ import java.util.Map;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(onConstructor_ = @JsonCreator)
 public class AgentRequest implements Serializable {
 
 	/** Application identifier */

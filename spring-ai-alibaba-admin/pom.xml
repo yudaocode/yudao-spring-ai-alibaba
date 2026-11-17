@@ -32,6 +32,7 @@
     <modules>
         <module>spring-ai-alibaba-admin-server-runtime</module>
         <module>spring-ai-alibaba-admin-server-core</module>
+        <module>spring-ai-alibaba-admin-server-openapi</module>
     </modules>
     <scm>
         <connection>git://github.com/alibaba/spring-ai-alibaba.git</connection>
@@ -383,7 +384,6 @@
             <id>admin-server-pending</id>
             <modules>
                 <module>spring-ai-alibaba-admin-server-start</module>
-                <module>spring-ai-alibaba-admin-server-openapi</module>
             </modules>
         </profile>
     </profiles>
