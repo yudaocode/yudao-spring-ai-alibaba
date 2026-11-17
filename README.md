@@ -87,7 +87,7 @@ spring:
 Admin runtime DTO/JSON 工具库已接入当前版本线：在现有 Alibaba BOM 下添加 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-admin-server-runtime`。
 版本为 `1.1.2.2-jdk25-SNAPSHOT`，须先源码安装；保留 `com.alibaba.cloud.ai.studio.runtime.*` 包名。
 当前完整25模块构建在原生JDK17通过1913项测试，零失败/错误、288项条件跳过；三路线安装包在Boot2/JDK8、Boot3/4×JDK17/25均完成真实HTTP文本/多模态验证。
-Boot4已补Jackson3转换器适配，Boot2/3继续使用Jackson2。Boot3/4 的 Core 类库已纳入默认构建；OpenAPI/Start 继续迁移。Boot2 的 Core 仍待兼容，本批不代表完整管理平台可部署。
+Boot4已补Jackson3转换器适配，Boot2/3继续使用Jackson2。Boot3/4 的 Core 类库已纳入默认构建；OpenAPI/Start 继续迁移。Boot2 的 Core/JS/Python 也已完成Java8类库检查点，本批不代表完整管理平台可部署。
 依赖示例、验证命令和边界见 [Admin runtime 使用说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-runtime/README-COMPATIBILITY.md)。
 
 ## Admin Core（Boot 3 / Boot 4）
@@ -108,7 +108,7 @@ Core 自身 42 项在 JDK17/25 均零失败/错误/跳过。
 
 这是 Core 类库，不是完整 Admin 服务。检索扩展已迁入 Admin 自己的包，不再覆盖 Spring AI 官方类；
 Boot4 的 Elasticsearch JSON 映射、GraalPy 标准库和 OpenAI SDK 业务错误映射已有实际回归。
-Boot2 Core/Python 的正式移植，以及 OpenAPI/Start、完整服务装配和外部后端验收仍在推进。
+Boot2 Core/JS/Python 已完成34模块、8580项原生Java8全量及macOS/Linux独立Boot2消费检查点；OpenAPI/Start、完整服务装配和外部后端验收仍在推进。
 接入、测试和边界见 [Core 使用说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-core/README-COMPATIBILITY.md)。
 
 <!-- YUDAO-COMPATIBILITY-INTRO-END -->
