@@ -78,11 +78,18 @@ spring:
           model: qwen-plus
 ```
 
-配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。三个分支均已适配可选 AgentScope starter：Boot 3/4 使用 `cn.iocoder.agentscope:agentscope-core:2.1.0-SNAPSHOT`，Boot 2 使用 `1.1.2.2-jdk8-SNAPSHOT`。需先安装对应 AgentScope 源码版本，再显式引入 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-starter-agentscope`（版本由 Alibaba BOM 管理）；状态存储使用 `stateStore(AgentStateStore)`。详细示例见下方兼容说明。三个分支均提供可选 sandbox 模块，具体接入见兼容说明。AgentScope 集成不会成为 DashScope starter 的强制依赖。
+配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。三个分支均已适配可选 AgentScope starter：Boot 3/4 使用 `cn.iocoder.agentscope:agentscope-core:2.1.0-SNAPSHOT`，Boot 2 使用 `2.1.0-jdk8-SNAPSHOT`。需先安装对应 AgentScope 源码版本，再显式引入 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-starter-agentscope`（版本由 Alibaba BOM 管理）；状态存储使用 `stateStore(AgentStateStore)`。详细示例见下方兼容说明。三个分支均提供可选 sandbox 模块，具体接入见兼容说明。AgentScope 集成不会成为 DashScope starter 的强制依赖。
 
 详细构建、源码基线、API 差异及当前支持边界见 [COMPATIBILITY.md](COMPATIBILITY.md)。
 
 下方逐字保留官方项目原始 README，其中的官方 Maven 坐标和发布状态仅针对上游项目；使用本兼容版时，以本节坐标、版本线和支持范围为准。
+
+Admin runtime DTO/JSON 工具库已接入当前版本线：在现有 Alibaba BOM 下添加 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-admin-server-runtime`。
+版本为 `1.1.2.2-jdk25-SNAPSHOT`，须先源码安装；保留 `com.alibaba.cloud.ai.studio.runtime.*` 包名。
+当前完整25模块构建在原生JDK17通过1913项测试，零失败/错误、288项条件跳过；三路线安装包在Boot2/JDK8、Boot3/4×JDK17/25均完成真实HTTP文本/多模态验证。
+Boot4已补Jackson3转换器适配，Boot2/3继续使用Jackson2。Admin的core/openapi/start三个模块仍待兼容，本批不代表完整管理平台可部署。
+依赖示例、验证命令和边界见 [Admin runtime 使用说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-runtime/README-COMPATIBILITY.md)。
+
 <!-- YUDAO-COMPATIBILITY-INTRO-END -->
 
 ---

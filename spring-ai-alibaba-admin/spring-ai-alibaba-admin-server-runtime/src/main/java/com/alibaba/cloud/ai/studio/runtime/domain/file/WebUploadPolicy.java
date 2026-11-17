@@ -18,7 +18,11 @@ package com.alibaba.cloud.ai.studio.runtime.domain.file;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.alibaba.cloud.ai.studio.runtime.enums.UploadType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**

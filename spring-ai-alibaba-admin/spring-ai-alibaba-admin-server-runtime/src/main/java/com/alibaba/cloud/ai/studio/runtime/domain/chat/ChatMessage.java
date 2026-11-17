@@ -56,6 +56,7 @@ public class ChatMessage implements Serializable {
 	/** The actual content of the message */
 	@JsonProperty("content")
 	@JsonDeserialize(using = ChatMessageContentDeserializer.class)
+	@tools.jackson.databind.annotation.JsonDeserialize(using = ChatMessageContentJackson3Deserializer.class)
 	private Object content;
 
 	/** The name of the message sender */
