@@ -2,7 +2,6 @@ package io.a2a.spec;
 
 import static io.a2a.util.Utils.defaultIfNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 

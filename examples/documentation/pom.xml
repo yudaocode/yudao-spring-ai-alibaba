@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version='1.0' encoding='UTF-8'?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -29,9 +28,9 @@
 
 	<properties>
 		<java.version>17</java.version>
-		<spring-ai.version>2.0.0-SNAPSHOT</spring-ai.version>
-		<spring-ai-alibaba.version>2.0.0-SNAPSHOT</spring-ai-alibaba.version>
-		<spring-ai-alibaba-extensions.version>2.0.0-SNAPSHOT</spring-ai-alibaba-extensions.version>
+		<spring-ai.version>2.1.0-jdk8-SNAPSHOT</spring-ai.version>
+		<spring-ai-alibaba.version>1.1.2.2-jdk8-SNAPSHOT</spring-ai-alibaba.version>
+		<spring-ai-alibaba-extensions.version>1.1.2.2-jdk8-SNAPSHOT</spring-ai-alibaba-extensions.version>
 
 		<redission.version>3.22.0</redission.version>
 	</properties>

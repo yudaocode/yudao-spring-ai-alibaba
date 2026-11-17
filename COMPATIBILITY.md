@@ -6,7 +6,7 @@
 | main-jdk17 | Spring Boot 3 | 17 | ruoyi-vue-pro-jdk25 |
 | main-jdk8 | Spring Boot 2 | 8 | ruoyi-vue-pro-jdk8 |
 
-This branch targets Spring AI `2.0.0-SNAPSHOT` and Boot 2.7.18; minimum target Java 8, consumer validation JVM 8.
+This branch targets Spring AI `2.1.0-jdk8-SNAPSHOT` and Boot 2.7.18; minimum target Java 8, consumer validation JVM 8.
 Default reactor unit tests and dependency gates have passed by recorded full/closure runs. Consumer source alignment is still in progress.
 No release has been published. Maven groups are cn.iocoder.spring-ai-alibaba and cn.iocoder.spring-ai; upstream artifactIds and Java packages are retained.
 
@@ -36,7 +36,7 @@ The three frozen business consumers start and pass local chat/image/knowledge fl
 
 The same ten local HTTP acceptance tests pass in all three business lines, including native DashScope embedding/image credentials, requested/default models and application observation callbacks. The matched chat service/tool regressions pass on actual JVM8/17/25 (51/54/61 tests). Streaming reasoning consumption uses the delegate delta rather than appending cumulative content.
 
-The Java8 optional AgentScope adapter uses `cn.iocoder.agentscope:agentscope-core:2.0.0-SNAPSHOT`, based on the pinned current AgentScope source. It uses `AgentStateStore` in place of the removed `Session` API, copies builders per invocation, isolates graph thread/agent state, and closes temporary agents after stream termination. `session(AgentStateStore)` remains a deprecated builder alias; new code should use `stateStore(AgentStateStore)`. The main and main-jdk17 adapters also use the pinned current SDK, with compatibility version3.0.0-SNAPSHOT. Model errors persist safe conversation input before propagating the failure. Cancellation follows core state ownership: committed file state remains available, in-flight writes finish before their session ownership is released, and the adapter does not perform an additional blanket save.
+The Java8 optional AgentScope adapter uses `cn.iocoder.agentscope:agentscope-core:2.1.0-jdk8-SNAPSHOT`, based on the pinned current AgentScope source. It uses `AgentStateStore` in place of the removed `Session` API, copies builders per invocation, isolates graph thread/agent state, and closes temporary agents after stream termination. `session(AgentStateStore)` remains a deprecated builder alias; new code should use `stateStore(AgentStateStore)`. The main and main-jdk17 adapters also use the pinned current SDK, with compatibility version2.1.0-SNAPSHOT. Model errors persist safe conversation input before propagating the failure. Cancellation follows core state ownership: committed file state remains available, in-flight writes finish before their session ownership is released, and the adapter does not perform an additional blanket save.
 
 The expanded 28-module Java8 default verify passes 1896 tests with 0 failures/errors and 286 skips; skipped cases requiring external services are not acceptance evidence. The optional adapter's 18 tests include local multi-turn state isolation, direct failure/cancellation persistence checks with a rebuilt graph, and lazy agent lifecycle coverage; 5 external-service cases remain skipped. Runtime sandbox is now included in the default reactor/BOM. No model provider credentials or remote model calls are required for these local gates.
 
@@ -46,9 +46,9 @@ The retained `spring-ai-alibaba-admin` source tree is outside the supported defa
 
 ## Runtime sandbox (optional)
 
-`cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-sandbox:2.0.0-SNAPSHOT` uses
-`cn.iocoder.agentscope:agentscope-runtime-sandbox-core:2.0.0-SNAPSHOT`. Boot4 deliberately
-shares AgentScope version3 with Boot3. These development artifacts must be installed
+`cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-sandbox:1.1.2.2-jdk8-SNAPSHOT` uses
+`cn.iocoder.agentscope:agentscope-runtime-sandbox-core:2.1.0-jdk8-SNAPSHOT`. Boot4 deliberately
+shares AgentScope 2.1.0-SNAPSHOT with Boot3. These development artifacts must be installed
 from source before use; no remote artifact release has been published.
 
 First install matching yudao-spring-ai. In yudao-agentscope-java branch `main-jdk8`,
@@ -86,3 +86,5 @@ these gates do not claim acceptance of every remote sandbox backend.
 ### ITU Java 8 API fix
 
 The Networknt schema paths exclude `com.ethlo.time:itu`; MCP common explicitly consumes `cn.iocoder.spring-ai:spring-ai-itu-compat`. This avoids a Java 9-only Math overload in original ITU binaries, verified by a real Java 8 duration-parsing regression. Keep the Spring AI compatibility BOM at the matching revision.
+
+Development coordinates now retain Alibaba baseline1.1.2.2 and use the selected jdk8/jdk17/jdk25 route. The Spring AI BOM is separately versioned2.1.0 with the same route; AgentScope modern version is2.1.0-SNAPSHOT without a JDK suffix. Do not reuse the Alibaba version property for these other BOMs. Date-only release naming is described in VERSIONING.md.
