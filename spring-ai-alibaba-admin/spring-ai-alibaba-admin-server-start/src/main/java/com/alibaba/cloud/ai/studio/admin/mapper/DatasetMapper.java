@@ -3,7 +3,6 @@ package com.alibaba.cloud.ai.studio.admin.mapper;
 import com.alibaba.cloud.ai.studio.admin.entity.DatasetDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 
 import java.util.List;

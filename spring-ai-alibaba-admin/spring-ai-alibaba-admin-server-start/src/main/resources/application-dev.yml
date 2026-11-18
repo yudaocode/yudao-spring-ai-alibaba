@@ -11,13 +11,6 @@ spring:
     uris: http://47.239.212.78:9200
   jpa:
     properties:
-      jakarta:
-        persistence:
-          jdbc:
-            url: jdbc:mysql://47.239.212.78:3306/admin?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
-            user: admin
-            password: admin
-            driver: com.mysql.cj.jdbc.Driver
 nacos:
   server-addr: 47.239.212.78:8848
 rocketmq:

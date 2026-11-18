@@ -5,7 +5,6 @@ import com.alibaba.cloud.ai.studio.admin.dto.EvaluatorVersion;
 import com.alibaba.cloud.ai.studio.admin.dto.request.EvaluatorVersionCreateRequest;
 import com.alibaba.cloud.ai.studio.admin.dto.request.EvaluatorVersionListRequest;
 import com.alibaba.cloud.ai.studio.admin.dto.request.EvaluatorVersionUpdateRequest;
-import com.alibaba.cloud.ai.studio.admin.entity.EvaluatorVersionDO;
 
 public interface EvaluatorVersionService {
 

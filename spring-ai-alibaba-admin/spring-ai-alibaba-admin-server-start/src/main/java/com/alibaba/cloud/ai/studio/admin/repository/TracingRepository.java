@@ -1,7 +1,10 @@
 package com.alibaba.cloud.ai.studio.admin.repository;
 
 import com.alibaba.cloud.ai.studio.admin.common.PageResult;
-import com.alibaba.cloud.ai.studio.admin.dto.*;
+import com.alibaba.cloud.ai.studio.admin.dto.OverviewStatsDTO;
+import com.alibaba.cloud.ai.studio.admin.dto.ServicesResponseDTO;
+import com.alibaba.cloud.ai.studio.admin.dto.TraceDetailDTO;
+import com.alibaba.cloud.ai.studio.admin.dto.TraceSpanDTO;
 import com.alibaba.cloud.ai.studio.admin.dto.request.OverviewQueryRequest;
 import com.alibaba.cloud.ai.studio.admin.dto.request.ServicesQueryRequest;
 import com.alibaba.cloud.ai.studio.admin.dto.request.TracesQueryRequest;

@@ -4,6 +4,7 @@ import com.alibaba.cloud.ai.dashscope.api.DashScopeApi;
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatModel;
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions;
 import com.alibaba.cloud.ai.studio.admin.entity.ModelConfigDO;
+import com.alibaba.cloud.ai.observation.model.ObservationMetadataContext;
 import io.micrometer.observation.ObservationRegistry;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.observation.ChatModelObservationConvention;
@@ -57,7 +58,7 @@ public class DashScopeChatClientFactory implements ChatClientFactory{
     @Override
     public ChatOptions buildChatOptions(ModelConfigDO modelConfig, Map<String, Object> userParameters,
             Map<String, String> observationMetadata) {
-        DashScopeChatOptions.DashscopeChatOptionsBuilder builder = DashScopeChatOptions.builder();
+        DashScopeChatOptions.DashScopeChatOptionsBuilder builder = DashScopeChatOptions.builder();
         builder.withModel(modelConfig.getModelName());
         builder.withStream(true);
         for (Map.Entry<String, Object> entry : userParameters.entrySet()) {
@@ -101,11 +102,6 @@ public class DashScopeChatClientFactory implements ChatClientFactory{
                     break;
             }
         }
-        DashScopeChatOptions chatOptions = builder.build();
-        DashScopeObservationMetadataChatOptions options = DashScopeObservationMetadataChatOptions.fromDashScopeOptions(chatOptions);
-        if (observationMetadata != null) {
-            options.setObservationMetadata(observationMetadata);
-        }
-        return options;
+        return ObservationMetadataContext.attach(builder.build(), observationMetadata);
     }
 }

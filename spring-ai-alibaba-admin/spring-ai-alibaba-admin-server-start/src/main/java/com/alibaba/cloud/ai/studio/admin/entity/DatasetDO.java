@@ -1,7 +1,9 @@
 package com.alibaba.cloud.ai.studio.admin.entity;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Data;
 

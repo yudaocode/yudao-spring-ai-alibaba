@@ -23,7 +23,6 @@ import com.alibaba.cloud.ai.studio.runtime.domain.account.Account;
 import com.alibaba.cloud.ai.studio.runtime.domain.account.LoginRequest;
 import com.alibaba.cloud.ai.studio.runtime.domain.account.RefreshTokenRequest;
 import com.alibaba.cloud.ai.studio.runtime.domain.account.TokenResponse;
-import org.redisson.spring.starter.RedissonAutoConfigurationV2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration;
@@ -42,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 仅用来启动DSL转换SAA服务的启动类（可以不启动studio-admin所需要的中间件）
  */
 // TODO: 将Studio的低代码平台也引入本启动类中
-@SpringBootApplication(exclude = { RedissonAutoConfigurationV2.class, ElasticsearchDataAutoConfiguration.class,
+@SpringBootApplication(exclude = { ElasticsearchDataAutoConfiguration.class,
 		ElasticsearchRepositoriesAutoConfiguration.class, ElasticsearchRestClientAutoConfiguration.class,
 		DataSourceAutoConfiguration.class })
 @ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,

@@ -145,7 +145,8 @@ public class GlobalExceptionHandler {
 		}
 
 		try {
-			response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			RequestContext context = RequestContextHolder.getRequestContext();
 
 			String requestId = context == null ? "" : context.getRequestId();

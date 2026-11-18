@@ -3,9 +3,7 @@ package com.alibaba.cloud.ai.studio.admin.mapper;
 import com.alibaba.cloud.ai.studio.admin.entity.DatasetItemDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper

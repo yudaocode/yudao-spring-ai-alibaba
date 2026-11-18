@@ -19,8 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.alibaba.cloud.ai.studio.admin.builder.generator.utils.CodeGenUtils.*;
-
+import static com.alibaba.cloud.ai.studio.admin.builder.generator.utils.CodeGenUtils.esc;
+import static com.alibaba.cloud.ai.studio.admin.builder.generator.utils.CodeGenUtils.isBlank;
+import static com.alibaba.cloud.ai.studio.admin.builder.generator.utils.CodeGenUtils.nvl;
 /**
  * AgentTypeProvider 的抽象基类，提供通用的校验逻辑和渲染工具
  *
