@@ -107,11 +107,11 @@ public class ChatClientFactoryDelegate {
         ChatOptions options = factory.buildChatOptions(config, mergedParameters, observationMetadata);
         if (advisors != null) {
             return ChatClient.builder(chatModel,observationRegistry,customObservationConvention,
-                            new DefaultAdvisorObservationConvention()).defaultOptions(options).defaultAdvisors(advisors)
+                            new DefaultAdvisorObservationConvention()).defaultOptions(options.mutate()).defaultAdvisors(advisors)
                     .build();
         } else {
             return ChatClient.builder(chatModel,observationRegistry,customObservationConvention
-                    ,new DefaultAdvisorObservationConvention()).defaultOptions(options).defaultAdvisors().build();
+                    ,new DefaultAdvisorObservationConvention()).defaultOptions(options.mutate()).defaultAdvisors().build();
 
         }
     }

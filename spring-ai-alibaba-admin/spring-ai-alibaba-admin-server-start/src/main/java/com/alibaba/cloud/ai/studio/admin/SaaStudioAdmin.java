@@ -26,6 +26,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
+import com.alibaba.cloud.ai.autoconfigure.arms.ArmsAutoConfiguration;
 
 
 /**
@@ -50,6 +52,7 @@ import org.springframework.context.annotation.FilterType;
 				@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
 						classes = GeneratorApplication.MockLoginController.class) })
 @EnableConfigurationProperties(StudioProperties.class)
+@Import(ArmsAutoConfiguration.class)
 public class SaaStudioAdmin {
 
 	/**

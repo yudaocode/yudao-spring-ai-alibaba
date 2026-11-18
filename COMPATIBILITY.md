@@ -159,3 +159,11 @@ release is claimed. Core on Java8 remains pending. See the Core module's README-
 27 modules, 1966 cases, zero failures/errors, 288 conditional skips; full clean install on native17, retries disabled. This supersedes older aggregate counts above.
 Ten MVC cases and one installed-jar real HTTP consumer case pass per target VM (Boot2/native8; Boot3/4/native17 and25). Consumer fixtures replace application services, not servlet/JSON/SSE transport.
 OpenAPI is included in reactor/BOM. Start remains pending; no complete platform/backend or every endpoint/API-path claim. See OpenAPI module README for usage and limits.
+
+## Admin Start (2026-11-18)
+
+Admin Start is included in the default reactor on this route. It uses Boot 4.1.2, runs on JDK 17/25, and builds an executable jar. The app uses the fork's current Graph, model and observation components. Route-specific SpringDoc, Initializr and database dependencies keep the underlying Boot stack aligned.
+
+See the [Admin Start guide](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-start/README-COMPATIBILITY.md) for startup configuration and reproducible test scope.
+
+The current default reactor reports 28 modules on native JDK17, 1969 tests, 0 failures/errors and 290 conditional skips. With no Docker connection the PostgreSQL container integration test follows the same Docker availability condition used by the other container tests.

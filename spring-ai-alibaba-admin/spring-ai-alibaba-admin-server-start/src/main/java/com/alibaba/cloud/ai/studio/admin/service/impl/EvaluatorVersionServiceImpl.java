@@ -1,6 +1,5 @@
 package com.alibaba.cloud.ai.studio.admin.service.impl;
 
-import com.alibaba.cloud.ai.studio.admin.SaaStudioAdmin;
 import com.alibaba.cloud.ai.studio.admin.common.PageResult;
 import com.alibaba.cloud.ai.studio.admin.dto.EvaluatorVersion;
 import com.alibaba.cloud.ai.studio.admin.dto.request.EvaluatorVersionCreateRequest;

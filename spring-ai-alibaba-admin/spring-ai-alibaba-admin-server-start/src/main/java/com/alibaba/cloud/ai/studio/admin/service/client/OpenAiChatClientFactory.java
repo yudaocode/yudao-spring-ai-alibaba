@@ -8,7 +8,8 @@ import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.model.tool.ToolCallingManager;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.openai.api.OpenAiApi;
+import com.alibaba.cloud.ai.observation.model.ObservationMetadataContext;
+import org.springframework.util.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -44,9 +45,16 @@ public class OpenAiChatClientFactory implements ChatClientFactory {
     
     @Override
     public ChatModel buildChatModel(ModelConfigDO modelConfig) {
-        OpenAiApi api = OpenAiApi.builder().apiKey(modelConfig.getApiKey()).baseUrl(modelConfig.getBaseUrl()).build();
-        // 创建ChatModel
-        OpenAiChatModel model =  OpenAiChatModel.builder().openAiApi(api)
+        String baseUrl = modelConfig.getBaseUrl();
+        if (StringUtils.hasText(baseUrl)) {
+            baseUrl = baseUrl.replaceAll("/+$", "");
+            if (!baseUrl.endsWith("/v1")) {
+                baseUrl += "/v1";
+            }
+        }
+        OpenAiChatOptions options = OpenAiChatOptions.builder().apiKey(modelConfig.getApiKey())
+                .baseUrl(baseUrl).build();
+        OpenAiChatModel model = OpenAiChatModel.builder().options(options)
                 .toolCallingManager(toolCallingManager)
                 .observationRegistry(observationRegistry)
                 .build();
@@ -87,7 +95,7 @@ public class OpenAiChatClientFactory implements ChatClientFactory {
                     break;
                 case "N":
                 case "n":
-                    builder.N(((Number) value).intValue());
+                    builder.n(((Number) value).intValue());
                     break;
                 case "reasoningEffort":
                 case "reasoning_effort":
@@ -109,12 +117,7 @@ public class OpenAiChatClientFactory implements ChatClientFactory {
                     break;
             }
         }
-        OpenAiChatOptions chatOptions = builder.build();
-        OpenAiObservationMetadataChatOptions options = OpenAiObservationMetadataChatOptions.fromOpenAiOptions(chatOptions);
-        if (observationMetadata != null) {
-            options.setObservationMetadata(observationMetadata);
-        }
-        return options;
+        return ObservationMetadataContext.attach(builder.build(), observationMetadata);
     }
     
     

@@ -24,8 +24,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-import static com.alibaba.cloud.ai.studio.admin.builder.generator.utils.CodeGenUtils.*;
-
+import static com.alibaba.cloud.ai.studio.admin.builder.generator.utils.CodeGenUtils.esc;
+import static com.alibaba.cloud.ai.studio.admin.builder.generator.utils.CodeGenUtils.str;
+import static com.alibaba.cloud.ai.studio.admin.builder.generator.utils.CodeGenUtils.toInt;
 /**
  * @author yHong
  * @version 1.0

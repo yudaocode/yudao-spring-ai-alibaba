@@ -1,7 +1,13 @@
 package com.alibaba.cloud.ai.studio.admin.repository.impl;
 
 import com.alibaba.cloud.ai.studio.admin.common.PageResult;
-import com.alibaba.cloud.ai.studio.admin.dto.*;
+import com.alibaba.cloud.ai.studio.admin.dto.OverviewStatsDTO;
+import com.alibaba.cloud.ai.studio.admin.dto.ServiceInfoDTO;
+import com.alibaba.cloud.ai.studio.admin.dto.ServicesResponseDTO;
+import com.alibaba.cloud.ai.studio.admin.dto.SpanEventDTO;
+import com.alibaba.cloud.ai.studio.admin.dto.SpanLinkDTO;
+import com.alibaba.cloud.ai.studio.admin.dto.TraceDetailDTO;
+import com.alibaba.cloud.ai.studio.admin.dto.TraceSpanDTO;
 import com.alibaba.cloud.ai.studio.admin.dto.request.OverviewQueryRequest;
 import com.alibaba.cloud.ai.studio.admin.dto.request.ServicesQueryRequest;
 import com.alibaba.cloud.ai.studio.admin.dto.request.TracesQueryRequest;
@@ -12,12 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
-import co.elastic.clients.elasticsearch._types.aggregations.CardinalityAggregate;
-import co.elastic.clients.elasticsearch._types.aggregations.ValueCountAggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.SumAggregate;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository

@@ -10,7 +10,6 @@ import com.alibaba.cloud.ai.studio.admin.dto.request.ExperimentListRequest;
 import com.alibaba.cloud.ai.studio.admin.dto.request.EvaluatorExperimentsListRequest;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ExperimentService {
 

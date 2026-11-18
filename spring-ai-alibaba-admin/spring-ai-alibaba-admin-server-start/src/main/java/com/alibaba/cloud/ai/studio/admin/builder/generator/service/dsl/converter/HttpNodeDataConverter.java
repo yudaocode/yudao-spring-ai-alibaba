@@ -38,7 +38,7 @@ import com.alibaba.cloud.ai.studio.admin.builder.generator.utils.MapReadUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import org.springframework.ai.util.json.JsonParser;
+import com.alibaba.cloud.ai.studio.runtime.utils.JsonUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -308,10 +308,10 @@ public class HttpNodeDataConverter extends AbstractNodeDataConverter<HttpNodeDat
 				// 处理rawBodyMap
 				Map<String, Object> rawBodyMap = httpNodeData.getRawBodyMap();
 				if (!CollectionUtils.isEmpty(rawBodyMap)) {
-					String json = JsonParser.toJson(rawBodyMap);
+					String json = JsonUtils.toJson(rawBodyMap);
 					json = this.convertVarTemplate(dialectType, json.replace("{{#", "${{#"), idToVarName);
 					try {
-						httpNodeData.setRawBodyMap(JsonParser.fromJson(json, new TypeReference<Map<String, Object>>() {
+						httpNodeData.setRawBodyMap(JsonUtils.getObjectMapper().readValue(json, new TypeReference<Map<String, Object>>() {
 						}));
 					}
 					catch (Exception ignore) {

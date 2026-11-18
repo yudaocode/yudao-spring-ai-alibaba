@@ -6,7 +6,14 @@ import com.alibaba.cloud.ai.studio.admin.dto.EvaluatorDebugResult;
 import com.alibaba.cloud.ai.studio.admin.dto.EvaluatorTemplate;
 import com.alibaba.cloud.ai.studio.admin.dto.EvaluatorVersion;
 import com.alibaba.cloud.ai.studio.admin.dto.Experiment;
-import com.alibaba.cloud.ai.studio.admin.dto.request.*;
+import com.alibaba.cloud.ai.studio.admin.dto.request.EvaluatorCreateRequest;
+import com.alibaba.cloud.ai.studio.admin.dto.request.EvaluatorExperimentsListRequest;
+import com.alibaba.cloud.ai.studio.admin.dto.request.EvaluatorListRequest;
+import com.alibaba.cloud.ai.studio.admin.dto.request.EvaluatorTemplateListRequest;
+import com.alibaba.cloud.ai.studio.admin.dto.request.EvaluatorTestRequest;
+import com.alibaba.cloud.ai.studio.admin.dto.request.EvaluatorUpdateRequest;
+import com.alibaba.cloud.ai.studio.admin.dto.request.EvaluatorVersionCreateRequest;
+import com.alibaba.cloud.ai.studio.admin.dto.request.EvaluatorVersionListRequest;
 import com.alibaba.cloud.ai.studio.admin.dto.Evaluator;
 import com.alibaba.cloud.ai.studio.admin.service.EvaluatorTemplateService;
 import com.alibaba.cloud.ai.studio.admin.service.EvaluatorService;
@@ -15,10 +22,14 @@ import com.alibaba.cloud.ai.studio.admin.service.ExperimentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api/evaluator")

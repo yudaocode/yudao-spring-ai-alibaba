@@ -1,6 +1,7 @@
 package com.alibaba.cloud.ai.studio.admin.service.client;
 
 import com.alibaba.cloud.ai.studio.admin.entity.ModelConfigDO;
+import com.alibaba.cloud.ai.observation.model.ObservationMetadataContext;
 import io.micrometer.observation.ObservationRegistry;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.observation.ChatModelObservationConvention;
@@ -97,11 +98,6 @@ public class DeepSeekChatClientFactory implements ChatClientFactory{
                     break;
             }
         }
-        DeepSeekChatOptions chatOptions = builder.build();
-        DeepSeekObservationMetadataChatOptions options = DeepSeekObservationMetadataChatOptions.fromDeepSeekOptions(chatOptions);
-        if (observationMetadata != null) {
-            options.setObservationMetadata(observationMetadata);
-        }
-        return options;
+        return ObservationMetadataContext.attach(builder.build(), observationMetadata);
     }
 }

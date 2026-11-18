@@ -2,7 +2,10 @@ package com.alibaba.cloud.ai.studio.admin.controller;
 
 import com.alibaba.cloud.ai.studio.admin.common.PageResult;
 import com.alibaba.cloud.ai.studio.runtime.domain.Result;
-import com.alibaba.cloud.ai.studio.admin.dto.*;
+import com.alibaba.cloud.ai.studio.admin.dto.OverviewStatsDTO;
+import com.alibaba.cloud.ai.studio.admin.dto.ServicesResponseDTO;
+import com.alibaba.cloud.ai.studio.admin.dto.TraceDetailDTO;
+import com.alibaba.cloud.ai.studio.admin.dto.TraceSpanDTO;
 import com.alibaba.cloud.ai.studio.admin.dto.request.OverviewQueryRequest;
 import com.alibaba.cloud.ai.studio.admin.dto.request.ServicesQueryRequest;
 import com.alibaba.cloud.ai.studio.admin.dto.request.TracesQueryRequest;
@@ -10,8 +13,10 @@ import com.alibaba.cloud.ai.studio.admin.service.TracingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api/observability")
