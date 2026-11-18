@@ -32,11 +32,23 @@ Elasticsearch搜索使用真实HTTP本地fixture覆盖三种检索模式和conte
 
 四个本批SDK包共22740个类均不高于class52，2973个JDK成员引用检查零缺失。
 完整消费路径352个jar、160085个有效base类均不高于class52；这是字节码门禁，不能据此宣称所有外部依赖API路径都可用。
-完整依赖API扫描仍有57个原始引用报告，包括Guava/Javassist/Kryo的高JDK选择分支、JDK Flow适配器、SLF4J可选/兼容分支，及Elasticsearch OpenTelemetry的Java9 Buffer调用。
-这些不计入单测失败，也未全部当作误报消除；尤其主动Elasticsearch OpenTelemetry路径尚未通过Java8验收。
+完整依赖API扫描仍有57个原始引用报告，包括Guava/Javassist/Kryo的高JDK选择分支、JDK Flow适配器、SLF4J可选/兼容分支，及原Elasticsearch 8.13.4 OpenTelemetry的Java9 Buffer调用。
+这些不计入单测失败，也未全部当作误报消除；其中 Elasticsearch 查询请求体追踪已在下一节复验。
 
 ## 边界
 
 内嵌Python为GraalPython22.0.0.2/Python3.8.5解释执行路线；不支持LLVM、原生C扩展和任意PyPI依赖。
 普通Java8不会提供Graal JIT性能。详见[GraalPython说明](../../compatibility/graalpython/README-COMPATIBILITY.md)。
 OpenAPI/Start、完整Admin服务装配、真实MySQL/Redis/ES/OSS/云模型等仍待验收；Core类库通过不等于整个平台可以部署。
+
+## Java 8 Elasticsearch 请求体追踪
+
+Admin 使用 Elasticsearch Java API Client 和 REST Client 8.19.11。Boot 2.7 parent 的默认 REST Client 版本是 7.x，宿主请在 `properties` 中设置：
+
+```xml
+<elasticsearch.version>8.19.11</elasticsearch.version>
+```
+
+同一请求在原生 Java 8 上复现旧客户端 8.13.4 的 Buffer 链接错误。升级后，测试验证 `db.statement` 记录的 JSON 与本地 HTTP 服务收到的请求一致，包含 Unicode，并复测三种检索模式。
+
+8.19.11 保留 Java 8 与 Jackson 2 依赖路线。8.19.12 起客户端默认传递依赖 Jackson 3。本次测试使用本地 Elasticsearch HTTP fixture。

@@ -19,6 +19,7 @@ package com.alibaba.cloud.ai.studio.core.rag.vectorstore.elasticsearch;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.mapping.DenseVectorProperty;
+import co.elastic.clients.elasticsearch._types.mapping.DenseVectorSimilarity;
 import co.elastic.clients.elasticsearch._types.mapping.KeywordProperty;
 import co.elastic.clients.elasticsearch._types.mapping.ObjectProperty;
 import co.elastic.clients.elasticsearch._types.mapping.Property;
@@ -119,7 +120,7 @@ public class ElasticSearchVectorStoreService implements VectorStoreService {
 		options.setIndexName(indexName);
 		options.setSimilarity(SimilarityFunction.dot_product);
 
-		String similarityAlgo = SimilarityFunction.cosine.name();
+		DenseVectorSimilarity similarityAlgo = DenseVectorSimilarity.Cosine;
 		IndexSettings indexSettings = IndexSettings
 			.of(settings -> settings.numberOfShards(String.valueOf(1)).numberOfReplicas(String.valueOf(1)));
 

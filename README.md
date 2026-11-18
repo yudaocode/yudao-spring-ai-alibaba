@@ -116,6 +116,8 @@ OpenAPI控制器/鉴权类库已加入当前版本线的默认reactor/BOM，可�
 三路线已验证JSON/SSE错误响应与Unicode；Boot4另修复Jackson3缺省布尔字段构造器选择。
 Start及完整平台/真实后端仍待验收；用法与边界见[OpenAPI说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-openapi/README-COMPATIBILITY.md)。
 
+Boot2 Admin Core 的 Elasticsearch 客户端升级至 8.19.11，原生 Java 8 已验证 OpenTelemetry 搜索请求体采集。使用 Boot2 parent 时请设置 `elasticsearch.version=8.19.11`。详见 [Core 说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-core/README-COMPATIBILITY.md)。
+
 <!-- YUDAO-COMPATIBILITY-INTRO-END -->
 
 ---

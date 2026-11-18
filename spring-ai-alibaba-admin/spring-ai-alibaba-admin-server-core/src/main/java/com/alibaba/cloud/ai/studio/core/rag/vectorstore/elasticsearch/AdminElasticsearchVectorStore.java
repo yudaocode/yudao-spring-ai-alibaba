@@ -17,6 +17,7 @@
 package com.alibaba.cloud.ai.studio.core.rag.vectorstore.elasticsearch;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.mapping.DenseVectorSimilarity;
 import co.elastic.clients.elasticsearch.core.BulkRequest;
 import co.elastic.clients.elasticsearch.core.BulkResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
@@ -324,12 +325,20 @@ public class AdminElasticsearchVectorStore extends AbstractObservationVectorStor
 		}
 	}
 
+	private DenseVectorSimilarity mappingSimilarity() {
+		return switch (this.options.getSimilarity()) {
+			case cosine -> DenseVectorSimilarity.Cosine;
+			case dot_product -> DenseVectorSimilarity.DotProduct;
+			case l2_norm -> DenseVectorSimilarity.L2Norm;
+		};
+	}
+
 	private void createIndexMapping() {
 		try {
 			this.elasticsearchClient.indices()
 				.create(cr -> cr.index(this.options.getIndexName())
 					.mappings(map -> map.properties("embedding",
-							p -> p.denseVector(dv -> dv.similarity(this.options.getSimilarity().toString())
+							p -> p.denseVector(dv -> dv.similarity(mappingSimilarity())
 								.dims(this.options.getDimensions())))));
 		}
 		catch (IOException e) {
@@ -473,9 +482,9 @@ public class AdminElasticsearchVectorStore extends AbstractObservationVectorStor
 			SearchResponse<ElasticSearchDocument> res = this.elasticsearchClient.search(sr -> sr.index(this.options.getIndexName())
 				.knn(knn -> knn.queryVector(EmbeddingUtils.toList(vectors))
 					.similarity(finalThreshold)
-					.k((long) searchRequest.getTopK())
+					.k(searchRequest.getTopK())
 					.field("embedding")
-					.numCandidates((long) (1.5 * searchRequest.getTopK()))
+					.numCandidates((int) (1.5 * searchRequest.getTopK()))
 					.filter(fl -> fl
 						.queryString(qs -> qs.query(getElasticsearchQueryString(searchRequest.getFilterExpression())))))
 				.size(searchRequest.getTopK()), ElasticSearchDocument.class);

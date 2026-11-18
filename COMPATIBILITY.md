@@ -170,3 +170,11 @@ No full platform/cloud backend, native extension/LLVM, arbitrary PyPI, AOT or JI
 35 modules, 8590 cases, zero failures/errors, 286 conditional skips; full clean install on native1.8, retries disabled. This supersedes older aggregate counts above.
 Ten MVC cases and one installed-jar real HTTP consumer case pass per target VM (Boot2/native8; Boot3/4/native17 and25). Consumer fixtures replace application services, not servlet/JSON/SSE transport.
 OpenAPI is included in reactor/BOM. Start remains pending; no complete platform/backend or every endpoint/API-path claim. See OpenAPI module README for usage and limits.
+
+## Elasticsearch request-body tracing on Java 8 (2026-11-18)
+
+Admin pins Elasticsearch Java API Client and REST Client 8.19.11.
+Native Java 8 reproduced the 8.13.4 ByteBuffer linkage error with active OpenTelemetry capture.
+The new regression checks the exported span and the actual JSON received by the local HTTP server.
+Boot 2 consumers set the Elasticsearch version property documented in the Core README.
+The earlier whole-tree report remains a historical scan.

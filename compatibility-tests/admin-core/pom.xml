@@ -12,6 +12,7 @@
     <version>1.1.2.2-jdk8-SNAPSHOT</version>
     <properties>
         <java.version>8</java.version>
+        <elasticsearch.version>8.19.11</elasticsearch.version>
         <maven.compiler.release>8</maven.compiler.release>
         <compat.test.jvm>${java.home}/bin/java</compat.test.jvm>
         <compat.expected.vm>${java.specification.version}</compat.expected.vm>
