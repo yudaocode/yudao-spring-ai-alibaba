@@ -716,6 +716,8 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>${maven-javadoc-plugin.version}</version>
                         <configuration>
+                            <!-- 发布构建使用 JDK 17 解析生成源码，字节码仍以 Java 8 为目标。 -->
+                            <release>17</release>
                             <doclint>none</doclint>
                         </configuration>
                         <executions>
