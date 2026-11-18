@@ -72,11 +72,10 @@ public interface NodeDataConverter<T extends NodeData> {
 	default BiConsumer<T, Map<String, String>> postProcessConsumer(DSLDialectType dialectType) {
 		return (nodeData, idToVarName) -> {
 			// 将所有的输出变量的名称统一为"nodeVarName_varName"的格式
-			Optional.ofNullable(nodeData.getOutputs())
-				.ifPresentOrElse((outputs) -> nodeData.setOutputs(outputs.stream().peek(v -> {
+			nodeData.setOutputs(Optional.ofNullable(nodeData.getOutputs()).orElse(List.of()).stream().peek(v -> {
 					String name = v.getName();
 					v.setName(nodeData.getVarName().concat("_").concat(name));
-				}).toList()), () -> nodeData.setOutputs(List.of()));
+				}).toList());
 
 			// 将所有的输入变量的nodeId转化为nodeName，并保存到nameInCode字段中
 			nodeData.setInputs(

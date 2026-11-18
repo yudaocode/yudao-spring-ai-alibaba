@@ -28,7 +28,7 @@ import com.alibaba.cloud.ai.studio.core.context.RequestContextHolder;
 import com.alibaba.cloud.ai.studio.core.utils.LogUtils;
 import io.micrometer.tracing.Tracer;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;

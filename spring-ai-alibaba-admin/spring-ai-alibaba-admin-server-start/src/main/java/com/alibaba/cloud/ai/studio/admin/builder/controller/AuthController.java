@@ -25,7 +25,7 @@ import com.alibaba.cloud.ai.studio.runtime.domain.account.TokenResponse;
 import com.alibaba.cloud.ai.studio.core.base.service.AccountService;
 import com.alibaba.cloud.ai.studio.core.utils.common.IdGenerator;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;

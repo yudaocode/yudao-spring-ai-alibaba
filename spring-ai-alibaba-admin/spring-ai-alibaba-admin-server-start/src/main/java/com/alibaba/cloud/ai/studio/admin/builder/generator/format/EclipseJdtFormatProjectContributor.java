@@ -24,10 +24,9 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.ToolFactory;
-import org.eclipse.jdt.core.formatter.CodeFormatter;
-import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
+import io.spring.javaformat.eclipse.jdt.jdk8.core.ToolFactory;
+import io.spring.javaformat.eclipse.jdt.jdk8.core.formatter.CodeFormatter;
+import io.spring.javaformat.eclipse.jdt.jdk8.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 
@@ -46,9 +45,9 @@ public class EclipseJdtFormatProjectContributor implements ProjectContributor {
 
 		// Configure formatting options
 		Map<String, String> options = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
-		options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_17);
-		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_17);
-		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_17);
+		options.put("org.eclipse.jdt.core.compiler.compliance", "1.8");
+		options.put("org.eclipse.jdt.core.compiler.source", "1.8");
+		options.put("org.eclipse.jdt.core.compiler.codegen.targetPlatform", "1.8");
 		// Use space indentation, 4 spaces
 		options.put(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR, "space");
 		options.put(DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE, "4");

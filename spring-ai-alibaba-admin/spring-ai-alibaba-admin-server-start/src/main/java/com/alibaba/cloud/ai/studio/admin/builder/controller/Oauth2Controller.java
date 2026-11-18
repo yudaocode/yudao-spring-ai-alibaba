@@ -20,7 +20,7 @@ import com.alibaba.cloud.ai.studio.runtime.domain.account.TokenResponse;
 import com.alibaba.cloud.ai.studio.core.base.service.AccountService;
 import com.alibaba.cloud.ai.studio.core.base.service.Oauth2Service;
 import com.alibaba.cloud.ai.studio.runtime.domain.account.Oauth2User;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

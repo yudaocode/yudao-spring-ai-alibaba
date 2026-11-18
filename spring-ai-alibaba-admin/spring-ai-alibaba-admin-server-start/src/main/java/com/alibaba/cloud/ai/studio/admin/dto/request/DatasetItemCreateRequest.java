@@ -2,7 +2,7 @@ package com.alibaba.cloud.ai.studio.admin.dto.request;
 
 import com.alibaba.cloud.ai.studio.admin.dto.DatasetColumn;
 import lombok.Data;
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 
 import java.util.List;
 

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
@@ -102,8 +103,8 @@ public class StartNodeDataConverter extends AbstractNodeDataConverter<StartNodeD
 				// 获取output属性
 				List<?> outputList = MapReadUtil.getMapDeepValue(data, List.class, "config", "output_params");
 				// 转换为Variable
-				List<Variable> outputs = Stream.ofNullable(outputList)
-					.flatMap(List::stream)
+				List<Variable> outputs = Optional.ofNullable(outputList)
+					.orElseGet(java.util.Collections::emptyList).stream()
 					.map(MapReadUtil::safeCastToMapWithStringKey)
 					.map(mp -> new Variable(MapReadUtil.getMapDeepValue(mp, String.class, "key"),
 							VariableType.fromStudioValue(MapReadUtil.getMapDeepValue(mp, String.class, "type"))

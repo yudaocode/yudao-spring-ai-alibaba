@@ -118,7 +118,7 @@ public class TemplateTransformNodeDataConverter extends AbstractNodeDataConverte
 		Pattern pattern = Pattern.compile("\\{\\{\\s*(\\w+)\\s*\\}\\}");
 		Matcher matcher = pattern.matcher(text);
 
-		StringBuilder result = new StringBuilder();
+		StringBuffer result = new StringBuffer();
 		while (matcher.find()) {
 			String key = matcher.group(1);
 			String value = data.get(key);

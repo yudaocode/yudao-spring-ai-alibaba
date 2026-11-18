@@ -100,8 +100,8 @@ public class EndNodeDataConverter extends AbstractNodeDataConverter<EndNodeData>
 				List<?> jsonParams = MapReadUtil.getMapDeepValue(data, List.class, "config", "node_param",
 						"json_params");
 				// 转换为VariableSelector
-				List<VariableSelector> variableSelectors = Stream.ofNullable(jsonParams)
-					.flatMap(List::stream)
+				List<VariableSelector> variableSelectors = Optional.ofNullable(jsonParams)
+					.orElseGet(java.util.Collections::emptyList).stream()
 					.map(MapReadUtil::safeCastToMapWithStringKey)
 					.map(mp -> {
 						String label = MapReadUtil.getMapDeepValue(mp, String.class, "key");

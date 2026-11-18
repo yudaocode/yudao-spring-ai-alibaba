@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -93,10 +92,10 @@ public abstract class AbstractNodeDataConverter<T extends NodeData> implements N
 				default -> throw new UnsupportedOperationException();
 			};
 			Matcher matcher = pattern.matcher(template);
-			MatchResult result = matcher.results()
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException("Invalid template string"));
-			return new VariableSelector(result.group(1), result.group(2));
+			if (!matcher.find()) {
+				throw new IllegalArgumentException("Invalid template string");
+			}
+			return new VariableSelector(matcher.group(1), matcher.group(2));
 		}
 
 		/**
@@ -193,7 +192,7 @@ public abstract class AbstractNodeDataConverter<T extends NodeData> implements N
 				if (Strings.isNullOrEmpty(str)) {
 					return str;
 				}
-				StringBuilder result = new StringBuilder();
+				StringBuffer result = new StringBuffer();
 				Matcher matcher = DIFY_VAR_TEMPLATE_PATTERN.matcher(str);
 				while (matcher.find()) {
 					String nodeId = matcher.group(1);
@@ -209,7 +208,7 @@ public abstract class AbstractNodeDataConverter<T extends NodeData> implements N
 				if (Strings.isNullOrEmpty(str)) {
 					return str;
 				}
-				StringBuilder result = new StringBuilder();
+				StringBuffer result = new StringBuffer();
 
 				Matcher matcher = STUDIO_VAR_TEMPLATE_PATTERN.matcher(str);
 				while (matcher.find()) {
@@ -234,7 +233,11 @@ public abstract class AbstractNodeDataConverter<T extends NodeData> implements N
 	 */
 	protected List<String> getVarTemplateKeys(String template) {
 		Matcher matcher = VAR_TEMPLATE_PATTERN.matcher(template);
-		return matcher.results().map(m -> m.group(1)).toList();
+		List<String> keys = new java.util.ArrayList<>();
+		while (matcher.find()) {
+			keys.add(matcher.group(1));
+		}
+		return keys;
 	}
 
 	/**

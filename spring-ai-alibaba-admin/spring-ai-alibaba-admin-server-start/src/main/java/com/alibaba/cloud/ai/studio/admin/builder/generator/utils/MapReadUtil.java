@@ -16,8 +16,6 @@
 
 package com.alibaba.cloud.ai.studio.admin.builder.generator.utils;
 
-import java.lang.reflect.Constructor;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -131,39 +129,6 @@ public final class MapReadUtil {
 		}
 
 		return result.toString();
-	}
-
-	/**
-	 * 将map对应的字段赋值给特定的record类型
-	 * @param map map
-	 * @param clazz record类
-	 * @return record对象
-	 */
-	public static <T extends Record> T castMapToRecord(Map<String, Object> map, Class<T> clazz) {
-		if (!clazz.isRecord()) {
-			return null;
-		}
-		Constructor<?> constructor = clazz.getDeclaredConstructors()[0];
-		Object[] params = Arrays.stream(constructor.getParameters()).map(p -> {
-			Object object = map.get(p.getName());
-			if (object == null) {
-				// 尝试将名称转换为下划线命名
-				String name = camelToSnakeCase(p.getName());
-				object = map.get(name);
-			}
-			// 判断是否为对应类型
-			if (object == null || !p.getType().isInstance(object)) {
-				return null;
-			}
-			return p.getType().cast(object);
-		}).toArray();
-		try {
-			Object newInstance = constructor.newInstance(params);
-			return clazz.cast(newInstance);
-		}
-		catch (Exception e) {
-			return null;
-		}
 	}
 
 }

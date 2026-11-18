@@ -150,7 +150,17 @@ class WebFetchToolTest {
 		for (int i = 0; i < maxCacheSize * 10; i++) {
 			cache.put("https://example.com/" + i + "::prompt::0", "content-" + i);
 		}
-		cache.cleanUp();
+		// Caffeine may already be draining a previous batch on its executor.
+		// Wait for the pending eviction work before reading the size.
+		long deadline = System.nanoTime() + java.util.concurrent.TimeUnit.SECONDS.toNanos(5);
+		do {
+			cache.cleanUp();
+			if (cache.estimatedSize() <= maxCacheSize) {
+				break;
+			}
+			Thread.sleep(20);
+		}
+		while (System.nanoTime() < deadline);
 
 		assertTrue(cache.estimatedSize() <= maxCacheSize,
 				"cache size " + cache.estimatedSize() + " must not exceed maxCacheSize " + maxCacheSize);

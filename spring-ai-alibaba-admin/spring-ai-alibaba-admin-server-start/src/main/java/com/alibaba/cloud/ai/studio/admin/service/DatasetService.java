@@ -5,7 +5,6 @@ import com.alibaba.cloud.ai.studio.admin.dto.Dataset;
 import com.alibaba.cloud.ai.studio.admin.dto.request.DatasetCreateRequest;
 import com.alibaba.cloud.ai.studio.admin.dto.request.DatasetListRequest;
 import com.alibaba.cloud.ai.studio.admin.dto.request.DatasetUpdateRequest;
-import com.alibaba.cloud.ai.studio.admin.entity.DatasetDO;
 
 public interface DatasetService {
 

@@ -1,12 +1,12 @@
 package com.alibaba.cloud.ai.studio.admin.entity;
 
-import com.alibaba.cloud.ai.studio.admin.dto.DatasetColumn;
-import jakarta.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder

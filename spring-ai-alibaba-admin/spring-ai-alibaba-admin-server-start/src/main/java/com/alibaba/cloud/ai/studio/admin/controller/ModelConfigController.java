@@ -6,7 +6,7 @@ import com.alibaba.cloud.ai.studio.admin.dto.ModelConfigResponse;
 import com.alibaba.cloud.ai.studio.admin.dto.request.ModelConfigQueryRequest;
 import com.alibaba.cloud.ai.studio.admin.exception.StudioException;
 import com.alibaba.cloud.ai.studio.admin.service.ModelConfigService;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

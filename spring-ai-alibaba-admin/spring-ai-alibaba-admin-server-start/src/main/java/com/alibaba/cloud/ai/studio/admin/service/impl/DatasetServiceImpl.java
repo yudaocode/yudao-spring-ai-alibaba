@@ -12,7 +12,7 @@ import com.alibaba.cloud.ai.studio.admin.mapper.DatasetMapper;
 import com.alibaba.cloud.ai.studio.admin.mapper.DatasetVersionMapper;
 import com.alibaba.cloud.ai.studio.admin.service.DatasetService;
 import com.alibaba.fastjson.JSONObject;
-import jakarta.annotation.Resource;
+import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;

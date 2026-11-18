@@ -88,15 +88,15 @@ spring:
 
 Admin runtime DTO/JSON 工具库已接入当前版本线：在现有 Alibaba BOM 下添加 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-admin-server-runtime`。
 版本为 `1.1.2.2-jdk8-SNAPSHOT`，须先源码安装；保留 `com.alibaba.cloud.ai.studio.runtime.*` 包名。
-当前完整35模块构建在原生JDK8通过8590项测试，零失败/错误、286项条件跳过；三路线安装包在Boot2/JDK8、Boot3/4×JDK17/25均完成真实HTTP文本/多模态验证。
-Boot4已补Jackson3转换器适配，Boot2/3继续使用Jackson2。Core类库已经纳入默认构建；Start继续迁移，本批不代表完整管理平台可部署。
+上一检查点完整35模块构建在原生JDK8通过8590项测试，零失败/错误、286项条件跳过；三路线安装包在Boot2/JDK8、Boot3/4×JDK17/25均完成真实HTTP文本/多模态验证。
+Boot4已补Jackson3转换器适配，Boot2/3继续使用Jackson2。Core类库已经纳入默认构建；Start 已纳入默认构建，本批不代表完整管理平台可部署。
 依赖示例、验证命令和边界见 [Admin runtime 使用说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-runtime/README-COMPATIBILITY.md)。
 
 ## Admin Core / Java8 JS、Python
 
 Core类库已纳入Boot2默认构建和BOM，现有两份兼容BOM下添加`cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-admin-server-core`。
 JDK8版已接入GraalJS/GraalPython22.0.0.2及JGraphT1.5.2兼容依赖；Core42项、JS/Python各3项，独立Boot2/H2/MyBatis消费4项全部通过，零跳过。
-独立消费同时在macOS与Linux/Corretto8验证通过。三个Boot分支都已完成Core类库，Start仍在推进。
+独立消费同时在macOS与Linux/Corretto8验证通过。三个Boot分支都已完成Core类库，Start 已纳入默认构建。
 Python为3.8.5解释执行，不支持LLVM/原生C扩展，不代表完整Admin平台或所有第三方API路径可用。
 使用方式、依赖审计限制和验证命令见[Core说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-core/README-COMPATIBILITY.md)、
 [GraalJS说明](compatibility/graaljs/README-COMPATIBILITY.md)、[GraalPython说明](compatibility/graalpython/README-COMPATIBILITY.md)。
@@ -104,19 +104,25 @@ Python为3.8.5解释执行，不支持LLVM/原生C扩展，不代表完整Admin�
 ## Java8 图依赖（JGraphT 1.5.2）
 
 为继续移植Admin Core，Java8分支已增加完整JGraphT1.5.2 core回迁模块，未将原依赖降为旧版。
-默认构建现在35模块，native8全量8590项，零失败/错误、286条件跳过；图模块上游默认选择6621项及独立Boot2消费2项通过。
+上一检查点为35模块，native8全量8590项，零失败/错误、286条件跳过；图模块上游默认选择6621项及独立Boot2消费2项通过。
 在现有Alibaba BOM下添加`cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-jgrapht-compat`即可使用，包名org.jgrapht不变。
 移除同一应用中的原版org.jgrapht:jgrapht-core；具体接入、许可证和排除边界见[图依赖说明](compatibility/jgrapht-core/README-COMPATIBILITY.md)。
-Core/Python类库已通过独立Java8消费；Start仍在迁移，完整管理平台尚待验收。
+Core/Python类库已通过独立Java8消费；Start 已纳入默认构建，完整管理平台尚待验收。
 
 ## Admin OpenAPI检查点
 
 OpenAPI控制器/鉴权类库已加入当前版本线的默认reactor/BOM，可按需引入`cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-admin-server-openapi`。
-当前完整35模块全量8590项，零失败/错误、286条件跳过；OpenAPI十项MVC测试及独立安装jar真实HTTP消费均通过本路线目标JVM。
+上一检查点完整35模块全量8590项，零失败/错误、286条件跳过；OpenAPI十项MVC测试及独立安装jar真实HTTP消费均通过本路线目标JVM。
 三路线已验证JSON/SSE错误响应与Unicode；Boot4另修复Jackson3缺省布尔字段构造器选择。
-Start及完整平台/真实后端仍待验收；用法与边界见[OpenAPI说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-openapi/README-COMPATIBILITY.md)。
+运行 Start 的中间件配置和验证范围见下文；用法与边界见[OpenAPI说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-openapi/README-COMPATIBILITY.md)。
 
 Boot2 Admin Core 的 Elasticsearch 客户端升级至 8.19.11，原生 Java 8 已验证 OpenTelemetry 搜索请求体采集。使用 Boot2 parent 时请设置 `elasticsearch.version=8.19.11`。详见 [Core 说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-core/README-COMPATIBILITY.md)。
+
+## Admin Start
+
+本路线的默认构建会生成 Admin 可执行包，运行于 Spring Boot 2.7.18 / JDK 8。启动命令、中间件配置、测试范围见 [Admin Start 说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-start/README-COMPATIBILITY.md)。
+
+当前默认构建共 36 个模块，原生 JDK8 计 8595 项测试，0 失败、0 错误、288 条件跳过。Docker 不可用时，使用 Testcontainers 的 PostgreSQL 用例按条件跳过。
 
 <!-- YUDAO-COMPATIBILITY-INTRO-END -->
 

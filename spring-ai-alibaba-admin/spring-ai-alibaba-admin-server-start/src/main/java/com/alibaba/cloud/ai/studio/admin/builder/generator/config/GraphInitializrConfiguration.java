@@ -17,11 +17,10 @@ package com.alibaba.cloud.ai.studio.admin.builder.generator.config;
 
 import com.alibaba.cloud.ai.studio.admin.builder.generator.controller.GeneratorController;
 import com.alibaba.cloud.ai.studio.admin.builder.generator.format.EclipseJdtFormatProjectContributor;
-import com.alibaba.cloud.ai.studio.admin.builder.generator.service.generator.GraphAppPropertiesCustomizer;
+import com.alibaba.cloud.ai.studio.admin.builder.generator.format.ApplicationYamlContributor;
 import com.alibaba.cloud.ai.studio.admin.builder.generator.service.generator.GraphProjectReqToDescConverter;
 import com.alibaba.cloud.ai.studio.admin.builder.generator.service.generator.GraphProjectRequest;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
-import io.spring.initializr.generator.spring.properties.ApplicationPropertiesCustomizer;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.controller.ProjectGenerationController;
 import io.spring.initializr.web.project.DefaultProjectRequestPlatformVersionTransformer;
@@ -55,8 +54,8 @@ public class GraphInitializrConfiguration {
 	}
 
 	@Bean
-	public ApplicationPropertiesCustomizer graphAppPropertiesCustomizer() {
-		return new GraphAppPropertiesCustomizer();
+	public ProjectContributor graphApplicationYamlContributor() {
+		return new ApplicationYamlContributor();
 	}
 
 }

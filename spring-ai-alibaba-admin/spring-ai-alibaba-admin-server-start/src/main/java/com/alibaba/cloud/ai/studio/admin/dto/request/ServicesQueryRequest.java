@@ -1,6 +1,6 @@
 package com.alibaba.cloud.ai.studio.admin.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data

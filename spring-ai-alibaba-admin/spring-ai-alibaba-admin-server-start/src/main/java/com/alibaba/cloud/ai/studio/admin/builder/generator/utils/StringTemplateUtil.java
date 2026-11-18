@@ -31,7 +31,7 @@ public class StringTemplateUtil {
 		String regex = "\\{\\{#(.*?)#\\}\\}";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(template);
-		StringBuilder result = new StringBuilder();
+		StringBuffer result = new StringBuffer();
 		while (matcher.find()) {
 			String variable = matcher.group(1);
 			variables.add(variable);

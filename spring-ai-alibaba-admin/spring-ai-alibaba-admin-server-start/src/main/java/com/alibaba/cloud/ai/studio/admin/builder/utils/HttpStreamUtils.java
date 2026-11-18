@@ -17,7 +17,7 @@
 package com.alibaba.cloud.ai.studio.admin.builder.utils;
 
 import com.alibaba.cloud.ai.studio.core.utils.LogUtils;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.util.StreamUtils;
 
 import java.nio.charset.StandardCharsets;

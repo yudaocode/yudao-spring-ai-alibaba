@@ -21,9 +21,14 @@ import com.alibaba.cloud.ai.studio.runtime.enums.ErrorCode;
 import com.alibaba.cloud.ai.studio.runtime.utils.JsonUtils;
 import com.alibaba.cloud.ai.studio.core.utils.LogUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.*;
-
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

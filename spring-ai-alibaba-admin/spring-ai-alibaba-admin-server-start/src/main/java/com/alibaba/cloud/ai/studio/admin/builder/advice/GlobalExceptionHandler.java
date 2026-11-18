@@ -27,10 +27,10 @@ import com.alibaba.cloud.ai.studio.core.utils.LogUtils;
 import com.alibaba.cloud.ai.studio.admin.builder.utils.HttpStreamUtils;
 import com.alibaba.cloud.ai.studio.admin.exception.StudioException;
 import com.alibaba.cloud.ai.studio.admin.exception.ExceptionUtils;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.util.CollectionUtils;
@@ -43,7 +43,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.io.IOException;
 import java.util.List;
@@ -137,7 +136,7 @@ public class GlobalExceptionHandler {
 			String message = buildValidationErrorMessage(be);
 			error = ErrorCode.INVALID_PARAMS.toError("", message);
 		}
-		else if (ex instanceof NoResourceFoundException) {
+		else if (ex instanceof org.springframework.web.servlet.NoHandlerFoundException) {
 			throw ex;
 		}
 		else {
@@ -145,7 +144,8 @@ public class GlobalExceptionHandler {
 		}
 
 		try {
-			response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			RequestContext context = RequestContextHolder.getRequestContext();
 
 			String requestId = context == null ? "" : context.getRequestId();

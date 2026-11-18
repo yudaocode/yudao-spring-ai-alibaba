@@ -278,8 +278,7 @@ public class DifyDSLAdapter extends AbstractDSLAdapter {
 			Node node = objectMapper.convertValue(nodeMap, Node.class);
 			// set title and desc
 			String parentId = Optional.ofNullable(MapReadUtil.getMapDeepValue(nodeMap, String.class, "parentId"))
-				.or(() -> Optional.ofNullable(MapReadUtil.getMapDeepValue(nodeDataMap, String.class, "iteration_id")))
-				.orElse(null);
+				.orElseGet(() -> MapReadUtil.getMapDeepValue(nodeDataMap, String.class, "iteration_id"));
 			node.setTitle((String) nodeDataMap.get("title"))
 				.setDesc((String) nodeDataMap.get("desc"))
 				.setParentId(parentId);

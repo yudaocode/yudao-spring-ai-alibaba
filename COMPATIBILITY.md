@@ -92,7 +92,7 @@ The Admin parent and `spring-ai-alibaba-admin-server-runtime` now join this bran
 The runtime retains the146 upstream DTO/utility source files; unused Guava is removed, wildcard imports are made explicit and framework/Java versions come from the branch root.
 The parent/runtime use the same fork revision and publication configuration as the root, rather than independent1.0.0 snapshots.
 This is the runtime library, not a completed Admin server.
-Core, OpenAPI and Start remain outside the supported default reactor in the explicit `admin-server-pending` profile.
+Core, OpenAPI and Start are now included in the default reactor. See the checkpoints below.
 Their historical official core/graph/ARMS dependencies are not produced by this fork and have no compatibility claim yet.
 
 This branch's full30-module clean install passed1911 cases, zero failures/errors and286 conditional skips on nativeJDK8, with retries disabled.
@@ -178,3 +178,11 @@ Native Java 8 reproduced the 8.13.4 ByteBuffer linkage error with active OpenTel
 The new regression checks the exported span and the actual JSON received by the local HTTP server.
 Boot 2 consumers set the Elasticsearch version property documented in the Core README.
 The earlier whole-tree report remains a historical scan.
+
+## Admin Start (2026-11-18)
+
+Admin Start is included in the default reactor on this route. It uses Boot 2.7.18, runs on JDK 8, and builds an executable jar. The app uses the fork's current Graph, model and observation components. Route-specific SpringDoc, Initializr and database dependencies keep the underlying Boot stack aligned.
+
+See the [Admin Start guide](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-start/README-COMPATIBILITY.md) for startup configuration and reproducible test scope.
+
+The current default reactor reports 36 modules on native JDK8, 8595 tests, 0 failures/errors and 288 conditional skips. With no Docker connection the PostgreSQL container integration test follows the same Docker availability condition used by the other container tests.

@@ -28,5 +28,5 @@ bash ./mvnw -f compatibility-tests/admin-openapi/pom.xml test \
   -Dcompat.test.jvm=/path/to/target-jdk/bin/java -Dcompat.expected.vm=1.8
 ```
 
-Start及完整管理平台装配、MySQL/Redis/Elasticsearch/OSS/云模型验收仍待完成；本批没有宣称所有控制器端点、异步工作流、所有第三方API路径均已通过。
+Start 已加入默认构建，连接与运行说明见 [Admin Start](../spring-ai-alibaba-admin-server-start/README-COMPATIBILITY.md)。MySQL/Redis/Elasticsearch/OSS/云模型需按部署环境验收。本批没有宣称所有控制器端点、异步工作流、所有第三方API路径均已通过。
 Java8的Graal/Python与外部依赖限制继续见Core说明；未进行Maven部署。

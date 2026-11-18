@@ -1,7 +1,7 @@
 package com.alibaba.cloud.ai.studio.admin.dto.request;
 
 import com.alibaba.cloud.ai.studio.admin.dto.ModelParameterDef;
-import jakarta.validation.constraints.Size;
+import javax.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.List;

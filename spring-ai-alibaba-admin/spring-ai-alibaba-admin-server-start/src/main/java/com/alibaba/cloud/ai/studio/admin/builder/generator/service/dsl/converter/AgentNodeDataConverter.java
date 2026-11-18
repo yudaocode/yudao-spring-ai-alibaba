@@ -42,6 +42,14 @@ public class AgentNodeDataConverter extends AbstractNodeDataConverter<AgentNodeD
 		return NodeType.AGENT.equals(nodeType);
 	}
 
+    private static String toolField(Map<String, Object> tool, String javaName, String jsonName) {
+        Object value = tool.get(javaName);
+        if (value == null) {
+            value = tool.get(jsonName);
+        }
+        return value instanceof String ? (String) value : null;
+    }
+
 	private enum AgentNodeDialectConverter {
 
 		DIFY(new DialectConverter<>() {
@@ -67,7 +75,10 @@ public class AgentNodeDataConverter extends AbstractNodeDataConverter<AgentNodeD
 						List<AgentNodeData.ToolData> toolDataList = toolListValue.stream()
 							.map(MapReadUtil::safeCastToMapWithStringKey)
 							.filter(Objects::nonNull)
-							.map(mp -> MapReadUtil.castMapToRecord(mp, AgentNodeData.ToolData.class))
+							.map(mp -> new AgentNodeData.ToolData(
+                                    MapReadUtil.safeCastToMapWithStringKey(mp.get("parameters")),
+                                    toolField(mp, "toolName", "tool_name"),
+                                    toolField(mp, "toolDescription", "tool_description")))
 							.filter(Objects::nonNull)
 							.toList();
 						nodeData.setToolList(toolDataList);

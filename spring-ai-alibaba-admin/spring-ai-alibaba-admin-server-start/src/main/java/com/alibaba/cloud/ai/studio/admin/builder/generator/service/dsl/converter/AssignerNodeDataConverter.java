@@ -59,10 +59,10 @@ public class AssignerNodeDataConverter extends AbstractNodeDataConverter<Assigne
 			@Override
 			public AssignerNodeData parse(Map<String, Object> data) {
 				AssignerNodeData nodeData = new AssignerNodeData();
-				List<AssignerNodeData.AssignItem> items = Stream
+				List<AssignerNodeData.AssignItem> items = Optional
 					.ofNullable(
 							MapReadUtil.safeCastToListWithMap(MapReadUtil.getMapDeepValue(data, List.class, "items")))
-					.flatMap(List::stream)
+					.orElseGet(java.util.Collections::emptyList).stream()
 					.filter(map -> map.containsKey("operation") && map.containsKey("variable_selector"))
 					.map(map -> {
 						List<String> variableSelectorList = Optional
@@ -108,10 +108,10 @@ public class AssignerNodeDataConverter extends AbstractNodeDataConverter<Assigne
 			@Override
 			public AssignerNodeData parse(Map<String, Object> data) throws JsonProcessingException {
 				AssignerNodeData nodeData = new AssignerNodeData();
-				List<AssignerNodeData.AssignItem> items = Stream
+				List<AssignerNodeData.AssignItem> items = Optional
 					.ofNullable(MapReadUtil.safeCastToListWithMap(
 							MapReadUtil.getMapDeepValue(data, List.class, "config", "node_param", "inputs")))
-					.flatMap(List::stream)
+					.orElseGet(java.util.Collections::emptyList).stream()
 					.filter(map -> map.containsKey("left") && map.containsKey("right"))
 					.map(map -> {
 						VariableSelector targetSelector = this.varTemplateToSelector(DSLDialectType.STUDIO,

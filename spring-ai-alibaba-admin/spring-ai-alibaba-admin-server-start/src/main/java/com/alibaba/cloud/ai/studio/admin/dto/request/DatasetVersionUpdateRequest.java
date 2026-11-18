@@ -1,9 +1,7 @@
 package com.alibaba.cloud.ai.studio.admin.dto.request;
 
-import com.alibaba.cloud.ai.studio.admin.dto.DatasetColumn;
 import lombok.Data;
 
-import java.util.List;
 
 @Data
 public class DatasetVersionUpdateRequest {
