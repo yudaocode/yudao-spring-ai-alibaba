@@ -1,6 +1,6 @@
 <!-- YUDAO-COMPATIBILITY-INTRO-BEGIN -->
 
-> 版本命名：保留当前源码基线的官方版本号；共用现代制品不加 JDK 后缀，隔离维护的兼容路线添加 `jdk8` / `jdk17` / `jdk25`。SNAPSHOT 尚未发布 Maven Central。JDK 路线后缀不等于最低字节码版本，框架依赖仍按 Boot 版本选择。
+> 版本命名：保留当前源码基线的官方版本号；共用现代制品不加 JDK 后缀，隔离维护的兼容路线添加 `jdk8` / `jdk17` / `jdk25`。开发版本使用 SNAPSHOT。JDK 路线后缀不等于最低字节码版本，框架依赖仍按 Boot 版本选择。
 > 完整版本规则与预览命名见 [VERSIONING.md](VERSIONING.md)。
 
 # yudao-spring-ai-alibaba
@@ -14,21 +14,21 @@ yudao-spring-ai-alibaba 是 [Spring AI Alibaba](https://github.com/alibaba/sprin
 | Gitee | [yudao-spring-ai-alibaba](https://gitee.com/yudaocode/yudao-spring-ai-alibaba) |
 | GitHub | [yudao-spring-ai-alibaba](https://github.com/yudaocode/yudao-spring-ai-alibaba) |
 
-| 分支 | 已验证 Spring Boot | 运行 JDK | 源码开发版本 | 发布规则 |
+| 分支 | 已验证 Spring Boot | 运行 JDK | 源码开发版本 | Maven Central |
 | --- | --- | --- | --- | --- |
-| [`main`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main) | 4.1.2 | 17+（业务消费使用25） | `1.1.2.2-jdk25-SNAPSHOT` | 官方版本 + 路线 + 日期 |
-| [`main-jdk17`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk17) | 3.5.15 | 17+ | `1.1.2.2-jdk17-SNAPSHOT` | 官方版本 + 路线 + 日期 |
-| [`main-jdk8`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk8) | 2.7.18 | 8+ | `1.1.2.2-jdk8-SNAPSHOT` | 官方版本 + 路线 + 日期 |
+| [`main`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main) | 4.1.2 | 17+（业务消费使用25） | `1.1.2.2-jdk25-SNAPSHOT` | 待发布 |
+| [`main-jdk17`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk17) | 3.5.15 | 17+ | `1.1.2.2-jdk17-SNAPSHOT` | [1.1.2.2-jdk17-20261119](https://central.sonatype.com/artifact/cn.iocoder.spring-ai-alibaba/spring-ai-alibaba-bom/1.1.2.2-jdk17-20261119) |
+| [`main-jdk8`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk8) | 2.7.18 | 8+ | `1.1.2.2-jdk8-SNAPSHOT` | [1.1.2.2-jdk8-20261119](https://central.sonatype.com/artifact/cn.iocoder.spring-ai-alibaba/spring-ai-alibaba-bom/1.1.2.2-jdk8-20261119) |
 
 版本保留上游源码基线编号，以 JDK 路线隔离 Boot 依赖；发布时追加北京时间日期，不增加同日序号。当前分支：**`main-jdk8`**。
 
 Maven groupId 为 **`cn.iocoder.spring-ai-alibaba`**，artifactId 和 Java 包名沿用官方。同一个应用只选择一条版本线，同一项目的模块使用同一版本；替换已有依赖时，也要移除对应官方 groupId 下的同类模块，避免重复类。
 
-**当前仅提供源码开发版，尚未发布这些坐标到 Maven Central 或远端 SNAPSHOT 仓库。** 下面的 SNAPSHOT 示例须先从源码安装到本地仓库。发布版本按 `官方版本[-jdk数字][-preview]-YYYYMMDD` 命名；共用制品省略 JDK，未发布上游基线增加 preview，无同日序号。
+Boot 2 / JDK 8 兼容版 [1.1.2.2-jdk8-20261119](https://central.sonatype.com/artifact/cn.iocoder.spring-ai-alibaba/spring-ai-alibaba-bom/1.1.2.2-jdk8-20261119) 已发布到 Maven Central。下面的 Maven 示例直接使用发布坐标。 AgentScope starter 和 sandbox 作为可选模块暂缓发布。Admin Start 按源码提供独立应用。发布版本按 `官方版本[-jdk数字][-preview]-YYYYMMDD` 命名；共用制品省略 JDK，未发布上游基线增加 preview，无同日序号。
 
 ## 如何使用
 
-先安装相同版本线的 [yudao-spring-ai](https://github.com/yudaocode/yudao-spring-ai)，并安装 [yudao-agentscope-java 的 main-jdk8 分支](https://github.com/yudaocode/yudao-agentscope-java/tree/main-jdk8)，再使用 JDK 17.0.19+ 构建本仓库。Java 8 分支同样使用 JDK 17 构建，产物供 JDK 8 运行。 默认源码构建包含 AgentScope 与 sandbox 模块，还需先安装 [yudao-agentscope-java](https://github.com/yudaocode/yudao-agentscope-java) 的对应依赖：Boot 2 选择 `main-jdk8`，Boot 3/4 选择 `main`；模块构建命令见 [COMPATIBILITY.md](COMPATIBILITY.md#runtime-sandbox-optional)。
+如需构建 SNAPSHOT 源码，先安装相同版本线的 [yudao-spring-ai](https://github.com/yudaocode/yudao-spring-ai)，并安装 [yudao-agentscope-java 的 main-jdk8 分支](https://github.com/yudaocode/yudao-agentscope-java/tree/main-jdk8)，再使用 JDK 17.0.19+ 构建本仓库。Java 8 分支同样使用 JDK 17 构建，产物供 JDK 8 运行。 默认源码构建包含 AgentScope 与 sandbox 模块，还需先安装 [yudao-agentscope-java](https://github.com/yudaocode/yudao-agentscope-java) 的对应依赖：Boot 2 选择 `main-jdk8`，Boot 3/4 选择 `main`；模块构建命令见 [COMPATIBILITY.md](COMPATIBILITY.md#runtime-sandbox-optional)。
 
 ```bash
 git clone -b main-jdk8 https://github.com/yudaocode/yudao-spring-ai-alibaba.git
@@ -40,14 +40,14 @@ bash ./mvnw -DskipTests -Dmaven.javadoc.skip=true install
 
 ```xml
 <properties>
-    <yudao-spring-ai-alibaba.version>1.1.2.2-jdk8-SNAPSHOT</yudao-spring-ai-alibaba.version>
+    <yudao-spring-ai-alibaba.version>1.1.2.2-jdk8-20261119</yudao-spring-ai-alibaba.version>
 </properties>
 <dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>cn.iocoder.spring-ai</groupId>
             <artifactId>spring-ai-bom</artifactId>
-            <version>2.1.0-jdk8-SNAPSHOT</version>
+            <version>2.1.0-jdk8-preview-20261119</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
