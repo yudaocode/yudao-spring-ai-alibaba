@@ -8,7 +8,7 @@
 
 This branch targets Spring AI `2.1.0-jdk17-SNAPSHOT` and Boot 3.5.15; minimum target Java 17, consumer validation JVM 17.
 Default reactor unit tests and dependency gates have passed by recorded full/closure runs. Consumer source alignment is still in progress.
-No release has been published. Maven groups are cn.iocoder.spring-ai-alibaba and cn.iocoder.spring-ai; upstream artifactIds and Java packages are retained.
+The initial Boot 2 and Boot 3 artifacts are available from Maven Central. Maven groups are cn.iocoder.spring-ai-alibaba and cn.iocoder.spring-ai; upstream artifactIds and Java packages are retained.
 
 ## Upstream source provenance
 
@@ -36,7 +36,7 @@ The three frozen business consumers start and pass local chat/image/knowledge fl
 
 The same ten local HTTP acceptance tests pass in all three business lines, including native DashScope embedding/image credentials, requested/default models and application observation callbacks. The matched chat service/tool regressions pass on actual JVM8/17/25 (51/54/61 tests). Streaming reasoning consumption uses the delegate delta rather than appending cumulative content.
 
-The optional AgentScope adapter uses `cn.iocoder.agentscope:agentscope-core:2.1.0-SNAPSHOT`, from the pinned current AgentScope source (the compatibility version is independent of upstream's version). It uses `AgentStateStore` instead of the removed `Session` API. Each invocation copies the builder, scopes persisted state by graph thread and agent name, creates the temporary agent on subscription, and closes it on termination. `session(AgentStateStore)` is retained as a deprecated builder alias; use `stateStore(AgentStateStore)` for new code. Model errors save safe input before propagating; cancellation retains committed file state without an extra blanket save.
+The optional AgentScope adapter uses `cn.iocoder.agentscope:agentscope-core:2.1.0-preview-20261119`, the published AgentScope artifact. It uses `AgentStateStore` instead of the removed `Session` API. Each invocation copies the builder, scopes persisted state by graph thread and agent name, creates the temporary agent on subscription, and closes it on termination. `session(AgentStateStore)` is retained as a deprecated builder alias; use `stateStore(AgentStateStore)` for new code. Model errors save safe input before propagating; cancellation retains committed file state without an extra blanket save.
 
 The adapter's local regression suite passes on native JDK17 for both Boot3 and Boot4: 18 tests, 0 failures/errors, 5 external-service skips. It covers multi-turn/thread/agent isolation, lazy lifecycle, failed model calls and cancellation recovery through a fresh graph. This is local adapter evidence; skipped provider integrations are not covered by it.
 
@@ -65,19 +65,10 @@ The Alibaba BOM manages the adapter version; its POM selects AgentScope `2.1.0-S
 ## Runtime sandbox (optional)
 
 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-sandbox:1.1.2.2-jdk17-SNAPSHOT` uses
-`cn.iocoder.agentscope:agentscope-runtime-sandbox-core:2.1.0-SNAPSHOT`. Boot4 deliberately
-shares AgentScope 2.1.0-SNAPSHOT with Boot3. These development artifacts must be installed
-from source before use; no remote artifact release has been published.
+`cn.iocoder.agentscope:agentscope-runtime-sandbox-core:2.1.0-preview-20261119` from Maven Central.
+Build and install the Alibaba integration with its Maven wrapper.
+Both Alibaba integrations are verified from locally installed JARs against Maven Central AgentScope dependencies.
 
-First install matching yudao-spring-ai. In yudao-agentscope-java branch `main`,
-use JDK17 and installed Maven3.9+ (the SDK has no mvnw) to install the BOMs and both
-optional Alibaba integration dependencies:
-
-```bash
-mvn -pl agentscope-dependencies-bom,agentscope-distribution/agentscope-bom,agentscope-extensions/agentscope-extensions-model/agentscope-extensions-model-dashscope,agentscope-runtime-sandbox-core -am -DskipTests -Dmaven.javadoc.skip=true install
-```
-
-Then build this Alibaba checkout using its Maven wrapper as shown in the README.
 Import the Spring AI and Alibaba BOMs, and add the sandbox dependency explicitly:
 
 ```xml
