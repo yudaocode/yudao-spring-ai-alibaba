@@ -8,7 +8,7 @@
 
 This branch targets Spring AI `2.1.0-jdk8-SNAPSHOT` and Boot 2.7.18; minimum target Java 8, consumer validation JVM 8.
 Default reactor unit tests and dependency gates have passed by recorded full/closure runs. Consumer source alignment is still in progress.
-No release has been published. Maven groups are cn.iocoder.spring-ai-alibaba and cn.iocoder.spring-ai; upstream artifactIds and Java packages are retained.
+The initial Boot 2 and Boot 3 artifacts are available from Maven Central. Maven groups are cn.iocoder.spring-ai-alibaba and cn.iocoder.spring-ai; upstream artifactIds and Java packages are retained.
 
 ## Upstream source provenance
 
@@ -36,7 +36,7 @@ The three frozen business consumers start and pass local chat/image/knowledge fl
 
 The same ten local HTTP acceptance tests pass in all three business lines, including native DashScope embedding/image credentials, requested/default models and application observation callbacks. The matched chat service/tool regressions pass on actual JVM8/17/25 (51/54/61 tests). Streaming reasoning consumption uses the delegate delta rather than appending cumulative content.
 
-The Java8 optional AgentScope adapter uses `cn.iocoder.agentscope:agentscope-core:2.1.0-jdk8-SNAPSHOT`, based on the pinned current AgentScope source. It uses `AgentStateStore` in place of the removed `Session` API, copies builders per invocation, isolates graph thread/agent state, and closes temporary agents after stream termination. `session(AgentStateStore)` remains a deprecated builder alias; new code should use `stateStore(AgentStateStore)`. The main and main-jdk17 adapters also use the pinned current SDK, with compatibility version2.1.0-SNAPSHOT. Model errors persist safe conversation input before propagating the failure. Cancellation follows core state ownership: committed file state remains available, in-flight writes finish before their session ownership is released, and the adapter does not perform an additional blanket save.
+The Java8 optional AgentScope adapter uses `cn.iocoder.agentscope:agentscope-core:2.1.0-jdk8-preview-20261119`, the published AgentScope Java 8 artifact. It uses `AgentStateStore` in place of the removed `Session` API, copies builders per invocation, isolates graph thread/agent state, and closes temporary agents after stream termination. `session(AgentStateStore)` remains a deprecated builder alias; new code should use `stateStore(AgentStateStore)`. The main and main-jdk17 adapters also use the pinned current SDK, with compatibility version2.1.0-SNAPSHOT. Model errors persist safe conversation input before propagating the failure. Cancellation follows core state ownership: committed file state remains available, in-flight writes finish before their session ownership is released, and the adapter does not perform an additional blanket save.
 
 The expanded 28-module Java8 default verify passes 1896 tests with 0 failures/errors and 286 skips; skipped cases requiring external services are not acceptance evidence. The optional adapter's 18 tests include local multi-turn state isolation, direct failure/cancellation persistence checks with a rebuilt graph, and lazy agent lifecycle coverage; 5 external-service cases remain skipped. Runtime sandbox is now included in the default reactor/BOM. No model provider credentials or remote model calls are required for these local gates.
 
@@ -44,19 +44,12 @@ The expanded 28-module Java8 default verify passes 1896 tests with 0 failures/er
 ## Runtime sandbox (optional)
 
 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-sandbox:1.1.2.2-jdk8-SNAPSHOT` uses
-`cn.iocoder.agentscope:agentscope-runtime-sandbox-core:2.1.0-jdk8-SNAPSHOT`. Boot4 deliberately
-shares AgentScope 2.1.0-SNAPSHOT with Boot3. These development artifacts must be installed
-from source before use; no remote artifact release has been published.
+`cn.iocoder.agentscope:agentscope-runtime-sandbox-core:2.1.0-jdk8-preview-20261119` from Maven Central.
+Build and install the Alibaba integration with its Maven wrapper.
+When inheriting the Spring Boot 2.7 parent, set `httpclient5.version` to `5.6.5` and
+`httpcore5.version` to `5.4.4` for the sandbox HTTP client.
+Both Alibaba integrations are verified from locally installed JARs against Maven Central AgentScope dependencies.
 
-First install matching yudao-spring-ai. In yudao-agentscope-java branch `main-jdk8`,
-use JDK17 and installed Maven3.9+ (the SDK has no mvnw) to install the BOMs and both
-optional Alibaba integration dependencies:
-
-```bash
-mvn -pl agentscope-dependencies-bom,agentscope-distribution/agentscope-bom,agentscope-extensions/agentscope-extensions-model/agentscope-extensions-model-dashscope,agentscope-runtime-sandbox-core -am -DskipTests -Dmaven.javadoc.skip=true install
-```
-
-Then build this Alibaba checkout using its Maven wrapper as shown in the README.
 Import the Spring AI and Alibaba BOMs, and add the sandbox dependency explicitly:
 
 ```xml

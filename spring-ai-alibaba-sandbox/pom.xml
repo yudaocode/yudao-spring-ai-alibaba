@@ -20,7 +20,7 @@
     </scm>
 
     <properties>
-        <agentscope-runtime.version>2.1.0-jdk8-SNAPSHOT</agentscope-runtime.version>
+        <agentscope-runtime.version>2.1.0-jdk8-preview-20261119</agentscope-runtime.version>
     </properties>
 
     <dependencies>

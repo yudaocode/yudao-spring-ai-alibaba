@@ -51,7 +51,7 @@
     </scm>
 
     <properties>
-        <agentscope.version>2.1.0-jdk8-SNAPSHOT</agentscope.version>
+        <agentscope.version>2.1.0-jdk8-preview-20261119</agentscope.version>
     </properties>
 
     <dependencies>

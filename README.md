@@ -28,7 +28,7 @@ Boot 2 / JDK 8 兼容版 [1.1.2.2-jdk8-20261119](https://central.sonatype.com/ar
 
 ## 如何使用
 
-如需构建 SNAPSHOT 源码，先安装相同版本线的 [yudao-spring-ai](https://github.com/yudaocode/yudao-spring-ai)，并安装 [yudao-agentscope-java 的 main-jdk8 分支](https://github.com/yudaocode/yudao-agentscope-java/tree/main-jdk8)，再使用 JDK 17.0.19+ 构建本仓库。Java 8 分支同样使用 JDK 17 构建，产物供 JDK 8 运行。 默认源码构建包含 AgentScope 与 sandbox 模块，还需先安装 [yudao-agentscope-java](https://github.com/yudaocode/yudao-agentscope-java) 的对应依赖：Boot 2 选择 `main-jdk8`，Boot 3/4 选择 `main`；模块构建命令见 [COMPATIBILITY.md](COMPATIBILITY.md#runtime-sandbox-optional)。
+如需构建 SNAPSHOT 源码，先安装相同版本线的 [yudao-spring-ai](https://github.com/yudaocode/yudao-spring-ai)，再使用 JDK 17.0.19+ 构建本仓库。Java 8 分支的产物可在 JDK 8 运行。AgentScope SDK 从 Maven Central 解析。
 
 ```bash
 git clone -b main-jdk8 https://github.com/yudaocode/yudao-spring-ai-alibaba.git
@@ -78,9 +78,9 @@ spring:
           model: qwen-plus
 ```
 
-配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。三个分支均提供可选 AgentScope starter 与 sandbox 模块：Boot 2 依赖 AgentScope SDK `2.1.0-jdk8-SNAPSHOT`，Boot 3/4 共用 SDK `2.1.0-SNAPSHOT`；具体接入见兼容说明。AgentScope 集成不会成为 DashScope starter 的强制依赖。
+配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。本分支提供可选 AgentScope starter 与 sandbox，均使用公开 AgentScope `2.1.0-jdk8-preview-20261119`。两个模块可从 Alibaba 源码安装，具体见 [兼容说明](COMPATIBILITY.md#runtime-sandbox-optional)。 DashScope starter 可单独使用。
 
-需要 AgentScope 时，先安装 [yudao-agentscope-java 的 main-jdk8 分支](https://github.com/yudaocode/yudao-agentscope-java/tree/main-jdk8)，再构建本仓库；另行引入 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-starter-agentscope`。它使用 `cn.iocoder.agentscope:agentscope-core:2.1.0-jdk8-SNAPSHOT`，通过 `AgentScopeAgent.fromBuilder(...).stateStore(store)` 接入新版状态存储；Java 包名仍沿用官方。基础 AgentScope 的 Boot parent HTTP 配置见其 [Java 8 使用说明](https://github.com/yudaocode/yudao-agentscope-java/blob/main-jdk8/JAVA8-COMPATIBILITY.md)。
+需要 AgentScope 时，从源码构建本仓库并引入 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-starter-agentscope`。它使用 `cn.iocoder.agentscope:agentscope-core:2.1.0-jdk8-preview-20261119`，通过 `AgentScopeAgent.fromBuilder(...).stateStore(store)` 接入新版状态存储；Java 包名仍沿用官方。Boot 2.7 parent 下请将 `httpclient5.version` 设为 `5.6.5`、`httpcore5.version` 设为 `5.4.4`。完整配置见 [Java 8 使用说明](https://github.com/yudaocode/yudao-agentscope-java/blob/main-jdk8/JAVA8-COMPATIBILITY.md)。
 
 详细构建、源码基线、API 差异及当前支持边界见 [COMPATIBILITY.md](COMPATIBILITY.md)。
 
