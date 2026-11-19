@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
@@ -35,8 +34,11 @@ import java.util.Map;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(onConstructor_ = @JsonCreator)
 public class AgentRequest implements Serializable {
+
+	@JsonCreator
+	public AgentRequest() {
+	}
 
 	/** Application identifier */
 	@JsonProperty("app_id")
