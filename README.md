@@ -140,6 +140,8 @@ OpenAPI控制器/鉴权类库已加入当前版本线的默认reactor/BOM，可�
 
 Boot 4 的 Graph Core 测试统一使用 Boot BOM 管理的 Testcontainers 2.0.5。共享 PostgreSQL 测试依赖的 DatabaseStore 也在 JDK 17 和 25 上各通过 2 项。
 
+Graph `DatabaseStore` 已补 MySQL 8.0、Oracle Free 23.7 的 Docker 集成测试。Boot 2 / JDK 8、Boot 3 和 Boot 4 / JDK 17 与 25 五组各通过 2 项，覆盖写入、更新、重开、查询和删除。
+
 <!-- YUDAO-COMPATIBILITY-INTRO-END -->
 
 ---
