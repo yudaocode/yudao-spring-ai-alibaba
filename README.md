@@ -16,7 +16,7 @@ yudao-spring-ai-alibaba 是 [Spring AI Alibaba](https://github.com/alibaba/sprin
 
 | 分支 | 已验证 Spring Boot | 运行 JDK | 源码开发版本 | Maven Central |
 | --- | --- | --- | --- | --- |
-| [`main`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main) | 4.1.2 | 17+（业务消费使用25） | `1.1.2.2-jdk25-SNAPSHOT` | 待发布 |
+| [`main`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main) | 4.1.2 | 17+（业务消费使用25） | `1.1.2.2-jdk25-SNAPSHOT` | [1.1.2.2-jdk25-20261119](https://central.sonatype.com/artifact/cn.iocoder.spring-ai-alibaba/spring-ai-alibaba-bom/1.1.2.2-jdk25-20261119) |
 | [`main-jdk17`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk17) | 3.5.15 | 17+ | `1.1.2.2-jdk17-SNAPSHOT` | [1.1.2.2-jdk17-20261119](https://central.sonatype.com/artifact/cn.iocoder.spring-ai-alibaba/spring-ai-alibaba-bom/1.1.2.2-jdk17-20261119) |
 | [`main-jdk8`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk8) | 2.7.18 | 8+ | `1.1.2.2-jdk8-SNAPSHOT` | [1.1.2.2-jdk8-20261119](https://central.sonatype.com/artifact/cn.iocoder.spring-ai-alibaba/spring-ai-alibaba-bom/1.1.2.2-jdk8-20261119) |
 
