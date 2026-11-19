@@ -140,6 +140,8 @@ Boot 4 的 Graph Core 测试统一使用 Boot BOM 管理的 Testcontainers 2.0.5
 
 Graph `DatabaseStore` 已补 MySQL 8.0、Oracle Free 23.7 的 Docker 集成测试。Boot 2 / JDK 8、Boot 3 和 Boot 4 / JDK 17 与 25 五组各通过 2 项，覆盖写入、更新、重开、查询和删除。
 
+Boot 2.7.18 / 原生 JDK 8 补跑 `DatabaseStorePostgreSqlIntegrationTest`，使用独立的 PostgreSQL 17 Docker 容器，首次写入及覆盖更新两个用例均通过。
+
 <!-- YUDAO-COMPATIBILITY-INTRO-END -->
 
 ---
