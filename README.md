@@ -16,7 +16,7 @@ yudao-spring-ai-alibaba 是 [Spring AI Alibaba](https://github.com/alibaba/sprin
 
 | 分支 | 已验证 Spring Boot | 运行 JDK | 源码开发版本 | Maven Central |
 | --- | --- | --- | --- | --- |
-| [`main`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main) | 4.1.2 | 17+（业务消费使用25） | `1.1.2.2-jdk25-SNAPSHOT` | 待发布 |
+| [`main`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main) | 4.1.2 | 17+（业务消费使用25） | `1.1.2.2-jdk25-SNAPSHOT` | [1.1.2.2-jdk25-20261119](https://central.sonatype.com/artifact/cn.iocoder.spring-ai-alibaba/spring-ai-alibaba-bom/1.1.2.2-jdk25-20261119) |
 | [`main-jdk17`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk17) | 3.5.15 | 17+ | `1.1.2.2-jdk17-SNAPSHOT` | [1.1.2.2-jdk17-20261119](https://central.sonatype.com/artifact/cn.iocoder.spring-ai-alibaba/spring-ai-alibaba-bom/1.1.2.2-jdk17-20261119) |
 | [`main-jdk8`](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk8) | 2.7.18 | 8+ | `1.1.2.2-jdk8-SNAPSHOT` | [1.1.2.2-jdk8-20261119](https://central.sonatype.com/artifact/cn.iocoder.spring-ai-alibaba/spring-ai-alibaba-bom/1.1.2.2-jdk8-20261119) |
 
@@ -24,11 +24,11 @@ yudao-spring-ai-alibaba 是 [Spring AI Alibaba](https://github.com/alibaba/sprin
 
 Maven groupId 为 **`cn.iocoder.spring-ai-alibaba`**，artifactId 和 Java 包名沿用官方。同一个应用只选择一条版本线，同一项目的模块使用同一版本；替换已有依赖时，也要移除对应官方 groupId 下的同类模块，避免重复类。
 
-Boot 3 / JDK 17 已发布 [1.1.2.2-jdk17-20261119](https://central.sonatype.com/artifact/cn.iocoder.spring-ai-alibaba/spring-ai-alibaba-bom/1.1.2.2-jdk17-20261119)，使用方式见 [main-jdk17](https://github.com/yudaocode/yudao-spring-ai-alibaba/tree/main-jdk17)。本分支的 Boot 4 示例使用源码开发版，需先安装到本地仓库。发布版本按 `官方版本[-jdk数字][-preview]-YYYYMMDD` 命名；共用制品省略 JDK，未发布上游基线增加 preview，无同日序号。
+Boot 4 / JDK 25 路线已发布 [1.1.2.2-jdk25-20261119](https://central.sonatype.com/artifact/cn.iocoder.spring-ai-alibaba/spring-ai-alibaba-bom/1.1.2.2-jdk25-20261119)，搭配 Spring AI `2.1.0-jdk25-preview-20261119`。公开制品包含 DashScope starter、Graph 和 Admin Runtime/Core。AgentScope starter、runtime-sandbox 与独立 Admin Start 可从源码构建。 发布版本按 `官方版本[-jdk数字][-preview]-YYYYMMDD` 命名；共用制品省略 JDK，未发布上游基线增加 preview，无同日序号。
 
 ## 如何使用
 
-先安装相同版本线的 [yudao-spring-ai](https://github.com/yudaocode/yudao-spring-ai)，再使用 JDK 17.0.19+ 构建本仓库。Java 8 分支同样使用 JDK 17 构建，产物供 JDK 8 运行。 默认源码构建包含 AgentScope 与 sandbox 模块，还需先安装 [yudao-agentscope-java](https://github.com/yudaocode/yudao-agentscope-java) 的对应依赖：Boot 2 选择 `main-jdk8`，Boot 3/4 选择 `main`；模块构建命令见 [COMPATIBILITY.md](COMPATIBILITY.md#runtime-sandbox-optional)。
+需要安装 `1.1.2.2-jdk25-SNAPSHOT` 时，先安装相同版本线的 [yudao-spring-ai](https://github.com/yudaocode/yudao-spring-ai)，再使用 JDK 17.0.19+ 构建本仓库。Java 8 分支同样使用 JDK 17 构建，产物供 JDK 8 运行。 默认源码构建包含 AgentScope 与 sandbox 模块，还需先安装 [yudao-agentscope-java](https://github.com/yudaocode/yudao-agentscope-java) 的对应依赖：Boot 2 选择 `main-jdk8`，Boot 3/4 选择 `main`；模块构建命令见 [COMPATIBILITY.md](COMPATIBILITY.md#runtime-sandbox-optional)。
 
 ```bash
 git clone -b main https://github.com/yudaocode/yudao-spring-ai-alibaba.git
@@ -40,14 +40,14 @@ bash ./mvnw -DskipTests -Dmaven.javadoc.skip=true install
 
 ```xml
 <properties>
-    <yudao-spring-ai-alibaba.version>1.1.2.2-jdk25-SNAPSHOT</yudao-spring-ai-alibaba.version>
+    <yudao-spring-ai-alibaba.version>1.1.2.2-jdk25-20261119</yudao-spring-ai-alibaba.version>
 </properties>
 <dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>cn.iocoder.spring-ai</groupId>
             <artifactId>spring-ai-bom</artifactId>
-            <version>2.1.0-jdk25-SNAPSHOT</version>
+            <version>2.1.0-jdk25-preview-20261119</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -78,14 +78,14 @@ spring:
           model: qwen-plus
 ```
 
-配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。三个分支均已适配可选 AgentScope starter：Boot 3/4 使用 `cn.iocoder.agentscope:agentscope-core:2.1.0-SNAPSHOT`，Boot 2 使用 `2.1.0-jdk8-SNAPSHOT`。需先安装对应 AgentScope 源码版本，再显式引入 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-starter-agentscope`（版本由 Alibaba BOM 管理）；状态存储使用 `stateStore(AgentStateStore)`。详细示例见下方兼容说明。三个分支均提供可选 sandbox 模块，具体接入见兼容说明。AgentScope 集成不会成为 DashScope starter 的强制依赖。
+配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。三个分支的源码均已适配可选 AgentScope starter，Boot 3/4 使用 `cn.iocoder.agentscope:agentscope-core:2.1.0-SNAPSHOT`，Boot 2 使用 `2.1.0-jdk8-SNAPSHOT`。先安装对应的 AgentScope 和 Alibaba 源码开发版，再使用同一路线的 SNAPSHOT BOM，引入 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-starter-agentscope`。状态存储使用 `stateStore(AgentStateStore)`。详细示例见下方兼容说明。三个分支均提供可选 sandbox 模块，具体接入见兼容说明。AgentScope 集成不会成为 DashScope starter 的强制依赖。
 
 详细构建、源码基线、API 差异及当前支持边界见 [COMPATIBILITY.md](COMPATIBILITY.md)。
 
 下方逐字保留官方项目原始 README，其中的官方 Maven 坐标和发布状态仅针对上游项目；使用本兼容版时，以本节坐标、版本线和支持范围为准。
 
 Admin runtime DTO/JSON 工具库已接入当前版本线：在现有 Alibaba BOM 下添加 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-admin-server-runtime`。
-版本为 `1.1.2.2-jdk25-SNAPSHOT`，须先源码安装；保留 `com.alibaba.cloud.ai.studio.runtime.*` 包名。
+发布版本为 `1.1.2.2-jdk25-20261119`。源码开发版本为 `1.1.2.2-jdk25-SNAPSHOT`。Java 包名为 `com.alibaba.cloud.ai.studio.runtime.*`。
 上一检查点完整25模块构建在原生JDK17通过1913项测试，零失败/错误、288项条件跳过；三路线安装包在Boot2/JDK8、Boot3/4×JDK17/25均完成真实HTTP文本/多模态验证。
 Boot4已补Jackson3转换器适配，Boot2/3继续使用Jackson2。Boot3/4 的 Core 类库已纳入默认构建；Start 已纳入默认构建。Boot2 的 Core/JS/Python 也已完成Java8类库检查点，本批不代表完整管理平台可部署。
 依赖示例、验证命令和边界见 [Admin runtime 使用说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-runtime/README-COMPATIBILITY.md)。
