@@ -120,7 +120,7 @@ OpenAPI控制器/鉴权类库已加入当前版本线的默认reactor/BOM，可�
 
 ## Admin Start
 
-本路线的默认构建会生成 Admin 可执行包，运行于 Spring Boot 4.1.2 / JDK 17/25。启动命令、中间件配置、测试范围见 [Admin Start 说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-start/README-COMPATIBILITY.md)。
+本路线的默认构建会生成 Admin 可执行包，运行于 Spring Boot 4.1.2 / JDK 17/25。使用隔离的真实 MySQL、Redis、Nacos、RocketMQ 和 Elasticsearch 复验通过，覆盖健康检查、全局配置、OpenAPI 文档和 API Key 缺失时的 401 响应。启动命令、中间件配置、测试范围见 [Admin Start 说明](spring-ai-alibaba-admin/spring-ai-alibaba-admin-server-start/README-COMPATIBILITY.md)。
 
 当前默认构建共 28 个模块，原生 JDK17 计 1969 项测试，0 失败、0 错误、290 条件跳过。Docker 不可用时，使用 Testcontainers 的 PostgreSQL 用例按条件跳过。
 
