@@ -126,6 +126,20 @@ OpenAPI控制器/鉴权类库已加入当前版本线的默认reactor/BOM，可�
 
 当前默认构建共 28 个模块，原生 JDK17 计 1964 项测试，0 失败、0 错误、290 条件跳过。Docker 不可用时，使用 Testcontainers 的 PostgreSQL 用例按条件跳过。
 
+## Graph Checkpoint Saver
+
+2026-11-19 在 Docker 中用 Testcontainers 复验 `spring-ai-alibaba-graph-core`。每组执行 MySQL 7 项、PostgreSQL 11 项、Oracle 8 项和 Redis Saver 18 项，共 44 项，零失败、零错误、零跳过。容器使用 MySQL 8.0、PostgreSQL 16（pgvector 镜像）、Oracle Free 23.7 和 Valkey 8.1.2。
+
+| 分支 | Spring Boot | 测试 JVM | 通过 |
+| --- | --- | --- | ---: |
+| `main-jdk8` | 2.7.18 | 1.8.0_472 | 44/44 |
+| `main-jdk17` | 3.5.15 | 17.0.21 | 44/44 |
+| `main-jdk17` | 3.5.15 | 25.0.3 | 44/44 |
+| `main` | 4.1.2 | 17.0.21 | 44/44 |
+| `main` | 4.1.2 | 25.0.3 | 44/44 |
+
+Boot 4 的 Graph Core 测试统一使用 Boot BOM 管理的 Testcontainers 2.0.5。共享 PostgreSQL 测试依赖的 DatabaseStore 也在 JDK 17 和 25 上各通过 2 项。
+
 <!-- YUDAO-COMPATIBILITY-INTRO-END -->
 
 ---
