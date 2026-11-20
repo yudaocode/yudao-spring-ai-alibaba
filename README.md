@@ -1,5 +1,7 @@
 <!-- YUDAO-COMPATIBILITY-INTRO-BEGIN -->
 
+源码已对齐官方 `17e26ff6f`，本分支依赖 Spring AI `2.1.1-jdk25-SNAPSHOT`。Boot 4.2.0／JDK 25 的 Graph Checkpoint Saver 真库测试 44 项通过。
+
 > 版本命名：保留当前源码基线的官方版本号；共用现代制品不加 JDK 后缀，隔离维护的兼容路线添加 `jdk8` / `jdk17` / `jdk25`。开发版本使用 SNAPSHOT。JDK 路线后缀不等于最低字节码版本，框架依赖仍按 Boot 版本选择。
 > 完整版本规则与预览命名见 [VERSIONING.md](VERSIONING.md)。
 
@@ -78,7 +80,7 @@ spring:
           model: qwen-plus
 ```
 
-配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。三个分支的源码均已适配可选 AgentScope starter，Boot 3/4 使用 `cn.iocoder.agentscope:agentscope-core:2.1.0-SNAPSHOT`，Boot 2 使用 `2.1.0-jdk8-SNAPSHOT`。先安装对应的 AgentScope 和 Alibaba 源码开发版，再使用同一路线的 SNAPSHOT BOM，引入 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-starter-agentscope`。状态存储使用 `stateStore(AgentStateStore)`。详细示例见下方兼容说明。三个分支均提供可选 sandbox 模块，具体接入见兼容说明。AgentScope 集成不会成为 DashScope starter 的强制依赖。
+配置环境变量后，通过 Spring AI 的 `ChatModel` / `ChatClient.Builder` 调用；Java 导入仍为 `com.alibaba.cloud.ai.*`、`org.springframework.ai.*`。三个分支的源码均已适配可选 AgentScope starter，Boot 3/4 使用 `cn.iocoder.agentscope:agentscope-core:2.1.0-SNAPSHOT`，Boot 2 使用 `2.1.1-jdk8-SNAPSHOT`。先安装对应的 AgentScope 和 Alibaba 源码开发版，再使用同一路线的 SNAPSHOT BOM，引入 `cn.iocoder.spring-ai-alibaba:spring-ai-alibaba-starter-agentscope`。状态存储使用 `stateStore(AgentStateStore)`。详细示例见下方兼容说明。三个分支均提供可选 sandbox 模块，具体接入见兼容说明。AgentScope 集成不会成为 DashScope starter 的强制依赖。
 
 详细构建、源码基线、API 差异及当前支持边界见 [COMPATIBILITY.md](COMPATIBILITY.md)。
 

@@ -6,7 +6,7 @@
 | main-jdk17 | Spring Boot 3 | 17 | ruoyi-vue-pro-jdk25 |
 | main-jdk8 | Spring Boot 2 | 8 | ruoyi-vue-pro-jdk8 |
 
-This branch targets Spring AI `2.1.0-jdk25-SNAPSHOT` and Boot 4.1.2; minimum target Java 17+, consumer validation JVM 25.
+This branch targets Spring AI `2.1.1-jdk25-SNAPSHOT` and Boot 4.1.2; minimum target Java 17+, consumer validation JVM 25.
 Internal Alibaba state/option serializers retain the Jackson 2 implementation supplied
 by the Boot 4 Jackson 2 BOM; the framework/MCP JSON implementation is Jackson 3.
 This boundary requires explicit HTTP codec and runtime validation.
@@ -33,7 +33,7 @@ Native DashScope sync/UTF8 SSE/provider errors and ChatClient option merging hav
 
 Tika parser's original14 tests pass on each line with the corresponding family (2.9.4/3.3.1/4.0.0); Boot4 uses TikaInputStream and standard-package type pom.
 
-The three frozen business consumers start and pass local chat/image/knowledge flows. The optional AgentScope adapter uses the Yudao SDK on every branch: main/main-jdk17 use2.1.0-SNAPSHOT and main-jdk8 uses2.1.0-jdk8-SNAPSHOT. The Java8 adapter is included in its default reactor/BOM; its runtime-sandbox module is also included after the independent Java8 port. Original consumer working directories remain untouched. No remote release has been published.
+The three frozen business consumers start and pass local chat/image/knowledge flows. The optional AgentScope adapter uses the Yudao SDK on every branch: main/main-jdk17 use2.1.0-SNAPSHOT and main-jdk8 uses2.1.1-jdk8-SNAPSHOT. The Java8 adapter is included in its default reactor/BOM; its runtime-sandbox module is also included after the independent Java8 port. Original consumer working directories remain untouched. No remote release has been published.
 
 ## Additional validation and limits
 
