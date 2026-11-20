@@ -1,5 +1,7 @@
 <!-- YUDAO-COMPATIBILITY-INTRO-BEGIN -->
 
+源码已对齐官方 `17e26ff6f`，本分支依赖 Spring AI `2.1.1-jdk8-SNAPSHOT`。Boot 2.7.18／JDK 8 的 Graph Checkpoint Saver 真库测试 44 项通过。
+
 > 版本命名：保留当前源码基线的官方版本号；共用现代制品不加 JDK 后缀，隔离维护的兼容路线添加 `jdk8` / `jdk17` / `jdk25`。开发版本使用 SNAPSHOT。JDK 路线后缀不等于最低字节码版本，框架依赖仍按 Boot 版本选择。
 > 完整版本规则与预览命名见 [VERSIONING.md](VERSIONING.md)。
 

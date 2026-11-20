@@ -77,7 +77,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Spring version -->
-        <spring-ai.version>2.1.0-jdk8-SNAPSHOT</spring-ai.version>
+        <spring-ai.version>2.1.1-jdk8-SNAPSHOT</spring-ai.version>
         <spring-boot.version>2.7.18</spring-boot.version>
         <springdoc-openapi.version>2.8.15</springdoc-openapi.version>
 
@@ -276,7 +276,7 @@
         <dependency>
             <groupId>cn.iocoder.spring-ai</groupId>
             <artifactId>spring-ai-commons</artifactId>
-            <version>2.1.0-jdk8-SNAPSHOT</version>
+            <version>2.1.1-jdk8-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

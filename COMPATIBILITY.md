@@ -6,7 +6,7 @@
 | main-jdk17 | Spring Boot 3 | 17 | ruoyi-vue-pro-jdk25 |
 | main-jdk8 | Spring Boot 2 | 8 | ruoyi-vue-pro-jdk8 |
 
-This branch targets Spring AI `2.1.0-jdk8-SNAPSHOT` and Boot 2.7.18; minimum target Java 8, consumer validation JVM 8.
+This branch targets Spring AI `2.1.1-jdk8-SNAPSHOT` and Boot 2.7.18; minimum target Java 8, consumer validation JVM 8.
 Default reactor unit tests and dependency gates have passed by recorded full/closure runs. Consumer source alignment is still in progress.
 The initial Boot 2 and Boot 3 artifacts are available from Maven Central. Maven groups are cn.iocoder.spring-ai-alibaba and cn.iocoder.spring-ai; upstream artifactIds and Java packages are retained.
 

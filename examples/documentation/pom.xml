@@ -28,7 +28,7 @@
 
 	<properties>
 		<java.version>17</java.version>
-		<spring-ai.version>2.1.0-jdk8-SNAPSHOT</spring-ai.version>
+		<spring-ai.version>2.1.1-jdk8-SNAPSHOT</spring-ai.version>
 		<spring-ai-alibaba.version>1.1.2.2-jdk8-SNAPSHOT</spring-ai-alibaba.version>
 		<spring-ai-alibaba-extensions.version>1.1.2.2-jdk8-SNAPSHOT</spring-ai-alibaba-extensions.version>
 
